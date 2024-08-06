@@ -39,8 +39,8 @@ jobs:
         id: oclif-readme
         run: |
           npm install
-          npm exec oclif manifest
-          npm exec oclif readme
+          npm run prepack
+          npm run postpack
           rm -f oclif.manifest.json
           if [ -n "$(git status --porcelain)" ]; then
             git add .
