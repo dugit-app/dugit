@@ -20,7 +20,7 @@ $ npm install -g dugit
 $ dugit COMMAND
 running command...
 $ dugit (--version)
-dugit/0.0.0 linux-x64 node-v18.20.4
+dugit/0.0.1 linux-x64 node-v18.20.4
 $ dugit --help [COMMAND]
 USAGE
   $ dugit COMMAND
