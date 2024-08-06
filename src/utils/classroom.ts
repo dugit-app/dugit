@@ -1,14 +1,21 @@
+import { select } from '@inquirer/prompts'
 import { Octokit } from 'octokit'
 
 import { getAccessToken } from './auth.js'
 import { headers } from './octokit.js'
 
 export async function listClassrooms() {
-    const accessToken = await getAccessToken()
-
-    const octokit = new Octokit({ auth: accessToken })
+    const octokit = new Octokit({ auth: await getAccessToken() })
 
     const classrooms = (await octokit.request('GET /classrooms', { headers })).data
 
-    console.log(classrooms)
+    const selectedClassroom = await select({
+        choices: classrooms.map(classroom => ({
+            name: classroom.name,
+            value: classroom,
+        })),
+        message: 'Select a classroom',
+    })
+
+    console.log(selectedClassroom)
 }
