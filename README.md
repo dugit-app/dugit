@@ -20,7 +20,7 @@ $ npm install -g dugit
 $ dugit COMMAND
 running command...
 $ dugit (--version)
-dugit/0.0.0 darwin-arm64 node-v20.16.0
+dugit/0.0.0 linux-x64 node-v18.20.4
 $ dugit --help [COMMAND]
 USAGE
   $ dugit COMMAND
@@ -29,8 +29,6 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`dugit hello PERSON`](#dugit-hello-person)
-* [`dugit hello world`](#dugit-hello-world)
 * [`dugit help [COMMAND]`](#dugit-help-command)
 * [`dugit plugins`](#dugit-plugins)
 * [`dugit plugins add PLUGIN`](#dugit-plugins-add-plugin)
@@ -42,48 +40,6 @@ USAGE
 * [`dugit plugins uninstall [PLUGIN]`](#dugit-plugins-uninstall-plugin)
 * [`dugit plugins unlink [PLUGIN]`](#dugit-plugins-unlink-plugin)
 * [`dugit plugins update`](#dugit-plugins-update)
-
-## `dugit hello PERSON`
-
-Say hello
-
-```
-USAGE
-  $ dugit hello PERSON -f <value>
-
-ARGUMENTS
-  PERSON  Person to say hello to
-
-FLAGS
-  -f, --from=<value>  (required) Who is saying hello
-
-DESCRIPTION
-  Say hello
-
-EXAMPLES
-  $ dugit hello friend --from oclif
-  hello friend from oclif! (./src/commands/hello/index.ts)
-```
-
-_See code: [src/commands/hello/index.ts](https://github.com/braydenoneal/du-git/blob/v0.0.0/src/commands/hello/index.ts)_
-
-## `dugit hello world`
-
-Say hello world
-
-```
-USAGE
-  $ dugit hello world
-
-DESCRIPTION
-  Say hello world
-
-EXAMPLES
-  $ dugit hello world
-  hello world! (./src/commands/hello/world.ts)
-```
-
-_See code: [src/commands/hello/world.ts](https://github.com/braydenoneal/du-git/blob/v0.0.0/src/commands/hello/world.ts)_
 
 ## `dugit help [COMMAND]`
 
