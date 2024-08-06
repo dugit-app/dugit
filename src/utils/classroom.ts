@@ -15,9 +15,7 @@ export async function listClassrooms() {
             value: classroom,
         })),
         message: 'Select a classroom',
-    })
-
-    console.log(selectedClassroom)
+    }, { clearPromptOnDone: true })
 
     await listAssignments(selectedClassroom.id)
 }
@@ -26,8 +24,7 @@ export async function listAssignments(classroomID: number) {
     const octokit = new Octokit({ auth: await getAccessToken() })
 
     const assignments = (await octokit.request('GET /classrooms/{classroom_id}/assignments', {
-        // eslint-disable-next-line camelcase
-        classroom_id: classroomID,
+        'classroom_id': classroomID,
         headers,
     })).data
 
@@ -37,7 +34,18 @@ export async function listAssignments(classroomID: number) {
             value: assignment,
         })),
         message: 'Select an assignment',
-    })
+    }, { clearPromptOnDone: true })
 
-    console.log(selectedAssignment)
+    await listAcceptedAssignments(selectedAssignment.id)
+}
+
+export async function listAcceptedAssignments(assignmentID: number) {
+    const octokit = new Octokit({ auth: await getAccessToken() })
+
+    const assignments = (await octokit.request('GET /assignments/{assignment_id}/accepted_assignments', {
+        'assignment_id': assignmentID,
+        headers,
+    })).data
+
+    console.log(assignments.map(assignment => assignment.students.map(student => student.login)))
 }
