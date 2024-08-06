@@ -14,6 +14,7 @@ jobs:
       - name: Check if version already exists
         id: version-check
         run: |
+          ls -la
           package_version=$(node -p "require('./package.json').version")
           exists=$(gh api repos/${{ github.repository }}/releases/tags/v$package_version >/dev/null 2>&1 && echo "true" || echo "")
 
