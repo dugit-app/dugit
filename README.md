@@ -1,7 +1,7 @@
 dugit
 =================
 
-A new CLI generated with oclif
+GitHub Classroom tools for Drury University
 
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
