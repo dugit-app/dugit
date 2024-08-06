@@ -4,7 +4,7 @@ import { getAccessToken } from './auth.js'
 import { headers } from './octokit.js'
 
 export async function listClassrooms() {
-    const accessToken = getAccessToken()
+    const accessToken = await getAccessToken()
 
     const octokit = new Octokit({ auth: accessToken })
 
