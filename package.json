@@ -1,12 +1,12 @@
 {
   "name": "dugit",
-  "description": "A new CLI generated with oclif",
-  "version": "0.0.0",
+  "description": "GitHub Classroom tools for Drury University",
+  "version": "0.0.1",
   "author": "Brayden O'Neal",
   "bin": {
     "dugit": "./bin/run.js"
   },
-  "bugs": "https://github.com/braydenoneal/du-git/issues",
+  "bugs": "https://github.com/braydenoneal/dugit/issues",
   "dependencies": {
     "@inquirer/prompts": "^5.3.8",
     "@oclif/core": "^4",
@@ -40,7 +40,7 @@
     "/dist",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/braydenoneal/du-git",
+  "homepage": "https://github.com/braydenoneal/dugit",
   "keywords": [
     "oclif"
   ],
@@ -58,7 +58,7 @@
     "topicSeparator": " ",
     "topics": {}
   },
-  "repository": "braydenoneal/du-git",
+  "repository": "braydenoneal/dugit",
   "scripts": {
     "build": "shx rm -rf dist && tsc -b",
     "lint": "eslint . --ext .ts",
