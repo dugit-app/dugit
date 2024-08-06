@@ -18,4 +18,26 @@ export async function listClassrooms() {
     })
 
     console.log(selectedClassroom)
+
+    await listAssignments(selectedClassroom.id)
+}
+
+export async function listAssignments(classroomID: number) {
+    const octokit = new Octokit({ auth: await getAccessToken() })
+
+    const assignments = (await octokit.request('GET /classrooms/{classroom_id}/assignments', {
+        // eslint-disable-next-line camelcase
+        classroom_id: classroomID,
+        headers,
+    })).data
+
+    const selectedAssignment = await select({
+        choices: assignments.map(assignment => ({
+            name: assignment.title,
+            value: assignment,
+        })),
+        message: 'Select an assignment',
+    })
+
+    console.log(selectedAssignment)
 }
