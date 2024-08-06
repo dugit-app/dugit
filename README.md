@@ -20,7 +20,7 @@ $ npm install -g dugit
 $ dugit COMMAND
 running command...
 $ dugit (--version)
-dugit/0.0.5 linux-x64 node-v18.20.4
+dugit/0.0.6 linux-x64 node-v18.20.4
 $ dugit --help [COMMAND]
 USAGE
   $ dugit COMMAND
@@ -29,6 +29,10 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`dugit auth`](#dugit-auth)
+* [`dugit auth login`](#dugit-auth-login)
+* [`dugit auth logout`](#dugit-auth-logout)
+* [`dugit classroom`](#dugit-classroom)
 * [`dugit help [COMMAND]`](#dugit-help-command)
 * [`dugit plugins`](#dugit-plugins)
 * [`dugit plugins add PLUGIN`](#dugit-plugins-add-plugin)
@@ -40,6 +44,74 @@ USAGE
 * [`dugit plugins uninstall [PLUGIN]`](#dugit-plugins-uninstall-plugin)
 * [`dugit plugins unlink [PLUGIN]`](#dugit-plugins-unlink-plugin)
 * [`dugit plugins update`](#dugit-plugins-update)
+
+## `dugit auth`
+
+Manage GitHub authentication.
+
+```
+USAGE
+  $ dugit auth [-h]
+
+FLAGS
+  -h, --help  Show CLI help.
+
+DESCRIPTION
+  Manage GitHub authentication.
+```
+
+_See code: [src/commands/auth/index.ts](https://github.com/braydenoneal/dugit/blob/v0.0.6/src/commands/auth/index.ts)_
+
+## `dugit auth login`
+
+Authenticate with GitHub.
+
+```
+USAGE
+  $ dugit auth login [-h]
+
+FLAGS
+  -h, --help  Show CLI help.
+
+DESCRIPTION
+  Authenticate with GitHub.
+```
+
+_See code: [src/commands/auth/login.ts](https://github.com/braydenoneal/dugit/blob/v0.0.6/src/commands/auth/login.ts)_
+
+## `dugit auth logout`
+
+Remove GitHub authentication.
+
+```
+USAGE
+  $ dugit auth logout [-h]
+
+FLAGS
+  -h, --help  Show CLI help.
+
+DESCRIPTION
+  Remove GitHub authentication.
+```
+
+_See code: [src/commands/auth/logout.ts](https://github.com/braydenoneal/dugit/blob/v0.0.6/src/commands/auth/logout.ts)_
+
+## `dugit classroom`
+
+Manage GitHub Classroom.
+
+```
+USAGE
+  $ dugit classroom [-h]
+
+FLAGS
+  -h, --help  Show CLI help.
+
+DESCRIPTION
+  Manage GitHub Classroom.
+```
+
+_See code: [src/commands/classroom/index.ts](https://github.com/braydenoneal/dugit/blob/v0.0.6/src/commands/classroom/index.ts)_
 
 ## `dugit help [COMMAND]`
 
