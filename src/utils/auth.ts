@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 
-import { appName, clientID } from '../config.js'
+import { appName, clientID } from './config.js'
 
 const configDirectoryPath = join(homedir(), '.config/', appName)
 const configFilePath = join(configDirectoryPath, 'config.json')
@@ -29,22 +29,6 @@ async function writeConfigFile(data: ConfigFile) {
 
 async function createConfigFile() {
     await writeConfigFile({})
-}
-
-async function getAccessToken() {
-    mkdirSync(configDirectoryPath, { recursive: true })
-
-    if (existsSync(configFilePath)) {
-        const configFile = await readConfigFile()
-
-        if (Object.hasOwn(configFile, 'accessToken')) {
-            return configFile.accessToken
-        }
-    } else {
-        await createConfigFile()
-    }
-
-    return ''
 }
 
 async function requestDeviceCode() {
@@ -121,6 +105,23 @@ async function pollForToken(deviceCode: string, interval: number) {
     return response.access_token
 }
 
+export async function getAccessToken() {
+    mkdirSync(configDirectoryPath, { recursive: true })
+
+    if (existsSync(configFilePath)) {
+        const configFile = await readConfigFile()
+
+        if (Object.hasOwn(configFile, 'accessToken')) {
+            return configFile.accessToken
+        }
+    } else {
+        await createConfigFile()
+    }
+
+    console.log(`Please run \`${appName} auth login\` to authenticate with GitHub.`)
+    exit(1)
+}
+
 export async function login() {
     const response = await requestDeviceCode()
 
@@ -144,10 +145,4 @@ export async function logout() {
     }
 
     await writeConfigFile(configFile)
-}
-
-export async function authenticate() {
-    if (await getAccessToken() === '') {
-        await login()
-    }
 }
