@@ -41,7 +41,7 @@ jobs:
           npm install
           npm exec oclif manifest
           npm exec oclif readme
-          shx rm -f oclif.manifest.json
+          rm -f oclif.manifest.json
           if [ -n "$(git status --porcelain)" ]; then
             git add .
             git commit -am "chore: update README.md"
