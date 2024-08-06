@@ -1,6 +1,6 @@
 import { Command } from '@oclif/core'
 
-import { login } from '../../utils/auth.js'
+import { authenticate } from '../../utils/auth.js'
 
 export default class World extends Command {
     static args = {}
@@ -16,6 +16,6 @@ hello world! (./src/commands/hello/world.ts)
     static flags = {}
 
     async run(): Promise<void> {
-        await login()
+        await authenticate()
     }
 }

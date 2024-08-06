@@ -1,5 +1,17 @@
 import { exit } from '@oclif/core/errors'
 import axios from 'axios'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { homedir } from 'node:os'
+import { join } from 'node:path'
+
+import { appName, clientID } from '../config.js'
+
+const configDirectoryPath = join(homedir(), '.config/', appName)
+const configFilePath = join(configDirectoryPath, 'config.json')
+
+type ConfigFile = {
+    accessToken?: string
+}
 
 function sleep(seconds: number) {
     return new Promise(resolve => {
@@ -7,14 +19,42 @@ function sleep(seconds: number) {
     })
 }
 
-export async function requestDeviceCode() {
+async function readConfigFile(): Promise<ConfigFile> {
+    return JSON.parse(readFileSync(configFilePath, 'utf8'))
+}
+
+async function writeConfigFile(data: ConfigFile) {
+    writeFileSync(configFilePath, JSON.stringify(data), 'utf8')
+}
+
+async function createConfigFile() {
+    await writeConfigFile({})
+}
+
+async function getAccessToken() {
+    mkdirSync(configDirectoryPath, { recursive: true })
+
+    if (existsSync(configFilePath)) {
+        const configFile = await readConfigFile()
+
+        if (Object.hasOwn(configFile, 'accessToken')) {
+            return configFile.accessToken
+        }
+    } else {
+        await createConfigFile()
+    }
+
+    return ''
+}
+
+async function requestDeviceCode() {
     const response = await axios.post('https://github.com/login/device/code', {},
         {
             headers: {
                 'Accept': 'application/json',
             },
             params: {
-                'client_id': 'Iv23lijtn2t2viXRUXCe',
+                'client_id': clientID,
             },
         },
     )
@@ -22,14 +62,14 @@ export async function requestDeviceCode() {
     return response.data
 }
 
-export async function requestToken(deviceCode: string) {
+async function requestToken(deviceCode: string) {
     const response = await axios.post('https://github.com/login/oauth/access_token', {},
         {
             headers: {
                 'Accept': 'application/json',
             },
             params: {
-                'client_id': 'Iv23lijtn2t2viXRUXCe',
+                'client_id': clientID,
                 'device_code': deviceCode,
                 'grant_type': 'urn:ietf:params:oauth:grant-type:device_code',
             },
@@ -39,7 +79,7 @@ export async function requestToken(deviceCode: string) {
     return response.data
 }
 
-export async function pollForToken(deviceCode: string, interval: number) {
+async function pollForToken(deviceCode: string, interval: number) {
     await sleep(interval)
 
     const response = await requestToken(deviceCode)
@@ -88,5 +128,26 @@ export async function login() {
 
     const accessToken = await pollForToken(response.device_code, response.interval)
 
-    console.log(`Access token: ${accessToken}`)
+    const configFile = await readConfigFile()
+    configFile.accessToken = accessToken
+
+    await writeConfigFile(configFile)
+
+    console.log('Successfully authenticated!')
+}
+
+export async function logout() {
+    const configFile = await readConfigFile()
+
+    if (Object.hasOwn(configFile, 'accessToken')) {
+        delete configFile.accessToken
+    }
+
+    await writeConfigFile(configFile)
+}
+
+export async function authenticate() {
+    if (await getAccessToken() === '') {
+        await login()
+    }
 }
