@@ -1,5 +1,6 @@
 import { Command, Flags } from '@oclif/core'
-import { listClassrooms } from '../../utils/classroom.js'
+
+import { createInstructorRepository } from '../../utils/classroom.js'
 
 export default class Auth extends Command {
     static args = {}
@@ -11,6 +12,6 @@ export default class Auth extends Command {
     }
 
     async run(): Promise<void> {
-        await listClassrooms()
+        await createInstructorRepository()
     }
 }

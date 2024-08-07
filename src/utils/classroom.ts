@@ -1,51 +1,85 @@
-import { select } from '@inquirer/prompts'
+import { input, select } from '@inquirer/prompts'
 import { Octokit } from 'octokit'
+import slug from 'slug'
 
 import { getAccessToken } from './auth.js'
 import { headers } from './octokit.js'
 
-export async function listClassrooms() {
+
+export async function getClassrooms() {
     const octokit = new Octokit({ auth: await getAccessToken() })
 
-    const classrooms = (await octokit.request('GET /classrooms', { headers })).data
-
-    const selectedClassroom = await select({
-        choices: classrooms.map(classroom => ({
-            name: classroom.name,
-            value: classroom,
-        })),
-        message: 'Select a classroom',
-    }, { clearPromptOnDone: true })
-
-    await listAssignments(selectedClassroom.id)
+    return (await octokit.request('GET /classrooms', { headers })).data
 }
 
-export async function listAssignments(classroomID: number) {
+export async function getClassroom(classroomID: number) {
     const octokit = new Octokit({ auth: await getAccessToken() })
 
-    const assignments = (await octokit.request('GET /classrooms/{classroom_id}/assignments', {
+    return (await octokit.request('GET /classrooms/{classroom_id}', {
         'classroom_id': classroomID,
         headers,
     })).data
+}
 
-    const selectedAssignment = await select({
-        choices: assignments.map(assignment => ({
+export async function selectClassroom() {
+    const selectedClassroom = await select({
+        choices: (await getClassrooms()).map(classroom => ({
+            name: classroom.name,
+            value: classroom.id,
+        })),
+        message: 'Select a classroom:',
+    }, { clearPromptOnDone: true })
+
+    return getClassroom(selectedClassroom)
+}
+
+export async function getAssignments(classroomID: number) {
+    const octokit = new Octokit({ auth: await getAccessToken() })
+
+    return (await octokit.request('GET /classrooms/{classroom_id}/assignments', {
+        'classroom_id': classroomID,
+        headers,
+    })).data
+}
+
+export async function selectAssignment(classroomID: number) {
+    return select({
+        choices: (await getAssignments(classroomID)).map(assignment => ({
             name: assignment.title,
             value: assignment,
         })),
-        message: 'Select an assignment',
+        message: 'Select an assignment:',
     }, { clearPromptOnDone: true })
-
-    await listAcceptedAssignments(selectedAssignment.id)
 }
 
-export async function listAcceptedAssignments(assignmentID: number) {
+export async function getAcceptedAssignments(assignmentID: number) {
     const octokit = new Octokit({ auth: await getAccessToken() })
 
-    const assignments = (await octokit.request('GET /assignments/{assignment_id}/accepted_assignments', {
+    return (await octokit.request('GET /assignments/{assignment_id}/accepted_assignments', {
         'assignment_id': assignmentID,
         headers,
     })).data
+}
 
-    console.log(assignments.map(assignment => assignment.students.map(student => student.login)))
+export async function createInstructorRepository() {
+    const classroom = await selectClassroom()
+    const assignment = await selectAssignment(classroom.id)
+    const gradeName = await input({message: 'Give the grade a name:'}, { clearPromptOnDone: true })
+
+    const organizationName = classroom.organization.login
+    const repositoryName = `${assignment.slug}-${slug(gradeName)}-instructor`
+
+    const octokit = new Octokit({ auth: await getAccessToken() })
+
+    const response = (await octokit.request('POST /orgs/{org}/repos', {
+        'has_issues': false,
+        'has_projects': false,
+        'has_wiki': false,
+        headers,
+        name: repositoryName,
+        org: organizationName,
+        'private': true,
+    })).data
+
+    console.log(response.html_url)
 }
