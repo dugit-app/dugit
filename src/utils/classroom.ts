@@ -1,11 +1,13 @@
 import { input, select } from '@inquirer/prompts'
 import { randomUUID } from 'node:crypto'
 import { rmSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { Octokit } from 'octokit'
 import { simpleGit } from 'simple-git'
 import slug from 'slug'
 
 import { getAccessToken } from './auth.js'
+import { configDirectoryPath } from './config.js'
 import { headers } from './octokit.js'
 
 export async function getClassrooms() {
@@ -93,11 +95,12 @@ export async function createInstructorRepository() {
 
     const git = simpleGit()
 
+    await git.cwd(join(configDirectoryPath))
     await git.clone(response.html_url)
 
-    writeFileSync(`./${repositoryName}/README.md`, readMeString)
+    writeFileSync(join(configDirectoryPath, repositoryName, 'README.md'), readMeString)
 
-    await git.cwd(`./${repositoryName}`)
+    await git.cwd(join(configDirectoryPath, repositoryName))
 
     await git.addConfig('user.email', 'user@example.com')
     await git.addConfig('user.name', 'dugit')
@@ -106,7 +109,7 @@ export async function createInstructorRepository() {
     await git.commit('Generate README.md')
     await git.push(['-u', 'origin', 'main'])
 
-    rmSync(`./${repositoryName}`, { force: true, recursive: true })
+    rmSync(join(configDirectoryPath, repositoryName), { force: true, recursive: true })
 
     console.log(response.html_url)
 }

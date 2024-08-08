@@ -1,13 +1,8 @@
 import { exit } from '@oclif/core/errors'
 import axios from 'axios'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { homedir } from 'node:os'
-import { join } from 'node:path'
 
-import { appName, clientID } from './config.js'
-
-const configDirectoryPath = join(homedir(), '.config/', appName)
-const configFilePath = join(configDirectoryPath, 'config.json')
+import { appName, clientID, configDirectoryPath, configFilePath } from './config.js'
 
 type ConfigFile = {
     accessToken?: string
