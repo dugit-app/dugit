@@ -13,6 +13,7 @@
     "@oclif/plugin-help": "^6",
     "@oclif/plugin-plugins": "^5",
     "axios": "^1.7.3",
+    "execa": "^9.3.0",
     "octokit": "^4.0.2",
     "slug": "^9.1.0"
   },

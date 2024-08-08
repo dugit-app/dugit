@@ -1,10 +1,12 @@
 import { input, select } from '@inquirer/prompts'
+import { $, execa } from 'execa'
+import { randomUUID } from 'node:crypto'
+import { writeFileSync } from 'node:fs'
 import { Octokit } from 'octokit'
 import slug from 'slug'
 
 import { getAccessToken } from './auth.js'
 import { headers } from './octokit.js'
-
 
 export async function getClassrooms() {
     const octokit = new Octokit({ auth: await getAccessToken() })
@@ -64,10 +66,18 @@ export async function getAcceptedAssignments(assignmentID: number) {
 export async function createInstructorRepository() {
     const classroom = await selectClassroom()
     const assignment = await selectAssignment(classroom.id)
-    const gradeName = await input({message: 'Give the grade a name:'}, { clearPromptOnDone: true })
+    const gradeName = await input({ message: 'Give the grade a name:' }, { clearPromptOnDone: true })
 
     const organizationName = classroom.organization.login
     const repositoryName = `${assignment.slug}-${slug(gradeName)}-instructor`
+
+    let readMeString = '| Name | ID | Student\'s URL | TA\'s URL |\n| - | - | - | - |\n'
+
+    const acceptedAssignments = await getAcceptedAssignments(assignment.id)
+
+    for (const acceptedAssignment of acceptedAssignments) {
+        readMeString += `| ${acceptedAssignment.students[0].login} | ${randomUUID()} | ${acceptedAssignment.repository.html_url} | ${acceptedAssignment.repository.html_url} |\n`
+    }
 
     const octokit = new Octokit({ auth: await getAccessToken() })
 
@@ -80,6 +90,13 @@ export async function createInstructorRepository() {
         org: organizationName,
         'private': true,
     })).data
+
+    await $`git clone ${response.html_url}`
+    writeFileSync(`./${repositoryName}/README.md`, readMeString)
+    await $({ cwd: `./${repositoryName}` })`git add README.md`
+    await execa({ cwd: `./${repositoryName}` })('git', ['commit', '-am', 'Add README.md'])
+    await $({ cwd: `./${repositoryName}` })`git push -u origin main`
+    await $`rm -rf ${repositoryName}`
 
     console.log(response.html_url)
 }
