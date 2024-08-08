@@ -1,6 +1,6 @@
 import { input, select } from '@inquirer/prompts'
 import { randomUUID } from 'node:crypto'
-import { rmSync, writeFileSync } from 'node:fs'
+import { rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { Octokit } from 'octokit'
 import { simpleGit } from 'simple-git'
@@ -71,17 +71,52 @@ export async function createInstructorRepository() {
     const gradeName = await input({ message: 'Give the grade a name:' }, { clearPromptOnDone: true })
 
     const organizationName = classroom.organization.login
-    const repositoryName = `${assignment.slug}-${slug(gradeName)}-instructor`
+    const assignmentSlug = assignment.slug
+    const gradeSlug = slug(gradeName)
+
+    const octokit = new Octokit({ auth: await getAccessToken() })
 
     let readMeString = '| Name | ID | Student\'s URL | TA\'s URL |\n| - | - | - | - |\n'
 
     const acceptedAssignments = await getAcceptedAssignments(assignment.id)
 
-    for (const acceptedAssignment of acceptedAssignments) {
-        readMeString += `| ${acceptedAssignment.students[0].login} | ${randomUUID()} | ${acceptedAssignment.repository.html_url} | ${acceptedAssignment.repository.html_url} |\n`
-    }
+    acceptedAssignments.map(async acceptedAssignment => {
+        const id = randomUUID()
 
-    const octokit = new Octokit({ auth: await getAccessToken() })
+        const repositoryName = `${assignmentSlug}-${gradeSlug}-student-${id}`
+
+        const response = (await octokit.request('POST /orgs/{org}/repos', {
+            'has_issues': false,
+            'has_projects': false,
+            'has_wiki': false,
+            headers,
+            name: repositoryName,
+            org: organizationName,
+            'private': true,
+        })).data
+
+        readMeString += `| ${acceptedAssignment.students[0].login} | ${id} | ${acceptedAssignment.repository.html_url} | ${response.html_url} |\n`
+
+        const repositoryPath = join(configDirectoryPath, 'repo')
+
+        const git = simpleGit()
+
+        await git.cwd(configDirectoryPath)
+        await git.clone(acceptedAssignment.repository.html_url, repositoryPath)
+
+        await git.cwd(repositoryPath)
+
+        // await git.addConfig('user.email', 'user@example.com')
+        // await git.addConfig('user.name', 'dugit')
+        //
+        // await git.add('README.md')
+        // await git.commit('Generate README.md')
+        // await git.push(['-u', 'origin', 'main'])
+
+        await rm(repositoryPath, { force: true, recursive: true })
+    })
+
+    const repositoryName = `${assignmentSlug}-${gradeSlug}-instructor`
 
     const response = (await octokit.request('POST /orgs/{org}/repos', {
         'has_issues': false,
@@ -93,14 +128,16 @@ export async function createInstructorRepository() {
         'private': true,
     })).data
 
+    const repositoryPath = join(configDirectoryPath, 'repo')
+
     const git = simpleGit()
 
     await git.cwd(join(configDirectoryPath))
-    await git.clone(response.html_url)
+    await git.clone(response.html_url, repositoryPath)
 
-    writeFileSync(join(configDirectoryPath, repositoryName, 'README.md'), readMeString)
+    await writeFile(join(repositoryPath, 'README.md'), readMeString)
 
-    await git.cwd(join(configDirectoryPath, repositoryName))
+    await git.cwd(repositoryPath)
 
     await git.addConfig('user.email', 'user@example.com')
     await git.addConfig('user.name', 'dugit')
@@ -109,7 +146,7 @@ export async function createInstructorRepository() {
     await git.commit('Generate README.md')
     await git.push(['-u', 'origin', 'main'])
 
-    rmSync(join(configDirectoryPath, repositoryName), { force: true, recursive: true })
+    await rm(repositoryPath, { force: true, recursive: true })
 
     console.log(response.html_url)
 }

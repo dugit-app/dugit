@@ -1,6 +1,7 @@
 import { exit } from '@oclif/core/errors'
 import axios from 'axios'
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync } from 'node:fs'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 
 import { appName, clientID, configDirectoryPath, configFilePath } from './config.js'
 
@@ -15,11 +16,11 @@ function sleep(seconds: number) {
 }
 
 async function readConfigFile(): Promise<ConfigFile> {
-    return JSON.parse(readFileSync(configFilePath, 'utf8'))
+    return JSON.parse(await readFile(configFilePath, 'utf8'))
 }
 
 async function writeConfigFile(data: ConfigFile) {
-    writeFileSync(configFilePath, JSON.stringify(data), 'utf8')
+    await writeFile(configFilePath, JSON.stringify(data), 'utf8')
 }
 
 async function createConfigFile() {
@@ -101,7 +102,7 @@ async function pollForToken(deviceCode: string, interval: number) {
 }
 
 export async function getAccessToken() {
-    mkdirSync(configDirectoryPath, { recursive: true })
+    await mkdir(configDirectoryPath, { recursive: true })
 
     if (existsSync(configFilePath)) {
         const configFile = await readConfigFile()
