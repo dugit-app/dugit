@@ -1,7 +1,7 @@
 import { input, select } from '@inquirer/prompts'
 import { $, execa } from 'execa'
 import { randomUUID } from 'node:crypto'
-import { writeFileSync } from 'node:fs'
+import { rmSync, writeFileSync } from 'node:fs'
 import { Octokit } from 'octokit'
 import slug from 'slug'
 
@@ -96,7 +96,7 @@ export async function createInstructorRepository() {
     await $({ cwd: `./${repositoryName}` })`git add README.md`
     await execa({ cwd: `./${repositoryName}` })('git', ['commit', '-am', 'Add README.md'])
     await $({ cwd: `./${repositoryName}` })`git push -u origin main`
-    await $`rm -rf ${repositoryName}`
+    rmSync(`./${repositoryName}`, { force: true, recursive: true })
 
     console.log(response.html_url)
 }
