@@ -1,8 +1,8 @@
 import { input, select } from '@inquirer/prompts'
-import { $, execa } from 'execa'
 import { randomUUID } from 'node:crypto'
 import { rmSync, writeFileSync } from 'node:fs'
 import { Octokit } from 'octokit'
+import { simpleGit } from 'simple-git'
 import slug from 'slug'
 
 import { getAccessToken } from './auth.js'
@@ -91,11 +91,21 @@ export async function createInstructorRepository() {
         'private': true,
     })).data
 
-    await $`git clone ${response.html_url}`
+    const git = simpleGit()
+
+    await git.clone(response.html_url)
+
     writeFileSync(`./${repositoryName}/README.md`, readMeString)
-    await $({ cwd: `./${repositoryName}` })`git add README.md`
-    await execa({ cwd: `./${repositoryName}` })('git', ['commit', '-am', 'Add README.md'])
-    await $({ cwd: `./${repositoryName}` })`git push -u origin main`
+
+    await git.cwd(`./${repositoryName}`)
+
+    await git.addConfig('user.email', 'user@example.com')
+    await git.addConfig('user.name', 'dugit')
+
+    await git.add('README.md')
+    await git.commit('Generate README.md')
+    await git.push(['-u', 'origin', 'main'])
+
     rmSync(`./${repositoryName}`, { force: true, recursive: true })
 
     console.log(response.html_url)
