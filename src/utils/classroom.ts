@@ -80,7 +80,7 @@ export async function createInstructorRepository() {
 
     const acceptedAssignments = await getAcceptedAssignments(assignment.id)
 
-    acceptedAssignments.map(async acceptedAssignment => {
+    for await (const acceptedAssignment of acceptedAssignments) {
         const id = randomUUID()
 
         const repositoryName = `${assignmentSlug}-${gradeSlug}-student-${id}`
@@ -99,24 +99,108 @@ export async function createInstructorRepository() {
 
         const repositoryPath = join(configDirectoryPath, 'repo')
 
+        await rm(repositoryPath, { force: true, recursive: true })
+        console.log('rm')
+
         const git = simpleGit()
 
         await git.cwd(configDirectoryPath)
+        console.log('cwd')
         await git.clone(acceptedAssignment.repository.html_url, repositoryPath)
+        console.log('clone')
 
         await git.cwd(repositoryPath)
+        console.log('cwd')
 
-        // eslint-disable-next-line no-warning-comments
-        /*
-        TODO:
-         - Change author of all commits
-         - Set remote to new repo
-         - Push to new repo
-         - Share with TA(s)
-         */
+        await git.remote(['set-url', '--push', 'origin', response.html_url])
+        console.log('remote')
+
+        const defaultBranchName = (await git.branch()).current
+        console.log(defaultBranchName)
+
+        const branches = await git.branch(['-r'])
+        console.log(branches)
+
+        for await (const branch of branches.all) {
+            const branchName = branch.slice(branch.search('/') + 1)
+
+            await git.checkout(branchName)
+            console.log(`checkout ${branchName}`)
+
+            await git.addConfig('user.email', 'user@example.com')
+            await git.addConfig('user.name', 'Anonymous')
+            console.log('config')
+
+            await git.rebase(['-r', '--root', '--exec', 'git commit --amend --no-edit --reset-author'])
+            console.log('rebase')
+        }
+
+        await git.push(['origin', '--all'])
+        console.log('push')
+
+        const branches2 = await git.branch(['-r'])
+        console.log(branches2)
 
         await rm(repositoryPath, { force: true, recursive: true })
-    })
+        console.log('rm')
+    }
+
+    // for await (const acceptedAssignment of acceptedAssignments) {
+    //     const id = randomUUID()
+    //
+    //     const repositoryName = `${assignmentSlug}-${gradeSlug}-student-${id}`
+    //
+    //     const response = (await octokit.request('POST /orgs/{org}/repos', {
+    //         'has_issues': false,
+    //         'has_projects': false,
+    //         'has_wiki': false,
+    //         headers,
+    //         name: repositoryName,
+    //         org: organizationName,
+    //         'private': true,
+    //     })).data
+    //
+    //     readMeString += `| ${acceptedAssignment.students[0].login} | ${id} | ${acceptedAssignment.repository.html_url} | ${response.html_url} |\n`
+    //
+    //     const repositoryPath = join(configDirectoryPath, 'repo')
+    //
+    //     await rm(repositoryPath, { force: true, recursive: true })
+    //     console.log('rm')
+    //
+    //     const git = simpleGit()
+    //
+    //     await git.cwd(configDirectoryPath)
+    //     console.log('cwd')
+    //     await git.clone(acceptedAssignment.repository.html_url, repositoryPath)
+    //     console.log('clone')
+    //
+    //     await git.cwd(repositoryPath)
+    //     console.log('cwd')
+    //
+    //     await git.remote(['set-url', '--push', 'origin', response.html_url])
+    //
+    //     await git.addConfig('user.email', 'user@example.com')
+    //     await git.addConfig('user.name', 'Anonymous')
+    //     console.log('config')
+    //
+    //     await git.rebase(['-r', '--root', '--exec', 'git commit --amend --no-edit --reset-author'])
+    //     console.log('rebase')
+    //
+    //     await git.push(['--mirror', '--force'])
+    //     console.log('push')
+    //
+    //     await rm(repositoryPath, { force: true, recursive: true })
+    //     console.log('rm')
+    //
+    //     // eslint-disable-next-line no-warning-comments
+    //     /*
+    //     TODO:
+    //      - Change author of all commits
+    //      - Set remote to new repo
+    //      - Push to new repo
+    //      - Share with TA(s)
+    //      */
+    // }
 
     const repositoryName = `${assignmentSlug}-${gradeSlug}-instructor`
 
@@ -134,7 +218,7 @@ export async function createInstructorRepository() {
 
     const git = simpleGit()
 
-    await git.cwd(join(configDirectoryPath))
+    await git.cwd(configDirectoryPath)
     await git.clone(response.html_url, repositoryPath)
 
     await writeFile(join(repositoryPath, 'README.md'), readMeString)
