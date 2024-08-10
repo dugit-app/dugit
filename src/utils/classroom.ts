@@ -65,6 +65,10 @@ export async function getAcceptedAssignments(assignmentID: number) {
     })).data
 }
 
+export async function tokenizeURL(URL: string) {
+    return `https://oauth2:${await getAccessToken()}@${URL.slice(8)}`
+}
+
 export async function createInstructorRepository() {
     const classroom = await selectClassroom()
     const assignment = await selectAssignment(classroom.id)
@@ -104,11 +108,18 @@ export async function createInstructorRepository() {
         const git = simpleGit()
 
         await git.cwd(configDirectoryPath)
-        await git.clone(acceptedAssignment.repository.html_url, repositoryPath)
+
+        const tokenURL = await tokenizeURL(acceptedAssignment.repository.html_url)
+        console.log(acceptedAssignment.repository.html_url)
+        console.log(tokenURL)
+
+        await git.clone(tokenURL, repositoryPath)
 
         await git.cwd(repositoryPath)
 
-        await git.remote(['set-url', '--push', 'origin', response.html_url])
+        const anonymizedURL = await tokenizeURL(response.html_url)
+
+        await git.remote(['set-url', '--push', 'origin', anonymizedURL])
 
         const branches = await git.branch(['-r'])
 
@@ -128,7 +139,7 @@ export async function createInstructorRepository() {
         await rm(repositoryPath, { force: true, recursive: true })
 
         // eslint-disable-next-line no-warning-comments
-        // TODO: Share repo with TA(s), pass token to git
+        // TODO: Share repo with TA(s)
     }
 
     const repositoryName = `${assignmentSlug}-${gradeSlug}-instructor`
@@ -148,11 +159,16 @@ export async function createInstructorRepository() {
     const git = simpleGit()
 
     await git.cwd(configDirectoryPath)
-    await git.clone(response.html_url, repositoryPath)
+
+    const instructorURL = await tokenizeURL(response.html_url)
+
+    await git.clone(instructorURL, repositoryPath)
 
     await writeFile(join(repositoryPath, 'README.md'), readMeString)
 
     await git.cwd(repositoryPath)
+
+    await git.remote(['set-url', 'origin', instructorURL])
 
     await git.addConfig('user.email', 'user@example.com')
     await git.addConfig('user.name', 'dugit')
