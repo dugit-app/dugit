@@ -110,8 +110,6 @@ export async function createInstructorRepository() {
         await git.cwd(configDirectoryPath)
 
         const tokenURL = await tokenizeURL(acceptedAssignment.repository.html_url)
-        console.log(acceptedAssignment.repository.html_url)
-        console.log(tokenURL)
 
         await git.clone(tokenURL, repositoryPath)
 
