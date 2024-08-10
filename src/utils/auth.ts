@@ -1,30 +1,13 @@
 import { exit } from '@oclif/core/errors'
 import axios from 'axios'
-import { existsSync } from 'node:fs'
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
 
-import { appName, clientID, configDirectoryPath, configFilePath } from './config.js'
-
-type ConfigFile = {
-    accessToken?: string
-}
+import { appName, clientID } from './config.js'
+import { readConfigFile, writeConfigFile } from './files.js'
 
 function sleep(seconds: number) {
     return new Promise(resolve => {
         setTimeout(resolve, seconds * 1000)
     })
-}
-
-async function readConfigFile(): Promise<ConfigFile> {
-    return JSON.parse(await readFile(configFilePath, 'utf8'))
-}
-
-async function writeConfigFile(data: ConfigFile) {
-    await writeFile(configFilePath, JSON.stringify(data), 'utf8')
-}
-
-async function createConfigFile() {
-    await writeConfigFile({})
 }
 
 async function requestDeviceCode() {
@@ -90,20 +73,14 @@ async function pollForToken(deviceCode: string, interval: number) {
 }
 
 export async function getAccessToken() {
-    await mkdir(configDirectoryPath, { recursive: true })
+    const configFile = await readConfigFile()
 
-    if (existsSync(configFilePath)) {
-        const configFile = await readConfigFile()
-
-        if (Object.hasOwn(configFile, 'accessToken')) {
-            return configFile.accessToken
-        }
-    } else {
-        await createConfigFile()
+    if (Object.hasOwn(configFile, 'accessToken')) {
+        return configFile.accessToken
     }
 
     console.log(`Please run \`${appName} auth login\` to authenticate with GitHub.`)
-    exit(1)
+    exit(0)
 }
 
 export async function tokenizeURL(URL: string) {
