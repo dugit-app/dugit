@@ -1,4 +1,4 @@
-import { select } from '@inquirer/prompts'
+import { confirm, select } from '@inquirer/prompts'
 import { exit } from '@oclif/core/errors'
 import { Octokit } from 'octokit'
 
@@ -52,19 +52,29 @@ export async function organizationCommand() {
         choices: ([
             {
                 name: 'Delete',
-                value: 'delete'
+                value: 'delete',
             },
             {
                 name: 'Cancel',
-                value: 'cancel'
-            }
+                value: 'cancel',
+            },
         ]),
         message: 'Select an option:',
     }, { clearPromptOnDone: true })
 
     switch (option) {
         case 'delete': {
-            await deleteRepository(repository.owner.login, repository.name)
+            const doDelete = await confirm({
+                default: false,
+                message: `Are you sure you want to delete ${repository.full_name}?`
+            }, { clearPromptOnDone: true })
+
+            if (doDelete) {
+                await deleteRepository(repository.owner.login, repository.name)
+            } else {
+                console.log('Cancelled')
+                exit(0)
+            }
 
             break
         }

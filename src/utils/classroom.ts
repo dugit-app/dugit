@@ -106,12 +106,14 @@ export async function createInstructorRepository() {
 
         await git.cwd(repositoryPath)
 
-        // await git.addConfig('user.email', 'user@example.com')
-        // await git.addConfig('user.name', 'dugit')
-        //
-        // await git.add('README.md')
-        // await git.commit('Generate README.md')
-        // await git.push(['-u', 'origin', 'main'])
+        // eslint-disable-next-line no-warning-comments
+        /*
+        TODO:
+         - Change author of all commits
+         - Set remote to new repo
+         - Push to new repo
+         - Share with TA(s)
+         */
 
         await rm(repositoryPath, { force: true, recursive: true })
     })
