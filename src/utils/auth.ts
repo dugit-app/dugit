@@ -28,45 +28,33 @@ async function createConfigFile() {
 }
 
 async function requestDeviceCode() {
-    const response = await axios.post('https://github.com/login/device/code', {},
+    return (await axios.post('https://github.com/login/device/code', {},
         {
-            headers: {
-                'Accept': 'application/json',
-            },
-            params: {
-                'client_id': clientID,
-            },
+            headers: { 'Accept': 'application/json' },
+            params: { 'client_id': clientID },
         },
-    )
-
-    return response.data
+    )).data
 }
 
 async function requestToken(deviceCode: string) {
-    const response = await axios.post('https://github.com/login/oauth/access_token', {},
+    return (await axios.post('https://github.com/login/oauth/access_token', {},
         {
-            headers: {
-                'Accept': 'application/json',
-            },
+            headers: { 'Accept': 'application/json' },
             params: {
                 'client_id': clientID,
                 'device_code': deviceCode,
                 'grant_type': 'urn:ietf:params:oauth:grant-type:device_code',
             },
         },
-    )
-
-    return response.data
+    )).data
 }
 
 async function pollForToken(deviceCode: string, interval: number) {
     await sleep(interval)
-
     const response = await requestToken(deviceCode)
 
     if (Object.hasOwn(response, 'error')) {
         const { error } = response
-
         let terminate = false
 
         switch (error) {
@@ -116,6 +104,10 @@ export async function getAccessToken() {
 
     console.log(`Please run \`${appName} auth login\` to authenticate with GitHub.`)
     exit(1)
+}
+
+export async function tokenizeURL(URL: string) {
+    return `https://oauth2:${await getAccessToken()}@${URL.slice(8)}`
 }
 
 export async function login() {
