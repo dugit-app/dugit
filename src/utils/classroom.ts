@@ -8,7 +8,7 @@ import { adjectives, animals, uniqueNamesGenerator } from 'unique-names-generato
 
 import { getAccessToken, tokenizeURL } from './auth.js'
 import { configDirectoryPath } from './config.js'
-import { readConfigFile, writeConfigFile } from './files.js'
+import { Grade, readConfigFile, writeConfigFile, writeJsonFile } from './files.js'
 import { headers } from './octokit.js'
 import { deleteRepository } from './org.js'
 
@@ -190,9 +190,24 @@ export async function deleteTeachingAssistant(classroomID: number, username: str
 }
 
 // eslint-disable-next-line max-params
-export async function createGrade(assignmentID: number, name: string, instructions: string, availablePoints: number, instructorRepositoryName: string, teachingAssistantRepositoryName: string, anonymousRepositoryNames: string[]) {
+export async function createGrade(assignmentID: number, name: string, instructions: string, availablePoints: number, instructorRepositoryName: string, teachingAssistantRepositoryName: string, anonymousRepositoryNames: {
+    anonymousName: string,
+    repositoryName: string,
+    studentName: string
+}[]): Promise<Grade> {
     const assignment = await getAssignment(assignmentID)
     const classroom = await getClassroom(assignment.classroom.id)
+
+    const grade = {
+        availablePoints,
+        instructions,
+        name,
+        repositories: {
+            anonymous: anonymousRepositoryNames,
+            instructor: instructorRepositoryName,
+            teachingAssistant: teachingAssistantRepositoryName,
+        },
+    }
 
     const configFile = await readConfigFile()
 
@@ -201,16 +216,7 @@ export async function createGrade(assignmentID: number, name: string, instructio
     if (configClassroom === undefined) {
         configFile.classrooms.push({
             assignments: [{
-                grades: [{
-                    availablePoints,
-                    instructions,
-                    name,
-                    repositories: {
-                        anonymous: anonymousRepositoryNames,
-                        instructor: instructorRepositoryName,
-                        teachingAssistant: teachingAssistantRepositoryName,
-                    },
-                }],
+                grades: [grade],
                 id: assignment.id,
                 title: assignment.title,
             }],
@@ -220,43 +226,26 @@ export async function createGrade(assignmentID: number, name: string, instructio
         })
 
         await writeConfigFile(configFile)
-        return
+        return grade
     }
 
     const configAssignment = configClassroom.assignments.find(a => a.id === assignmentID)
 
     if (configAssignment === undefined) {
         configClassroom.assignments.push({
-            grades: [{
-                availablePoints,
-                instructions,
-                name,
-                repositories: {
-                    anonymous: anonymousRepositoryNames,
-                    instructor: instructorRepositoryName,
-                    teachingAssistant: teachingAssistantRepositoryName,
-                },
-            }],
+            grades: [grade],
             id: assignment.id,
             title: assignment.title,
         })
 
         await writeConfigFile(configFile)
-        return
+        return grade
     }
 
-    configAssignment.grades.push({
-        availablePoints,
-        instructions,
-        name,
-        repositories: {
-            anonymous: anonymousRepositoryNames,
-            instructor: instructorRepositoryName,
-            teachingAssistant: teachingAssistantRepositoryName,
-        },
-    })
+    configAssignment.grades.push(grade)
 
     await writeConfigFile(configFile)
+    return grade
 }
 
 export async function getGrades(assignmentID: number) {
@@ -316,7 +305,7 @@ export async function deleteGrade(assignmentID: number, name: string) {
         const organizationName = classroom.organization.login
 
         for await (const anonymous of repositories.anonymous) {
-            await deleteRepository(organizationName, anonymous)
+            await deleteRepository(organizationName, anonymous.repositoryName)
         }
 
         await deleteRepository(organizationName, repositories.teachingAssistant)
@@ -366,7 +355,7 @@ async function addRepositoryCollaborator(org: string, repo: string, username: st
 }
 
 // eslint-disable-next-line max-params
-async function pushAnonymousRepository(studentURL: string, anonymousURL: string, classroomID: number, organizationName: string, repositoryName: string) {
+async function pushAnonymousRepository(studentURL: string, anonymousURL: string, classroomID: number, organizationName: string, repositoryName: string, anonymousName: string) {
     const repositoryPath = join(configDirectoryPath, 'repo')
     await rm(repositoryPath, { force: true, recursive: true })
 
@@ -385,7 +374,7 @@ async function pushAnonymousRepository(studentURL: string, anonymousURL: string,
         await git.checkout(branchName)
 
         await git.addConfig('user.email', 'user@example.com')
-        await git.addConfig('user.name', 'Anonymous')
+        await git.addConfig('user.name', anonymousName)
 
         await git.rebase(['-r', '--root', '--exec', 'git commit --amend --no-edit --reset-author'])
     }
@@ -406,7 +395,7 @@ function generateAnonymousName() {
     return uniqueNamesGenerator({ dictionaries: [adjectives, animals], separator: '-' })
 }
 
-async function pushInstructorRepository(URL: string, readMeString: string) {
+async function pushInstructorRepository(URL: string, readMeString: string, grade: Grade) {
     const repositoryPath = join(configDirectoryPath, 'repo')
     await rm(repositoryPath, { force: true, recursive: true })
 
@@ -424,16 +413,19 @@ async function pushInstructorRepository(URL: string, readMeString: string) {
     await git.addConfig('user.name', 'dugit')
 
     await writeFile(join(repositoryPath, 'README.md'), readMeString)
-
     await git.add('README.md')
-    await git.commit('Generate README.md')
+
+    await writeJsonFile(join(repositoryPath, 'grades.json'), grade)
+    await git.add('grades.json')
+
+    await git.commit('Generate files')
     await git.push(['-u', 'origin', 'main'])
 
     await rm(repositoryPath, { force: true, recursive: true })
 }
 
 // eslint-disable-next-line max-params
-async function pushTeachingAssistantRepository(URL: string, readMeString: string, classroomID: number, organizationName: string, repositoryName: string) {
+async function pushTeachingAssistantRepository(URL: string, readMeString: string, classroomID: number, organizationName: string, repositoryName: string, grade: Grade) {
     const repositoryPath = join(configDirectoryPath, 'repo')
     await rm(repositoryPath, { force: true, recursive: true })
 
@@ -451,12 +443,18 @@ async function pushTeachingAssistantRepository(URL: string, readMeString: string
     await git.addConfig('user.name', 'dugit')
 
     await writeFile(join(repositoryPath, 'README.md'), readMeString)
-
-    // eslint-disable-next-line no-warning-comments
-    // TODO: write grading file
-
     await git.add('README.md')
-    await git.commit('Generate README.md')
+
+    const grades = grade.repositories.anonymous.map(anonymous => ({
+        comments: '',
+        grade: '',
+        name: anonymous.anonymousName,
+    }))
+
+    await writeJsonFile(join(repositoryPath, 'grades.json'), grades)
+    await git.add('grades.json')
+
+    await git.commit('Generate files')
     await git.push(['-u', 'origin', 'main'])
 
     await rm(repositoryPath, { force: true, recursive: true })
@@ -465,7 +463,7 @@ async function pushTeachingAssistantRepository(URL: string, readMeString: string
 
     for await (const teachingAssistant of teachingAssistants) {
         await addOrganizationMember(organizationName, teachingAssistant.username)
-        await addRepositoryCollaborator(organizationName, repositoryName, teachingAssistant.username, 'triage')
+        await addRepositoryCollaborator(organizationName, repositoryName, teachingAssistant.username, 'push')
     }
 }
 
@@ -502,28 +500,33 @@ export async function createGradeRepositories(assignmentID: number, gradeName: s
         anonymousNames.push(anonymousName)
 
         const anonymousRepository = await createRepository(`${assignmentSlug}-${gradeSlug}-student-${anonymousName}`, organizationName)
-        await pushAnonymousRepository(acceptedAssignment.repository.html_url, anonymousRepository.html_url, classroom.id, organizationName, anonymousRepository.name)
+        await pushAnonymousRepository(acceptedAssignment.repository.html_url, anonymousRepository.html_url, classroom.id, organizationName, anonymousRepository.name, anonymousName)
 
-        instructorReadMeString += `| [${(acceptedAssignment.students.map(student => student.login)).join(', ')}](${acceptedAssignment.repository.html_url}) `
+        const studentName = (acceptedAssignment.students.map(student => student.login)).join(', ')
+
+        instructorReadMeString += `| [${studentName}](${acceptedAssignment.repository.html_url}) `
         instructorReadMeString += `| [${anonymousName}](${anonymousRepository.html_url}) |\n`
 
         teachingAssistantReadMeString += `| [${anonymousName}](${anonymousRepository.html_url}) |\n`
 
-        anonymousRepositoryNames.push(anonymousRepository.name)
+        anonymousRepositoryNames.push({ anonymousName, repositoryName: anonymousRepository.name, studentName })
     }
 
-    const teachingAssistantRepository = await createRepository(`${assignmentSlug}-${gradeSlug}-teaching-assistant`, organizationName)
-    await pushTeachingAssistantRepository(teachingAssistantRepository.html_url, teachingAssistantReadMeString, classroom.id, organizationName, teachingAssistantRepository.name)
+    const teachingAssistantRepositoryName = `${assignmentSlug}-${gradeSlug}-teaching-assistant`
+    const instructorRepositoryName = `${assignmentSlug}-${gradeSlug}-instructor`
+
+    const grade = await createGrade(assignmentID, gradeName, gradingInstructions, availablePoints, instructorRepositoryName, teachingAssistantRepositoryName, anonymousRepositoryNames)
+
+    const teachingAssistantRepository = await createRepository(teachingAssistantRepositoryName, organizationName)
+    await pushTeachingAssistantRepository(teachingAssistantRepository.html_url, teachingAssistantReadMeString, classroom.id, organizationName, teachingAssistantRepository.name, grade)
 
     let instructorReadMeHeader = `# ${assignment.title} - ${gradeName} - Instructor\n\n`
     instructorReadMeHeader += `[Teaching assistant repository](${teachingAssistantRepository.html_url})\n\n`
     instructorReadMeHeader += `${gradingInstructions}\n\n`
     instructorReadMeHeader += `Available points: ${availablePoints}\n\n`
 
-    const instructorRepository = await createRepository(`${assignmentSlug}-${gradeSlug}-instructor`, organizationName)
-    await pushInstructorRepository(instructorRepository.html_url, instructorReadMeHeader + instructorReadMeString)
-
-    await createGrade(assignmentID, gradeName, gradingInstructions, availablePoints, instructorRepository.name, teachingAssistantRepository.name, anonymousRepositoryNames)
+    const instructorRepository = await createRepository(instructorRepositoryName, organizationName)
+    await pushInstructorRepository(instructorRepository.html_url, instructorReadMeHeader + instructorReadMeString, grade)
 
     await open(instructorRepository.html_url)
 }
