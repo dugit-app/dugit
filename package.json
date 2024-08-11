@@ -16,7 +16,8 @@
     "octokit": "^4.0.2",
     "open": "^10.1.0",
     "simple-git": "^3.25.0",
-    "slug": "^9.1.0"
+    "slug": "^9.1.0",
+    "unique-names-generator": "^4.7.1"
   },
   "devDependencies": {
     "@oclif/prettier-config": "^0.2.1",
