@@ -20,7 +20,7 @@ $ npm install -g dugit
 $ dugit COMMAND
 running command...
 $ dugit (--version)
-dugit/0.1.4 linux-x64 node-v18.20.4
+dugit/0.1.5 linux-x64 node-v18.20.4
 $ dugit --help [COMMAND]
 USAGE
   $ dugit COMMAND
@@ -61,7 +61,7 @@ DESCRIPTION
   Manage GitHub authentication.
 ```
 
-_See code: [src/commands/auth/index.ts](https://github.com/braydenoneal/dugit/blob/v0.1.4/src/commands/auth/index.ts)_
+_See code: [src/commands/auth/index.ts](https://github.com/braydenoneal/dugit/blob/v0.1.5/src/commands/auth/index.ts)_
 
 ## `dugit auth login`
 
@@ -78,7 +78,7 @@ DESCRIPTION
   Authenticate with GitHub.
 ```
 
-_See code: [src/commands/auth/login.ts](https://github.com/braydenoneal/dugit/blob/v0.1.4/src/commands/auth/login.ts)_
+_See code: [src/commands/auth/login.ts](https://github.com/braydenoneal/dugit/blob/v0.1.5/src/commands/auth/login.ts)_
 
 ## `dugit auth logout`
 
@@ -95,7 +95,7 @@ DESCRIPTION
   Remove GitHub authentication.
 ```
 
-_See code: [src/commands/auth/logout.ts](https://github.com/braydenoneal/dugit/blob/v0.1.4/src/commands/auth/logout.ts)_
+_See code: [src/commands/auth/logout.ts](https://github.com/braydenoneal/dugit/blob/v0.1.5/src/commands/auth/logout.ts)_
 
 ## `dugit classroom`
 
@@ -112,7 +112,7 @@ DESCRIPTION
   Manage GitHub Classroom.
 ```
 
-_See code: [src/commands/classroom/index.ts](https://github.com/braydenoneal/dugit/blob/v0.1.4/src/commands/classroom/index.ts)_
+_See code: [src/commands/classroom/index.ts](https://github.com/braydenoneal/dugit/blob/v0.1.5/src/commands/classroom/index.ts)_
 
 ## `dugit help [COMMAND]`
 
@@ -149,7 +149,7 @@ DESCRIPTION
   Manage GitHub organizations.
 ```
 
-_See code: [src/commands/org/index.ts](https://github.com/braydenoneal/dugit/blob/v0.1.4/src/commands/org/index.ts)_
+_See code: [src/commands/org/index.ts](https://github.com/braydenoneal/dugit/blob/v0.1.5/src/commands/org/index.ts)_
 
 ## `dugit plugins`
 
