@@ -1,25 +1,36 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
-import { configDirectoryPath, configFilePath } from './config.js'
 import { existsSync } from 'node:fs'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 
-type ConfigFile = {
-    accessToken?: string
+import { configDirectoryPath, configFilePath } from './config.js'
+
+export type ConfigFile = {
+    accessToken?: string,
+    classrooms: {
+        id: number,
+        name: string,
+        teachingAssistants: {
+            email: string
+            name: string,
+            username: string,
+        }[]
+    }[]
 }
 
-export async function readConfigFile() {
+export async function readConfigFile(): Promise<ConfigFile> {
     if (existsSync(configFilePath)) {
         return JSON.parse(await readFile(configFilePath, 'utf8'))
-    } else {
-        await createConfigFile()
-        return {}
     }
+
+    await createConfigFile()
+    return { accessToken: '', classrooms: [] }
+
 }
 
 export async function writeConfigFile(data: ConfigFile) {
-    await writeFile(configFilePath, JSON.stringify(data), 'utf8')
+    await writeFile(configFilePath, JSON.stringify(data, null, 2), 'utf8')
 }
 
 export async function createConfigFile() {
     await mkdir(configDirectoryPath, { recursive: true })
-    await writeConfigFile({})
+    await writeConfigFile({ accessToken: '', classrooms: [] })
 }

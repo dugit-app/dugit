@@ -73,14 +73,14 @@ async function pollForToken(deviceCode: string, interval: number) {
 }
 
 export async function getAccessToken() {
-    const configFile = await readConfigFile()
+    const { accessToken } = await readConfigFile()
 
-    if (Object.hasOwn(configFile, 'accessToken')) {
-        return configFile.accessToken
+    if (accessToken === '') {
+        console.log(`Please run \`${appName} auth login\` to authenticate with GitHub.`)
+        exit(0)
     }
 
-    console.log(`Please run \`${appName} auth login\` to authenticate with GitHub.`)
-    exit(0)
+    return accessToken
 }
 
 export async function tokenizeURL(URL: string) {
