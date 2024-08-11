@@ -200,7 +200,31 @@ async function createRepository(name: string, org: string) {
     })).data
 }
 
-async function pushAnonymousRepository(studentURL: string, anonymousURL: string) {
+async function addOrganizationMember(org: string, username: string) {
+    const octokit = new Octokit({ auth: await getAccessToken() })
+
+    return (await octokit.request('PUT /orgs/{org}/memberships/{username}', {
+        headers,
+        org,
+        role: 'member',
+        username,
+    })).data
+}
+
+async function addRepositoryCollaborator(org: string, repo: string, username: string, permission: string) {
+    const octokit = new Octokit({ auth: await getAccessToken() })
+
+    return (await octokit.request('PUT /repos/{org}/{repo}/collaborators/{username}', {
+        headers,
+        org,
+        permission,
+        repo,
+        username,
+    })).data
+}
+
+// eslint-disable-next-line max-params
+async function pushAnonymousRepository(studentURL: string, anonymousURL: string, classroomID: number, organizationName: string, repositoryName: string) {
     const repositoryPath = join(configDirectoryPath, 'repo')
     await rm(repositoryPath, { force: true, recursive: true })
 
@@ -228,8 +252,12 @@ async function pushAnonymousRepository(studentURL: string, anonymousURL: string)
 
     await rm(repositoryPath, { force: true, recursive: true })
 
-    // eslint-disable-next-line no-warning-comments
-    // TODO: Share repo with TA(s)
+    const teachingAssistants = await getTeachingAssistants(classroomID)
+
+    for await (const teachingAssistant of teachingAssistants) {
+        await addOrganizationMember(organizationName, teachingAssistant.username)
+        await addRepositoryCollaborator(organizationName, repositoryName, teachingAssistant.username, 'triage')
+    }
 }
 
 function generateAnonymousID() {
@@ -279,7 +307,7 @@ export async function createGradeRepositories(assignmentID: number, gradeName: s
         const id = generateAnonymousID()
 
         const anonymousRepository = await createRepository(`${assignmentSlug}-${gradeSlug}-student-${id}`, organizationName)
-        await pushAnonymousRepository(acceptedAssignment.repository.html_url, anonymousRepository.html_url)
+        await pushAnonymousRepository(acceptedAssignment.repository.html_url, anonymousRepository.html_url, classroom.id, organizationName, anonymousRepository.name)
 
         readMeString += `| ${(acceptedAssignment.students.map(student => student.login)).join(', ')} `
         readMeString += `| [Student repo](${acceptedAssignment.repository.html_url}) `

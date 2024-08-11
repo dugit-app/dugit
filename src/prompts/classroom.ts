@@ -127,8 +127,8 @@ async function teachingAssistantOptions(classroomID: number, username: string) {
     const option = await select({
         choices: [
             { name: `Edit name (${teachingAssistant.name})`, value: 'name' },
-            { name: `Edit username (${teachingAssistant.name})`, value: 'username' },
-            { name: `Edit email (${teachingAssistant.name})`, value: 'email' },
+            { name: `Edit username (${teachingAssistant.username})`, value: 'username' },
+            { name: `Edit email (${teachingAssistant.email})`, value: 'email' },
             { name: 'Remove teaching assistant', value: 'remove' },
             new Separator(),
             { name: 'Back', value: 'back' },
