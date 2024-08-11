@@ -1,7 +1,7 @@
 {
   "name": "dugit",
   "description": "GitHub Classroom tools for Drury University",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "Brayden O'Neal",
   "bin": {
     "dugit": "./bin/run.js"

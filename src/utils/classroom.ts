@@ -254,6 +254,8 @@ export async function createGrade(assignmentID: number, name: string, instructio
             teachingAssistant: teachingAssistantRepositoryName,
         },
     })
+
+    await writeConfigFile(configFile)
 }
 
 export async function getGrades(assignmentID: number) {

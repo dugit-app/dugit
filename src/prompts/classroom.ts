@@ -182,7 +182,7 @@ async function editTeachingAssistantEmail(classroomID: number, username: string)
 async function removeTeachingAssistant(classroomID: number, username: string) {
     const doDelete = await confirm({
         default: false,
-        message: `Are you sure you want to delete ${(await getTeachingAssistant(classroomID, username))?.name}?`
+        message: `Are you sure you want to delete ${(await getTeachingAssistant(classroomID, username))?.name}?`,
     }, { clearPromptOnDone: true })
 
     if (doDelete) {
@@ -309,7 +309,7 @@ async function gradeOptions(assignmentID: number, name: string) {
         }
 
         case 'delete': {
-            await deleteGrade(assignmentID, name)
+            await removeGrade(assignmentID, name)
             break
         }
 
@@ -317,5 +317,19 @@ async function gradeOptions(assignmentID: number, name: string) {
             await gradesOptions(assignmentID)
             break
         }
+    }
+}
+
+async function removeGrade(assignmentID: number, name: string) {
+    const doDelete = await confirm({
+        default: false,
+        message: `Are you sure you want to delete ${(await getGrade(assignmentID, name))?.name}?`,
+    }, { clearPromptOnDone: true })
+
+    if (doDelete) {
+        await deleteGrade(assignmentID, name)
+    } else {
+        console.log('Cancelled')
+        exit(0)
     }
 }
