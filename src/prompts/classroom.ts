@@ -13,7 +13,7 @@ import {
     getTeachingAssistants,
     setTeachingAssistantEmail,
     setTeachingAssistantName,
-    setTeachingAssistantUsername,
+    setTeachingAssistantUsername, updateGrade,
 } from '../utils/classroom.js'
 
 export async function selectClassroom() {
@@ -294,7 +294,8 @@ async function gradeOptions(assignmentID: number, name: string) {
 
     const option = await select({
         choices: [
-            { name: `Info`, value: 'info' },
+            { name: 'Update grades on instructor repo', value: 'update' },
+            { name: 'Info', value: 'info' },
             { name: 'Delete', value: 'delete' },
             new Separator(),
             { name: 'Back', value: 'back' },
@@ -303,6 +304,11 @@ async function gradeOptions(assignmentID: number, name: string) {
     }, { clearPromptOnDone: true })
 
     switch (option) {
+        case 'update': {
+            await updateGrade(assignmentID, name)
+            break
+        }
+
         case 'info': {
             console.log(grade)
             break
@@ -323,7 +329,7 @@ async function gradeOptions(assignmentID: number, name: string) {
 async function removeGrade(assignmentID: number, name: string) {
     const doDelete = await confirm({
         default: false,
-        message: `Are you sure you want to delete ${(await getGrade(assignmentID, name))?.name}?`,
+        message: `Are you sure you want to delete ${name}?`,
     }, { clearPromptOnDone: true })
 
     if (doDelete) {

@@ -8,7 +8,7 @@ import { adjectives, animals, uniqueNamesGenerator } from 'unique-names-generato
 
 import { getAccessToken, tokenizeURL } from './auth.js'
 import { configDirectoryPath } from './config.js'
-import { Grade, readConfigFile, writeConfigFile, writeJsonFile } from './files.js'
+import { Grade, TeachingAssistantGrades, readConfigFile, writeConfigFile, writeJsonFile } from './files.js'
 import { headers } from './octokit.js'
 import { deleteRepository } from './org.js'
 
@@ -424,6 +424,32 @@ async function pushInstructorRepository(URL: string, readMeString: string, grade
     await rm(repositoryPath, { force: true, recursive: true })
 }
 
+async function updateInstructorGrades(URL: string, gradeFileString: string) {
+    const repositoryPath = join(configDirectoryPath, 'repo')
+    await rm(repositoryPath, { force: true, recursive: true })
+
+    const git = simpleGit()
+    await git.cwd(configDirectoryPath)
+
+    const instructorURL = await tokenizeURL(URL)
+    await git.clone(instructorURL, repositoryPath)
+
+    await git.cwd(repositoryPath)
+
+    await git.remote(['set-url', 'origin', instructorURL])
+
+    await git.addConfig('user.email', 'user@example.com')
+    await git.addConfig('user.name', 'dugit')
+
+    await writeFile(join(repositoryPath, 'grades.md'), gradeFileString)
+    await git.add('grades.md')
+
+    await git.commit('Update grades')
+    await git.push(['-u', 'origin', 'main'])
+
+    await rm(repositoryPath, { force: true, recursive: true })
+}
+
 // eslint-disable-next-line max-params
 async function pushTeachingAssistantRepository(URL: string, readMeString: string, classroomID: number, organizationName: string, repositoryName: string, grade: Grade) {
     const repositoryPath = join(configDirectoryPath, 'repo')
@@ -445,7 +471,7 @@ async function pushTeachingAssistantRepository(URL: string, readMeString: string
     await writeFile(join(repositoryPath, 'README.md'), readMeString)
     await git.add('README.md')
 
-    const grades = grade.repositories.anonymous.map(anonymous => ({
+    const grades: TeachingAssistantGrades = grade.repositories.anonymous.map(anonymous => ({
         comments: '',
         grade: '',
         name: anonymous.anonymousName,
@@ -529,4 +555,44 @@ export async function createGradeRepositories(assignmentID: number, gradeName: s
     await pushInstructorRepository(instructorRepository.html_url, instructorReadMeHeader + instructorReadMeString, grade)
 
     await open(instructorRepository.html_url)
+}
+
+async function getRepositoryFile(owner: string, path: string, repo: string) {
+    const octokit = new Octokit({ auth: await getAccessToken() })
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    return JSON.parse((await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+        headers: {...headers, accept: 'application/vnd.github.raw+json'},
+        owner,
+        path,
+        repo,
+    })).data)
+}
+
+export async function updateGrade(assignmentID: number, name: string) {
+    const assignment = await getAssignment(assignmentID)
+    const classroom = await getClassroom(assignment.classroom.id)
+    const gradeInfo = await getGrade(assignmentID, name)
+
+    if (gradeInfo === undefined) {
+        return
+    }
+
+    const teachingAssistantGradingFile: TeachingAssistantGrades = await getRepositoryFile(classroom.organization.login, 'grades.json', gradeInfo.repositories.teachingAssistant)
+    let instructorGradeFile: string = '# Grades\n'
+
+    for (const grade of teachingAssistantGradingFile) {
+        const anonymous = gradeInfo.repositories.anonymous.find(a => a.anonymousName === grade.name)
+
+        if (anonymous === undefined) {
+            break
+        }
+
+        instructorGradeFile += `\n## ${anonymous.studentName}\n\n`
+        instructorGradeFile += `Grade: ${grade.grade}\n\n`
+        instructorGradeFile += `Comments: ${grade.comments}\n`
+    }
+
+    await updateInstructorGrades(`https://github.com/${classroom.organization.login}/${gradeInfo.repositories.instructor}`, instructorGradeFile)
 }

@@ -3,6 +3,12 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 
 import { configDirectoryPath, configFilePath } from './config.js'
 
+export type TeachingAssistantGrades = {
+   comments: string,
+   grade: string,
+   name: string
+}[]
+
 export type Grade = {
     availablePoints: number,
     instructions: string,
@@ -36,8 +42,12 @@ export type ConfigFile = {
     }[]
 }
 
+export function jsonToString(data: unknown) {
+    return JSON.stringify(data, null, 2)
+}
+
 export async function writeJsonFile(path: string, data: unknown) {
-    await writeFile(path, JSON.stringify(data, null, 2), 'utf8')
+    await writeFile(path, jsonToString(data), 'utf8')
 }
 
 export async function readConfigFile(): Promise<ConfigFile> {
