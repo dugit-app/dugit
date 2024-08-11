@@ -290,7 +290,44 @@ async function pushInstructorRepository(URL: string, readMeString: string) {
     await rm(repositoryPath, { force: true, recursive: true })
 }
 
-export async function createGradeRepositories(assignmentID: number, gradeName: string) {
+// eslint-disable-next-line max-params
+async function pushTeachingAssistantRepository(URL: string, readMeString: string, classroomID: number, organizationName: string, repositoryName: string) {
+    const repositoryPath = join(configDirectoryPath, 'repo')
+    await rm(repositoryPath, { force: true, recursive: true })
+
+    const git = simpleGit()
+    await git.cwd(configDirectoryPath)
+
+    const teachingAssistantURL = await tokenizeURL(URL)
+    await git.clone(teachingAssistantURL, repositoryPath)
+
+    await git.cwd(repositoryPath)
+
+    await git.remote(['set-url', 'origin', teachingAssistantURL])
+
+    await git.addConfig('user.email', 'user@example.com')
+    await git.addConfig('user.name', 'dugit')
+
+    await writeFile(join(repositoryPath, 'README.md'), readMeString)
+
+    // eslint-disable-next-line no-warning-comments
+    // TODO: write grading file
+
+    await git.add('README.md')
+    await git.commit('Generate README.md')
+    await git.push(['-u', 'origin', 'main'])
+
+    await rm(repositoryPath, { force: true, recursive: true })
+
+    const teachingAssistants = await getTeachingAssistants(classroomID)
+
+    for await (const teachingAssistant of teachingAssistants) {
+        await addOrganizationMember(organizationName, teachingAssistant.username)
+        await addRepositoryCollaborator(organizationName, repositoryName, teachingAssistant.username, 'triage')
+    }
+}
+
+export async function createGradeRepositories(assignmentID: number, gradeName: string, gradingInstructions: string, availablePoints: number) {
     const assignment = await getAssignment(assignmentID)
     const classroom = await getClassroom(assignment.classroom.id)
 
@@ -298,8 +335,17 @@ export async function createGradeRepositories(assignmentID: number, gradeName: s
     const assignmentSlug = assignment.slug
     const gradeSlug = slug(gradeName)
 
-    let readMeString = '| Name | Student Repo | Anonymous Repo |\n'
-    readMeString += '| - | - | - |\n'
+    let instructorReadMeString = `# ${assignment.title} - ${gradeName} - Instructor\n\n`
+    instructorReadMeString += `${gradingInstructions}\n\n`
+    instructorReadMeString += `Available points: ${availablePoints}\n\n`
+    instructorReadMeString += '| Name | Student repo | Anonymous repo |\n'
+    instructorReadMeString += '| - | - | - |\n'
+
+    let teachingAssistantReadMeString = `# ${assignment.title} - ${gradeName} - Teaching Assistant\n\n`
+    teachingAssistantReadMeString += `${gradingInstructions}\n\n`
+    teachingAssistantReadMeString += `Available points: ${availablePoints}\n\n`
+    teachingAssistantReadMeString += '| ID | Anonymous repo |\n'
+    teachingAssistantReadMeString += '| - | - |\n'
 
     const acceptedAssignments = await getAcceptedAssignments(assignmentID)
 
@@ -309,11 +355,17 @@ export async function createGradeRepositories(assignmentID: number, gradeName: s
         const anonymousRepository = await createRepository(`${assignmentSlug}-${gradeSlug}-student-${id}`, organizationName)
         await pushAnonymousRepository(acceptedAssignment.repository.html_url, anonymousRepository.html_url, classroom.id, organizationName, anonymousRepository.name)
 
-        readMeString += `| ${(acceptedAssignment.students.map(student => student.login)).join(', ')} `
-        readMeString += `| [Student repo](${acceptedAssignment.repository.html_url}) `
-        readMeString += `| [Anonymous repo](${anonymousRepository.html_url}) |\n`
+        instructorReadMeString += `| ${(acceptedAssignment.students.map(student => student.login)).join(', ')} `
+        instructorReadMeString += `| [Student repo](${acceptedAssignment.repository.html_url}) `
+        instructorReadMeString += `| [Anonymous repo](${anonymousRepository.html_url}) |\n`
+
+        teachingAssistantReadMeString += `| ${id} `
+        teachingAssistantReadMeString += `| [Anonymous repo](${anonymousRepository.html_url}) |\n`
     }
 
     const instructorRepository = await createRepository(`${assignmentSlug}-${gradeSlug}-instructor`, organizationName)
-    await pushInstructorRepository(instructorRepository.html_url, readMeString)
+    await pushInstructorRepository(instructorRepository.html_url, instructorReadMeString)
+
+    const teachingAssistantRepository = await createRepository(`${assignmentSlug}-${gradeSlug}-teaching-assistant`, organizationName)
+    await pushTeachingAssistantRepository(teachingAssistantRepository.html_url, teachingAssistantReadMeString, classroom.id, organizationName, teachingAssistantRepository.name)
 }

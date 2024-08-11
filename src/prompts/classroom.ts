@@ -1,4 +1,4 @@
-import { Separator, confirm, input, select } from '@inquirer/prompts'
+import { Separator, confirm, input, number, select } from '@inquirer/prompts'
 import { exit } from '@oclif/core/errors'
 import open from 'open'
 
@@ -278,5 +278,7 @@ async function selectGrades(assignmentID: number) {
 
 async function newGrade(assignmentID: number) {
     const gradeName = await input({ message: 'Give the grade a name' }, { clearPromptOnDone: true })
-    await createGradeRepositories(assignmentID, gradeName)
+    const gradingInstructions = await input({ message: 'Enter the grading instructions' }, { clearPromptOnDone: true })
+    const availablePoints = await number({ message: 'Enter the available points for this grade' }, { clearPromptOnDone: true }) || 0
+    await createGradeRepositories(assignmentID, gradeName, gradingInstructions, availablePoints)
 }
