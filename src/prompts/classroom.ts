@@ -4,11 +4,11 @@ import open from 'open'
 
 import {
     createGradeRepositories,
-    createNewTeachingAssistant, deleteTeachingAssistant,
+    createNewTeachingAssistant, deleteGrade, deleteTeachingAssistant,
     getAssignment,
     getAssignments,
     getClassroom,
-    getClassrooms,
+    getClassrooms, getGrade, getGrades,
     getTeachingAssistant,
     getTeachingAssistants,
     setTeachingAssistantEmail,
@@ -254,7 +254,7 @@ async function gradesOptions(assignmentID: number) {
         }
 
         case 'grades': {
-            await selectGrades(assignmentID)
+            await selectGrade(assignmentID)
             break
         }
 
@@ -265,20 +265,57 @@ async function gradesOptions(assignmentID: number) {
     }
 }
 
-async function selectGrades(assignmentID: number) {
-    // return select({
-    //     choices: (await getAssignments(assignmentID)).map(assignment => ({
-    //         name: assignment.title,
-    //         value: assignment,
-    //     })),
-    //     message: 'Select a grade',
-    // }, { clearPromptOnDone: true })
-    console.log(assignmentID)
+async function selectGrade(assignmentID: number) {
+    const assignment = await getAssignment(assignmentID)
+
+    await gradeOptions(assignmentID, (await select({
+        choices: (await getGrades(assignmentID)).map(grade => ({
+            name: grade.name,
+            value: grade.name,
+        })),
+        message: `Select a grade for assignment '${assignment.title}'`,
+    }, { clearPromptOnDone: true })))
 }
 
 async function newGrade(assignmentID: number) {
     const gradeName = await input({ message: 'Give the grade a name' }, { clearPromptOnDone: true })
     const gradingInstructions = await input({ message: 'Enter the grading instructions' }, { clearPromptOnDone: true })
     const availablePoints = await number({ message: 'Enter the available points for this grade' }, { clearPromptOnDone: true }) || 0
+
     await createGradeRepositories(assignmentID, gradeName, gradingInstructions, availablePoints)
+}
+
+async function gradeOptions(assignmentID: number, name: string) {
+    const grade = await getGrade(assignmentID, name)
+
+    if (grade === undefined) {
+        return
+    }
+
+    const option = await select({
+        choices: [
+            { name: `Info`, value: 'info' },
+            { name: 'Delete', value: 'delete' },
+            new Separator(),
+            { name: 'Back', value: 'back' },
+        ],
+        message: `Options for grade ${name}`,
+    }, { clearPromptOnDone: true })
+
+    switch (option) {
+        case 'info': {
+            console.log(grade)
+            break
+        }
+
+        case 'delete': {
+            await deleteGrade(assignmentID, name)
+            break
+        }
+
+        case 'back': {
+            await gradesOptions(assignmentID)
+            break
+        }
+    }
 }

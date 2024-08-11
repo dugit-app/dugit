@@ -6,6 +6,20 @@ import { configDirectoryPath, configFilePath } from './config.js'
 export type ConfigFile = {
     accessToken?: string,
     classrooms: {
+        assignments: {
+            grades: {
+                availablePoints: number,
+                instructions: string,
+                name: string,
+                repositories: {
+                    anonymous: string[],
+                    instructor: string,
+                    teachingAssistant: string,
+                }
+            }[],
+            id: number,
+            title: string,
+        }[],
         id: number,
         name: string,
         teachingAssistants: {

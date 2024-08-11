@@ -9,6 +9,7 @@ import { getAccessToken, tokenizeURL } from './auth.js'
 import { configDirectoryPath } from './config.js'
 import { readConfigFile, writeConfigFile } from './files.js'
 import { headers } from './octokit.js'
+import { deleteRepository } from './org.js'
 
 export async function getClassrooms() {
     const octokit = new Octokit({ auth: await getAccessToken() })
@@ -62,6 +63,7 @@ export async function createNewTeachingAssistant(classroomID: number, name: stri
 
     if (configClassroom === undefined) {
         configFile.classrooms.push({
+            assignments: [],
             id: classroom.id,
             name: classroom.name,
             teachingAssistants: [teachingAssistant],
@@ -181,6 +183,143 @@ export async function deleteTeachingAssistant(classroomID: number, username: str
 
     if (teachingAssistantIndex > -1) {
         configClassroom.teachingAssistants.splice(teachingAssistantIndex, 1)
+
+        await writeConfigFile(configFile)
+    }
+}
+
+// eslint-disable-next-line max-params
+export async function createGrade(assignmentID: number, name: string, instructions: string, availablePoints: number, instructorRepositoryName: string, teachingAssistantRepositoryName: string, anonymousRepositoryNames: string[]) {
+    const assignment = await getAssignment(assignmentID)
+    const classroom = await getClassroom(assignment.classroom.id)
+
+    const configFile = await readConfigFile()
+
+    const configClassroom = configFile.classrooms.find(c => c.id === classroom.id)
+
+    if (configClassroom === undefined) {
+        configFile.classrooms.push({
+            assignments: [{
+                grades: [{
+                    availablePoints,
+                    instructions,
+                    name,
+                    repositories: {
+                        anonymous: anonymousRepositoryNames,
+                        instructor: instructorRepositoryName,
+                        teachingAssistant: teachingAssistantRepositoryName,
+                    },
+                }],
+                id: assignment.id,
+                title: assignment.title,
+            }],
+            id: classroom.id,
+            name: classroom.name,
+            teachingAssistants: [],
+        })
+
+        await writeConfigFile(configFile)
+        return
+    }
+
+    const configAssignment = configClassroom.assignments.find(a => a.id === assignmentID)
+
+    if (configAssignment === undefined) {
+        configClassroom.assignments.push({
+            grades: [{
+                availablePoints,
+                instructions,
+                name,
+                repositories: {
+                    anonymous: anonymousRepositoryNames,
+                    instructor: instructorRepositoryName,
+                    teachingAssistant: teachingAssistantRepositoryName,
+                },
+            }],
+            id: assignment.id,
+            title: assignment.title,
+        })
+
+        await writeConfigFile(configFile)
+        return
+    }
+
+    configAssignment.grades.push({
+        availablePoints,
+        instructions,
+        name,
+        repositories: {
+            anonymous: anonymousRepositoryNames,
+            instructor: instructorRepositoryName,
+            teachingAssistant: teachingAssistantRepositoryName,
+        },
+    })
+}
+
+export async function getGrades(assignmentID: number) {
+    const assignment = await getAssignment(assignmentID)
+    const classroom = await getClassroom(assignment.classroom.id)
+
+    const configFile = await readConfigFile()
+
+    const configClassroom = configFile.classrooms.find(c => c.id === classroom.id)
+
+    if (configClassroom === undefined) {
+        return []
+    }
+
+    const configAssignment = configClassroom.assignments.find(a => a.id === assignmentID)
+
+    if (configAssignment === undefined) {
+        return []
+    }
+
+    return configAssignment.grades
+}
+
+export async function getGrade(assignmentID: number, name: string) {
+    const assignment = await getAssignment(assignmentID)
+    const classroom = await getClassroom(assignment.classroom.id)
+
+    const configFile = await readConfigFile()
+
+    const configClassroom = configFile.classrooms.find(c => c.id === classroom.id)
+    const configAssignment = configClassroom?.assignments.find(a => a.id === assignmentID)
+    return configAssignment?.grades.find(g => g.name === name)
+}
+
+export async function deleteGrade(assignmentID: number, name: string) {
+    const assignment = await getAssignment(assignmentID)
+    const classroom = await getClassroom(assignment.classroom.id)
+
+    const configFile = await readConfigFile()
+
+    const configClassroom = configFile.classrooms.find(c => c.id === classroom.id)
+
+    if (configClassroom === undefined) {
+        return
+    }
+
+    const configAssignment = configClassroom.assignments.find(a => a.id === assignmentID)
+
+    if (configAssignment === undefined) {
+        return
+    }
+
+    const gradeIndex = configAssignment.grades.findIndex(g => g.name === name)
+
+    if (gradeIndex > -1) {
+        const { repositories } = configAssignment.grades[gradeIndex]
+        const organizationName = classroom.organization.login
+
+        for await (const anonymous of repositories.anonymous) {
+            await deleteRepository(organizationName, anonymous)
+        }
+
+        await deleteRepository(organizationName, repositories.teachingAssistant)
+        await deleteRepository(organizationName, repositories.instructor)
+
+        configAssignment.grades.splice(gradeIndex, 1)
 
         await writeConfigFile(configFile)
     }
@@ -349,6 +488,8 @@ export async function createGradeRepositories(assignmentID: number, gradeName: s
 
     const acceptedAssignments = await getAcceptedAssignments(assignmentID)
 
+    const anonymousRepositoryNames = []
+
     for await (const acceptedAssignment of acceptedAssignments) {
         const id = generateAnonymousID()
 
@@ -361,6 +502,8 @@ export async function createGradeRepositories(assignmentID: number, gradeName: s
 
         teachingAssistantReadMeString += `| ${id} `
         teachingAssistantReadMeString += `| [Anonymous repo](${anonymousRepository.html_url}) |\n`
+
+        anonymousRepositoryNames.push(anonymousRepository.name)
     }
 
     const instructorRepository = await createRepository(`${assignmentSlug}-${gradeSlug}-instructor`, organizationName)
@@ -368,4 +511,6 @@ export async function createGradeRepositories(assignmentID: number, gradeName: s
 
     const teachingAssistantRepository = await createRepository(`${assignmentSlug}-${gradeSlug}-teaching-assistant`, organizationName)
     await pushTeachingAssistantRepository(teachingAssistantRepository.html_url, teachingAssistantReadMeString, classroom.id, organizationName, teachingAssistantRepository.name)
+
+    await createGrade(assignmentID, gradeName, gradingInstructions, availablePoints, instructorRepository.name, teachingAssistantRepository.name, anonymousRepositoryNames)
 }
