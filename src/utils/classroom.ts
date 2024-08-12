@@ -2,6 +2,7 @@ import { rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { Octokit } from 'octokit'
 import open from 'open'
+import ora from 'ora'
 import { simpleGit } from 'simple-git'
 import slug from 'slug'
 import { adjectives, animals, uniqueNamesGenerator } from 'unique-names-generator'
@@ -281,6 +282,8 @@ export async function getGrade(assignmentID: number, name: string) {
 }
 
 export async function deleteGrade(assignmentID: number, name: string) {
+    const spinner = ora('Deleting grade').start()
+
     const assignment = await getAssignment(assignmentID)
     const classroom = await getClassroom(assignment.classroom.id)
 
@@ -305,16 +308,23 @@ export async function deleteGrade(assignmentID: number, name: string) {
         const organizationName = classroom.organization.login
 
         for await (const anonymous of repositories.anonymous) {
+            spinner.text = `Deleting ${anonymous.studentName}'s repository`
             await deleteRepository(organizationName, anonymous.repositoryName)
         }
 
+        spinner.text = 'Deleting teaching assistant repository'
         await deleteRepository(organizationName, repositories.teachingAssistant)
+        spinner.text = 'Deleting instructor repository'
         await deleteRepository(organizationName, repositories.instructor)
 
         configAssignment.grades.splice(gradeIndex, 1)
 
         await writeConfigFile(configFile)
+        spinner.succeed('Grade deleted')
+        return
     }
+
+    spinner.fail('Grade not found')
 }
 
 async function createRepository(name: string, org: string) {
@@ -494,6 +504,8 @@ async function pushTeachingAssistantRepository(URL: string, readMeString: string
 }
 
 export async function createGradeRepositories(assignmentID: number, gradeName: string, gradingInstructions: string, availablePoints: number) {
+    const spinner = ora('Generating grading repositories').start()
+
     const assignment = await getAssignment(assignmentID)
     const classroom = await getClassroom(assignment.classroom.id)
 
@@ -525,10 +537,12 @@ export async function createGradeRepositories(assignmentID: number, gradeName: s
 
         anonymousNames.push(anonymousName)
 
+        const studentName = (acceptedAssignment.students.map(student => student.login)).join(', ')
+
+        spinner.text = `Creating anonymous repository for ${studentName}`
+
         const anonymousRepository = await createRepository(`${assignmentSlug}-${gradeSlug}-student-${anonymousName}`, organizationName)
         await pushAnonymousRepository(acceptedAssignment.repository.html_url, anonymousRepository.html_url, classroom.id, organizationName, anonymousRepository.name, anonymousName)
-
-        const studentName = (acceptedAssignment.students.map(student => student.login)).join(', ')
 
         instructorReadMeString += `| [${studentName}](${acceptedAssignment.repository.html_url}) `
         instructorReadMeString += `| [${anonymousName}](${anonymousRepository.html_url}) |\n`
@@ -538,10 +552,14 @@ export async function createGradeRepositories(assignmentID: number, gradeName: s
         anonymousRepositoryNames.push({ anonymousName, repositoryName: anonymousRepository.name, studentName })
     }
 
+    spinner.text = 'Creating instructor repository'
+
     const teachingAssistantRepositoryName = `${assignmentSlug}-${gradeSlug}-teaching-assistant`
     const instructorRepositoryName = `${assignmentSlug}-${gradeSlug}-instructor`
 
     const grade = await createGrade(assignmentID, gradeName, gradingInstructions, availablePoints, instructorRepositoryName, teachingAssistantRepositoryName, anonymousRepositoryNames)
+
+    spinner.text = 'Creating teaching assistant repository'
 
     const teachingAssistantRepository = await createRepository(teachingAssistantRepositoryName, organizationName)
     await pushTeachingAssistantRepository(teachingAssistantRepository.html_url, teachingAssistantReadMeString, classroom.id, organizationName, teachingAssistantRepository.name, grade)
@@ -555,6 +573,8 @@ export async function createGradeRepositories(assignmentID: number, gradeName: s
     await pushInstructorRepository(instructorRepository.html_url, instructorReadMeHeader + instructorReadMeString, grade)
 
     await open(instructorRepository.html_url)
+
+    spinner.succeed('Generated grading repositories')
 }
 
 async function getRepositoryFile(owner: string, path: string, repo: string) {
@@ -571,6 +591,8 @@ async function getRepositoryFile(owner: string, path: string, repo: string) {
 }
 
 export async function updateGrade(assignmentID: number, name: string) {
+    const spinner = ora('Updating grades on instructor repository').start()
+
     const assignment = await getAssignment(assignmentID)
     const classroom = await getClassroom(assignment.classroom.id)
     const gradeInfo = await getGrade(assignmentID, name)
@@ -579,7 +601,10 @@ export async function updateGrade(assignmentID: number, name: string) {
         return
     }
 
+    spinner.text = 'Getting grading file from teaching assistant repository'
     const teachingAssistantGradingFile: TeachingAssistantGrades = await getRepositoryFile(classroom.organization.login, 'grades.json', gradeInfo.repositories.teachingAssistant)
+
+    spinner.text = 'Generating grades file for instructor repository'
     let instructorGradeFile: string = '# Grades\n'
 
     for (const grade of teachingAssistantGradingFile) {
@@ -594,5 +619,9 @@ export async function updateGrade(assignmentID: number, name: string) {
         instructorGradeFile += `Comments: ${grade.comments}\n`
     }
 
+    spinner.text = 'Uploading grades file to instructor repository'
+
     await updateInstructorGrades(`https://github.com/${classroom.organization.login}/${gradeInfo.repositories.instructor}`, instructorGradeFile)
+
+    spinner.succeed('Updated grades on instructor repository')
 }
