@@ -1,7 +1,7 @@
 {
   "name": "dugit",
   "description": "GitHub Classroom tools for Drury University",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "author": "Brayden O'Neal",
   "bin": {
     "dugit": "./bin/run.js"
@@ -12,7 +12,7 @@
     "@oclif/core": "^4",
     "@oclif/plugin-help": "^6",
     "@oclif/plugin-plugins": "^5",
-    "axios": "^1.7.3",
+    "axios": "^1.7.4",
     "octokit": "^4.0.2",
     "open": "^10.1.0",
     "ora": "^8.0.1",
