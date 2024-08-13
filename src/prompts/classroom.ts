@@ -3,7 +3,7 @@ import { exit } from '@oclif/core/errors'
 import open from 'open'
 
 import { getAssignment, getAssignments } from '../api/assignment.js'
-import { getClassroom, getClassrooms } from '../api/classroom.js'
+import { Classrooms, getClassrooms } from '../api/classroom.js'
 import { createGradeRepositories, updateGrade } from '../utils/classroom/classroom.js'
 import { deleteGrade, getGrade, getGrades } from '../utils/classroom/grade.js'
 import {
@@ -23,12 +23,10 @@ export async function selectClassroom() {
         message: 'Select a classroom',
     }, { clearPromptOnDone: true })
 
-    await classroomOptions(prompt.id)
+    await classroomOptions(prompt)
 }
 
-async function classroomOptions(classroomID: number) {
-    const classroom = await getClassroom(classroomID)
-
+async function classroomOptions(classroom: Classrooms[number]) {
     const option = await select({
         choices: [
             { name: 'View assignments', value: 'assignments' },
@@ -43,12 +41,12 @@ async function classroomOptions(classroomID: number) {
 
     switch (option) {
         case 'assignments': {
-            await selectAssignment(classroomID)
+            await selectAssignment(classroom)
             break
         }
 
         case 'teaching_assistants': {
-            await teachingAssistantsOptions(classroomID)
+            await teachingAssistantsOptions(classroom)
             break
         }
 
@@ -68,9 +66,7 @@ async function classroomOptions(classroomID: number) {
     }
 }
 
-async function teachingAssistantsOptions(classroomID: number) {
-    const classroom = await getClassroom(classroomID)
-
+async function teachingAssistantsOptions(classroom: Classrooms[number]) {
     const option = await select({
         choices: [
             { name: 'New teaching assistant', value: 'new' },
@@ -83,17 +79,17 @@ async function teachingAssistantsOptions(classroomID: number) {
 
     switch (option) {
         case 'new': {
-            await newTeachingAssistant(classroomID)
+            await newTeachingAssistant(classroom.id)
             break
         }
 
         case 'teaching_assistants': {
-            await selectTeachingAssistant(classroomID)
+            await selectTeachingAssistant(classroom)
             break
         }
 
         case 'back': {
-            await classroomOptions(classroom.id)
+            await classroomOptions(classroom)
             break
         }
     }
@@ -107,9 +103,9 @@ async function newTeachingAssistant(classroomID: number) {
     await createNewTeachingAssistant(classroomID, name, username, email)
 }
 
-async function selectTeachingAssistant(classroomID: number) {
-    await teachingAssistantOptions(classroomID, (await select({
-        choices: (await getTeachingAssistants(classroomID)).map(teachingAssistant => ({
+async function selectTeachingAssistant(classroom: Classrooms[number]) {
+    await teachingAssistantOptions(classroom, (await select({
+        choices: (await getTeachingAssistants(classroom)).map(teachingAssistant => ({
             name: teachingAssistant.name,
             value: teachingAssistant.username,
         })),
@@ -117,8 +113,8 @@ async function selectTeachingAssistant(classroomID: number) {
     }, { clearPromptOnDone: true })))
 }
 
-async function teachingAssistantOptions(classroomID: number, username: string) {
-    const teachingAssistant = await getTeachingAssistant(classroomID, username)
+async function teachingAssistantOptions(classroom: Classrooms[number], username: string) {
+    const teachingAssistant = await getTeachingAssistant(classroom.id, username)
 
     if (teachingAssistant === undefined) {
         return
@@ -138,27 +134,27 @@ async function teachingAssistantOptions(classroomID: number, username: string) {
 
     switch (option) {
         case 'name': {
-            await editTeachingAssistantName(classroomID, username)
+            await editTeachingAssistantName(classroom.id, username)
             break
         }
 
         case 'username': {
-            await editTeachingAssistantUsername(classroomID, username)
+            await editTeachingAssistantUsername(classroom.id, username)
             break
         }
 
         case 'email': {
-            await editTeachingAssistantEmail(classroomID, username)
+            await editTeachingAssistantEmail(classroom.id, username)
             break
         }
 
         case 'remove': {
-            await removeTeachingAssistant(classroomID, username)
+            await removeTeachingAssistant(classroom.id, username)
             break
         }
 
         case 'back': {
-            await teachingAssistantsOptions(classroomID)
+            await teachingAssistantsOptions(classroom)
             break
         }
     }
@@ -193,9 +189,9 @@ async function removeTeachingAssistant(classroomID: number, username: string) {
     }
 }
 
-async function selectAssignment(classroomID: number) {
+async function selectAssignment(classroom: Classrooms[number]) {
     await assignmentOptions(await select({
-        choices: (await getAssignments(classroomID)).map(assignment => ({
+        choices: (await getAssignments(classroom.id)).map(assignment => ({
             name: assignment.title,
             value: assignment.id,
         })),
@@ -228,7 +224,7 @@ async function assignmentOptions(assignmentID: number) {
         }
 
         case 'back': {
-            await classroomOptions(assignment.classroom.id)
+            await classroomOptions(assignment.classroom)
             break
         }
     }

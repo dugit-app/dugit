@@ -7,7 +7,7 @@ import slug from 'slug'
 import { adjectives, animals, uniqueNamesGenerator } from 'unique-names-generator'
 
 import { getAcceptedAssignments, getAssignment } from '../../api/assignment.js'
-import { getClassroom } from '../../api/classroom.js'
+import { Classrooms, getClassroom } from '../../api/classroom.js'
 import { addOrganizationMember } from '../../api/org.js'
 import { addRepositoryCollaborator, createRepository, getRepositoryFile } from '../../api/repository.js'
 import { tokenizeURL } from '../auth.js'
@@ -21,7 +21,7 @@ function generateAnonymousName() {
 }
 
 // eslint-disable-next-line max-params
-async function pushAnonymousRepository(studentURL: string, anonymousURL: string, classroomID: number, organizationName: string, repositoryName: string, anonymousName: string) {
+async function pushAnonymousRepository(studentURL: string, anonymousURL: string, classroom: Classrooms[number], organizationName: string, repositoryName: string, anonymousName: string) {
     const repositoryPath = join(configDirectoryPath, 'repo')
     await rm(repositoryPath, { force: true, recursive: true })
 
@@ -49,7 +49,7 @@ async function pushAnonymousRepository(studentURL: string, anonymousURL: string,
 
     await rm(repositoryPath, { force: true, recursive: true })
 
-    const teachingAssistants = await getTeachingAssistants(classroomID)
+    const teachingAssistants = await getTeachingAssistants(classroom)
 
     for await (const teachingAssistant of teachingAssistants) {
         await addOrganizationMember(organizationName, teachingAssistant.username)
@@ -113,7 +113,7 @@ async function updateInstructorGrades(URL: string, gradeFileString: string) {
 }
 
 // eslint-disable-next-line max-params
-async function pushTeachingAssistantRepository(URL: string, readMeString: string, classroomID: number, organizationName: string, repositoryName: string, grade: Grade) {
+async function pushTeachingAssistantRepository(URL: string, readMeString: string, classroom: Classrooms[number], organizationName: string, repositoryName: string, grade: Grade) {
     const repositoryPath = join(configDirectoryPath, 'repo')
     await rm(repositoryPath, { force: true, recursive: true })
 
@@ -147,7 +147,7 @@ async function pushTeachingAssistantRepository(URL: string, readMeString: string
 
     await rm(repositoryPath, { force: true, recursive: true })
 
-    const teachingAssistants = await getTeachingAssistants(classroomID)
+    const teachingAssistants = await getTeachingAssistants(classroom)
 
     for await (const teachingAssistant of teachingAssistants) {
         await addOrganizationMember(organizationName, teachingAssistant.username)
@@ -194,7 +194,7 @@ export async function createGradeRepositories(assignmentID: number, gradeName: s
         spinner.text = `Creating anonymous repository for ${studentName}`
 
         const anonymousRepository = await createRepository(`${assignmentSlug}-${gradeSlug}-student-${anonymousName}`, organizationName)
-        await pushAnonymousRepository(acceptedAssignment.repository.html_url, anonymousRepository.html_url, classroom.id, organizationName, anonymousRepository.name, anonymousName)
+        await pushAnonymousRepository(acceptedAssignment.repository.html_url, anonymousRepository.html_url, classroom, organizationName, anonymousRepository.name, anonymousName)
 
         instructorReadMeString += `| [${studentName}](${acceptedAssignment.repository.html_url}) `
         instructorReadMeString += `| [${anonymousName}](${anonymousRepository.html_url}) |\n`
@@ -214,7 +214,7 @@ export async function createGradeRepositories(assignmentID: number, gradeName: s
     spinner.text = 'Creating teaching assistant repository'
 
     const teachingAssistantRepository = await createRepository(teachingAssistantRepositoryName, organizationName)
-    await pushTeachingAssistantRepository(teachingAssistantRepository.html_url, teachingAssistantReadMeString, classroom.id, organizationName, teachingAssistantRepository.name, grade)
+    await pushTeachingAssistantRepository(teachingAssistantRepository.html_url, teachingAssistantReadMeString, classroom, organizationName, teachingAssistantRepository.name, grade)
 
     let instructorReadMeHeader = `# ${assignment.title} - ${gradeName} - Instructor\n\n`
     instructorReadMeHeader += `[Teaching assistant repository](${teachingAssistantRepository.html_url})\n\n`

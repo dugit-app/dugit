@@ -1,4 +1,4 @@
-import { getClassroom } from '../../api/classroom.js'
+import { Classrooms, getClassroom } from '../../api/classroom.js'
 import { readConfigFile, writeConfigFile } from '../files.js'
 
 export async function createNewTeachingAssistant(classroomID: number, name: string, username: string, email: string) {
@@ -48,9 +48,7 @@ export async function createNewTeachingAssistant(classroomID: number, name: stri
     await writeConfigFile(configFile)
 }
 
-export async function getTeachingAssistants(classroomID: number) {
-    const classroom = await getClassroom(classroomID)
-
+export async function getTeachingAssistants(classroom: Classrooms[number]) {
     const configFile = await readConfigFile()
 
     const configClassroom = configFile.classrooms.find(c => c.id === classroom.id)
