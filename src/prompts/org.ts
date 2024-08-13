@@ -1,33 +1,19 @@
 import { confirm, select } from '@inquirer/prompts'
 import { exit } from '@oclif/core/errors'
-import { Octokit } from 'octokit'
 
-import { getAccessToken } from './auth.js'
-import { headers } from './octokit.js'
+import { deleteRepository, getOrganizations, getRepositories } from '../api/org.js'
 
-export async function getOrganizations() {
-    const octokit = new Octokit({ auth: await getAccessToken() })
-
-    return (await octokit.request('GET /user/orgs', { headers })).data
-}
-
-export async function selectOrganization() {
+async function selectOrganization() {
     return select({
         choices: (await getOrganizations()).map(organization => ({
             name: organization.login,
             value: organization,
         })),
-        message: 'Select an organization:',
+        message: 'Select an organization',
     }, { clearPromptOnDone: true })
 }
 
-export async function getRepositories(organizationName: string) {
-    const octokit = new Octokit({ auth: await getAccessToken() })
-
-    return (await octokit.request('GET /orgs/{org}/repos', { headers, org: organizationName })).data
-}
-
-export async function selectRepository() {
+async function selectRepository() {
     const organization = await selectOrganization()
 
     return select({
@@ -35,14 +21,8 @@ export async function selectRepository() {
             name: repository.name,
             value: repository,
         })),
-        message: 'Select a repository:',
+        message: 'Select a repository',
     }, { clearPromptOnDone: true })
-}
-
-export async function deleteRepository(owner: string, repo: string) {
-    const octokit = new Octokit({ auth: await getAccessToken() })
-
-    return (await octokit.request('DELETE /repos/{owner}/{repo}', { headers, owner, repo })).data
 }
 
 export async function organizationCommand() {
@@ -59,7 +39,7 @@ export async function organizationCommand() {
                 value: 'cancel',
             },
         ]),
-        message: 'Select an option:',
+        message: 'Select an option',
     }, { clearPromptOnDone: true })
 
     switch (option) {

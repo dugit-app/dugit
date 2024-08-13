@@ -1,35 +1,13 @@
 import { exit } from '@oclif/core/errors'
-import axios from 'axios'
 
-import { appName, clientID } from './config.js'
+import { requestDeviceCode, requestToken } from '../api/auth.js'
+import { appName } from './config.js'
 import { readConfigFile, writeConfigFile } from './files.js'
 
 function sleep(seconds: number) {
     return new Promise(resolve => {
         setTimeout(resolve, seconds * 1000)
     })
-}
-
-async function requestDeviceCode() {
-    return (await axios.post('https://github.com/login/device/code', {},
-        {
-            headers: { 'Accept': 'application/json' },
-            params: { 'client_id': clientID },
-        },
-    )).data
-}
-
-async function requestToken(deviceCode: string) {
-    return (await axios.post('https://github.com/login/oauth/access_token', {},
-        {
-            headers: { 'Accept': 'application/json' },
-            params: {
-                'client_id': clientID,
-                'device_code': deviceCode,
-                'grant_type': 'urn:ietf:params:oauth:grant-type:device_code',
-            },
-        },
-    )).data
 }
 
 async function pollForToken(deviceCode: string, interval: number) {

@@ -2,28 +2,28 @@ import { Separator, confirm, input, number, select } from '@inquirer/prompts'
 import { exit } from '@oclif/core/errors'
 import open from 'open'
 
+import { getAssignment, getAssignments } from '../api/assignment.js'
+import { getClassroom, getClassrooms } from '../api/classroom.js'
+import { createGradeRepositories, updateGrade } from '../utils/classroom/classroom.js'
+import { deleteGrade, getGrade, getGrades } from '../utils/classroom/grade.js'
 import {
-    createGradeRepositories,
-    createNewTeachingAssistant, deleteGrade, deleteTeachingAssistant,
-    getAssignment,
-    getAssignments,
-    getClassroom,
-    getClassrooms, getGrade, getGrades,
+    createNewTeachingAssistant, deleteTeachingAssistant,
     getTeachingAssistant,
-    getTeachingAssistants,
-    setTeachingAssistantEmail,
-    setTeachingAssistantName,
-    setTeachingAssistantUsername, updateGrade,
-} from '../utils/classroom.js'
+    getTeachingAssistants, setTeachingAssistantEmail, setTeachingAssistantName, setTeachingAssistantUsername,
+} from '../utils/classroom/teaching-assistant.js'
 
 export async function selectClassroom() {
-    await classroomOptions(await select({
-        choices: (await getClassrooms()).map(classroom => ({
+    const classrooms = await getClassrooms()
+
+    const prompt = await select({
+        choices: classrooms.map(classroom => ({
             name: classroom.name,
-            value: classroom.id,
+            value: classroom,
         })),
         message: 'Select a classroom',
-    }, { clearPromptOnDone: true }))
+    }, { clearPromptOnDone: true })
+
+    await classroomOptions(prompt.id)
 }
 
 async function classroomOptions(classroomID: number) {

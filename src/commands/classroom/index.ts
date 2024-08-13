@@ -15,3 +15,22 @@ export default class Classroom extends Command {
         await selectClassroom()
     }
 }
+
+/*
+classroom list
+    assignments list
+        grades
+            new grade
+            view grades
+                update
+                info
+                delete
+        info
+    tas
+        new ta
+        list tas
+            edit
+            remove
+    info
+    open in browser
+ */
