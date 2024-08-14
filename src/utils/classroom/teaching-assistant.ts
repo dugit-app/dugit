@@ -1,8 +1,7 @@
-import { Classrooms, getClassroom } from '../../api/classroom.js'
+import { Classrooms } from '../../api/classroom.js'
 import { readConfigFile, writeConfigFile } from '../files.js'
 
-export async function createNewTeachingAssistant(classroomID: number, name: string, username: string, email: string) {
-    const classroom = await getClassroom(classroomID)
+export async function createNewTeachingAssistant(classroom: Classrooms[number], name: string, username: string, email: string) {
     const teachingAssistant = { email, name, username }
 
     const configFile = await readConfigFile()
@@ -60,18 +59,14 @@ export async function getTeachingAssistants(classroom: Classrooms[number]) {
     return configClassroom.teachingAssistants
 }
 
-export async function getTeachingAssistant(classroomID: number, username: string) {
-    const classroom = await getClassroom(classroomID)
-
+export async function getTeachingAssistant(classroom: Classrooms[number], username: string) {
     const configFile = await readConfigFile()
 
     const configClassroom = configFile.classrooms.find(c => c.id === classroom.id)
     return configClassroom?.teachingAssistants.find(t => t.username === username)
 }
 
-export async function setTeachingAssistantName(classroomID: number, username: string, name: string) {
-    const classroom = await getClassroom(classroomID)
-
+export async function setTeachingAssistantName(classroom: Classrooms[number], username: string, name: string) {
     const configFile = await readConfigFile()
 
     const configClassroom = configFile.classrooms.find(c => c.id === classroom.id)
@@ -84,9 +79,7 @@ export async function setTeachingAssistantName(classroomID: number, username: st
     }
 }
 
-export async function setTeachingAssistantUsername(classroomID: number, username: string, newUsername: string) {
-    const classroom = await getClassroom(classroomID)
-
+export async function setTeachingAssistantUsername(classroom: Classrooms[number], username: string, newUsername: string) {
     const configFile = await readConfigFile()
 
     const configClassroom = configFile.classrooms.find(c => c.id === classroom.id)
@@ -99,9 +92,7 @@ export async function setTeachingAssistantUsername(classroomID: number, username
     }
 }
 
-export async function setTeachingAssistantEmail(classroomID: number, username: string, email: string) {
-    const classroom = await getClassroom(classroomID)
-
+export async function setTeachingAssistantEmail(classroom: Classrooms[number], username: string, email: string) {
     const configFile = await readConfigFile()
 
     const configClassroom = configFile.classrooms.find(c => c.id === classroom.id)
@@ -114,9 +105,7 @@ export async function setTeachingAssistantEmail(classroomID: number, username: s
     }
 }
 
-export async function deleteTeachingAssistant(classroomID: number, username: string) {
-    const classroom = await getClassroom(classroomID)
-
+export async function deleteTeachingAssistant(classroom: Classrooms[number], username: string) {
     const configFile = await readConfigFile()
 
     const configClassroom = configFile.classrooms.find(c => c.id === classroom.id)

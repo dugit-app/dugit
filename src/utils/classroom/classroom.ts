@@ -6,7 +6,7 @@ import { simpleGit } from 'simple-git'
 import slug from 'slug'
 import { adjectives, animals, uniqueNamesGenerator } from 'unique-names-generator'
 
-import { getAcceptedAssignments, getAssignment } from '../../api/assignment.js'
+import { Assignments, getAcceptedAssignments } from '../../api/assignment.js'
 import { Classrooms, getClassroom } from '../../api/classroom.js'
 import { addOrganizationMember } from '../../api/org.js'
 import { addRepositoryCollaborator, createRepository, getRepositoryFile } from '../../api/repository.js'
@@ -155,10 +155,9 @@ async function pushTeachingAssistantRepository(URL: string, readMeString: string
     }
 }
 
-export async function createGradeRepositories(assignmentID: number, gradeName: string, gradingInstructions: string, availablePoints: number) {
+export async function createGradeRepositories(assignment: Assignments[number], gradeName: string, gradingInstructions: string, availablePoints: number) {
     const spinner = ora('Generating grading repositories').start()
 
-    const assignment = await getAssignment(assignmentID)
     const classroom = await getClassroom(assignment.classroom.id)
 
     const organizationName = classroom.organization.login
@@ -174,7 +173,7 @@ export async function createGradeRepositories(assignmentID: number, gradeName: s
     teachingAssistantReadMeString += '| Anonymous repo |\n'
     teachingAssistantReadMeString += '| - |\n'
 
-    const acceptedAssignments = await getAcceptedAssignments(assignmentID)
+    const acceptedAssignments = await getAcceptedAssignments(assignment.id)
 
     const anonymousRepositoryNames = []
 
@@ -209,7 +208,7 @@ export async function createGradeRepositories(assignmentID: number, gradeName: s
     const teachingAssistantRepositoryName = `${assignmentSlug}-${gradeSlug}-teaching-assistant`
     const instructorRepositoryName = `${assignmentSlug}-${gradeSlug}-instructor`
 
-    const grade = await createGrade(assignmentID, gradeName, gradingInstructions, availablePoints, instructorRepositoryName, teachingAssistantRepositoryName, anonymousRepositoryNames)
+    const grade = await createGrade(assignment, gradeName, gradingInstructions, availablePoints, instructorRepositoryName, teachingAssistantRepositoryName, anonymousRepositoryNames)
 
     spinner.text = 'Creating teaching assistant repository'
 
@@ -229,12 +228,11 @@ export async function createGradeRepositories(assignmentID: number, gradeName: s
     spinner.succeed('Generated grading repositories')
 }
 
-export async function updateGrade(assignmentID: number, name: string) {
+export async function updateGrade(assignment: Assignments[number], name: string) {
     const spinner = ora('Updating grades on instructor repository').start()
 
-    const assignment = await getAssignment(assignmentID)
     const classroom = await getClassroom(assignment.classroom.id)
-    const gradeInfo = await getGrade(assignmentID, name)
+    const gradeInfo = await getGrade(assignment, name)
 
     if (gradeInfo === undefined) {
         return

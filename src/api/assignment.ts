@@ -1,9 +1,12 @@
+import { Endpoints } from '@octokit/types'
 import { Octokit } from 'octokit'
 
 import { getAccessToken } from '../utils/auth.js'
 import { headers } from '../utils/octokit.js'
 
-export async function getAssignments(classroomID: number) {
+export type Assignments = Endpoints['GET /classrooms/{classroom_id}/assignments']['response']['data']
+
+export async function getAssignments(classroomID: number): Promise<Assignments> {
     const octokit = new Octokit({ auth: await getAccessToken() })
 
     return (await octokit.request('GET /classrooms/{classroom_id}/assignments', {
@@ -12,16 +15,9 @@ export async function getAssignments(classroomID: number) {
     })).data
 }
 
-export async function getAssignment(assignmentID: number) {
-    const octokit = new Octokit({ auth: await getAccessToken() })
+export type AcceptedAssignments = Endpoints['GET /assignments/{assignment_id}/accepted_assignments']['response']['data']
 
-    return (await octokit.request('GET /assignments/{assignment_id}', {
-        'assignment_id': assignmentID,
-        headers,
-    })).data
-}
-
-export async function getAcceptedAssignments(assignmentID: number) {
+export async function getAcceptedAssignments(assignmentID: number): Promise<AcceptedAssignments> {
     const octokit = new Octokit({ auth: await getAccessToken() })
 
     return (await octokit.request('GET /assignments/{assignment_id}/accepted_assignments', {

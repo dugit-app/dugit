@@ -1,18 +1,17 @@
 import ora from 'ora'
 
-import { getAssignment } from '../../api/assignment.js'
+import { Assignments } from '../../api/assignment.js'
 import { getClassroom } from '../../api/classroom.js'
 import { deleteRepository } from '../../api/org.js'
 import { Grade, readConfigFile, writeConfigFile } from '../files.js'
 
 // eslint-disable-next-line max-params
-export async function createGrade(assignmentID: number, name: string, instructions: string, availablePoints: number, instructorRepositoryName: string, teachingAssistantRepositoryName: string, anonymousRepositoryNames: {
+export async function createGrade(assignment: Assignments[number], name: string, instructions: string, availablePoints: number, instructorRepositoryName: string, teachingAssistantRepositoryName: string, anonymousRepositoryNames: {
     anonymousName: string,
     repositoryName: string,
     studentName: string
 }[]): Promise<Grade> {
-    const assignment = await getAssignment(assignmentID)
-    const classroom = await getClassroom(assignment.classroom.id)
+    const { classroom, id, title } = assignment
 
     const grade = {
         availablePoints,
@@ -33,8 +32,8 @@ export async function createGrade(assignmentID: number, name: string, instructio
         configFile.classrooms.push({
             assignments: [{
                 grades: [grade],
-                id: assignment.id,
-                title: assignment.title,
+                id,
+                title,
             }],
             id: classroom.id,
             name: classroom.name,
@@ -45,13 +44,13 @@ export async function createGrade(assignmentID: number, name: string, instructio
         return grade
     }
 
-    const configAssignment = configClassroom.assignments.find(a => a.id === assignmentID)
+    const configAssignment = configClassroom.assignments.find(a => a.id === id)
 
     if (configAssignment === undefined) {
         configClassroom.assignments.push({
             grades: [grade],
-            id: assignment.id,
-            title: assignment.title,
+            id,
+            title,
         })
 
         await writeConfigFile(configFile)
@@ -64,19 +63,16 @@ export async function createGrade(assignmentID: number, name: string, instructio
     return grade
 }
 
-export async function getGrades(assignmentID: number) {
-    const assignment = await getAssignment(assignmentID)
-    const classroom = await getClassroom(assignment.classroom.id)
-
+export async function getGrades(assignment: Assignments[number]) {
     const configFile = await readConfigFile()
 
-    const configClassroom = configFile.classrooms.find(c => c.id === classroom.id)
+    const configClassroom = configFile.classrooms.find(c => c.id === assignment.classroom.id)
 
     if (configClassroom === undefined) {
         return []
     }
 
-    const configAssignment = configClassroom.assignments.find(a => a.id === assignmentID)
+    const configAssignment = configClassroom.assignments.find(a => a.id === assignment.id)
 
     if (configAssignment === undefined) {
         return []
@@ -85,32 +81,28 @@ export async function getGrades(assignmentID: number) {
     return configAssignment.grades
 }
 
-export async function getGrade(assignmentID: number, name: string) {
-    const assignment = await getAssignment(assignmentID)
-    const classroom = await getClassroom(assignment.classroom.id)
-
+export async function getGrade(assignment: Assignments[number], name: string) {
     const configFile = await readConfigFile()
 
-    const configClassroom = configFile.classrooms.find(c => c.id === classroom.id)
-    const configAssignment = configClassroom?.assignments.find(a => a.id === assignmentID)
+    const configClassroom = configFile.classrooms.find(c => c.id === assignment.classroom.id)
+    const configAssignment = configClassroom?.assignments.find(a => a.id === assignment.id)
     return configAssignment?.grades.find(g => g.name === name)
 }
 
-export async function deleteGrade(assignmentID: number, name: string) {
+export async function deleteGrade(assignment: Assignments[number], name: string) {
     const spinner = ora('Deleting grade').start()
 
-    const assignment = await getAssignment(assignmentID)
     const classroom = await getClassroom(assignment.classroom.id)
 
     const configFile = await readConfigFile()
 
-    const configClassroom = configFile.classrooms.find(c => c.id === classroom.id)
+    const configClassroom = configFile.classrooms.find(c => c.id === assignment.classroom.id)
 
     if (configClassroom === undefined) {
         return
     }
 
-    const configAssignment = configClassroom.assignments.find(a => a.id === assignmentID)
+    const configAssignment = configClassroom.assignments.find(a => a.id === assignment.id)
 
     if (configAssignment === undefined) {
         return

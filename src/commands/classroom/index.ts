@@ -1,6 +1,6 @@
 import { Command, Flags } from '@oclif/core'
 
-import { selectClassroom } from '../../prompts/classroom.js'
+import { selectClassroom } from '../../prompts/classroom/classroom.js'
 
 export default class Classroom extends Command {
     static args = {}
