@@ -1,8 +1,13 @@
-import { exit } from '@oclif/core/errors'
-
 import { requestDeviceCode, requestToken } from '../api/auth.js'
-import { appName } from './config.js'
 import { readConfigFile, writeConfigFile } from './files.js'
+
+export default {
+    getAccessToken,
+    tokenizeURL,
+    isLoggedIn,
+    login,
+    logout
+}
 
 function sleep(seconds: number) {
     return new Promise(resolve => {
@@ -41,7 +46,7 @@ async function pollForToken(deviceCode: string, interval: number) {
         }
 
         if (terminate) {
-            exit(1)
+            process.exit(1)
         }
 
         return pollForToken(deviceCode, interval)
@@ -50,22 +55,23 @@ async function pollForToken(deviceCode: string, interval: number) {
     return response.access_token
 }
 
-export async function getAccessToken() {
+async function getAccessToken() {
     const { accessToken } = await readConfigFile()
-
-    if (accessToken === '') {
-        console.log(`Please run \`${appName} auth login\` to authenticate with GitHub.`)
-        exit(0)
-    }
 
     return accessToken
 }
 
-export async function tokenizeURL(URL: string) {
+async function tokenizeURL(URL: string) {
     return `https://oauth2:${await getAccessToken()}@${URL.slice(8)}`
 }
 
-export async function login() {
+async function isLoggedIn() {
+    const accessToken = await getAccessToken()
+
+    return accessToken !== ''
+}
+
+async function login() {
     const response = await requestDeviceCode()
 
     console.log(`Please visit ${response.verification_uri}\nand enter code: ${response.user_code}`)
@@ -77,10 +83,10 @@ export async function login() {
 
     await writeConfigFile(configFile)
 
-    console.log('Successfully authenticated!')
+    console.log('\nSuccessfully authenticated!')
 }
 
-export async function logout() {
+async function logout() {
     const configFile = await readConfigFile()
 
     if (Object.hasOwn(configFile, 'accessToken')) {

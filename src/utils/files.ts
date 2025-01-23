@@ -3,43 +3,8 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 
 import { configDirectoryPath, configFilePath } from './config.js'
 
-export type TeachingAssistantGrades = {
-   comments: string,
-   grade: string,
-   name: string
-}[]
-
-export type Grade = {
-    availablePoints: number,
-    instructions: string,
-    name: string,
-    repositories: {
-        anonymous: {
-            anonymousName: string,
-            repositoryName: string,
-            studentName: string,
-        }[],
-        instructor: string,
-        teachingAssistant: string,
-    }
-}
-
 export type ConfigFile = {
     accessToken?: string,
-    classrooms: {
-        assignments: {
-            grades: Grade[],
-            id: number,
-            title: string,
-        }[],
-        id: number,
-        name: string,
-        teachingAssistants: {
-            email: string
-            name: string,
-            username: string,
-        }[]
-    }[]
 }
 
 export function jsonToString(data: unknown) {
@@ -50,14 +15,17 @@ export async function writeJsonFile(path: string, data: unknown) {
     await writeFile(path, jsonToString(data), 'utf8')
 }
 
+export async function readJsonFile(path: string) {
+    return JSON.parse(await readFile(path, 'utf8'))
+}
+
 export async function readConfigFile(): Promise<ConfigFile> {
     if (existsSync(configFilePath)) {
-        return JSON.parse(await readFile(configFilePath, 'utf8'))
+        return readJsonFile(configFilePath)
     }
 
     await createConfigFile()
-    return { accessToken: '', classrooms: [] }
-
+    return await readConfigFile()
 }
 
 export async function writeConfigFile(data: ConfigFile) {
@@ -66,5 +34,5 @@ export async function writeConfigFile(data: ConfigFile) {
 
 export async function createConfigFile() {
     await mkdir(configDirectoryPath, { recursive: true })
-    await writeConfigFile({ accessToken: '', classrooms: [] })
+    await writeConfigFile({ accessToken: '' })
 }

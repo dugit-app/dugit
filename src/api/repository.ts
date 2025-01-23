@@ -1,10 +1,9 @@
 import { Octokit } from 'octokit'
 
-import { getAccessToken } from '../utils/auth.js'
-import { headers } from '../utils/octokit.js'
+import { headers, newOctokit } from '../utils/octokit.js'
 
 export async function createRepository(name: string, org: string) {
-    const octokit = new Octokit({ auth: await getAccessToken() })
+    const octokit = await newOctokit()
 
     return (await octokit.request('POST /orgs/{org}/repos', {
         'has_issues': false,
@@ -18,7 +17,7 @@ export async function createRepository(name: string, org: string) {
 }
 
 export async function addRepositoryCollaborator(org: string, repo: string, username: string, permission: string) {
-    const octokit = new Octokit({ auth: await getAccessToken() })
+    const octokit = await newOctokit()
 
     return (await octokit.request('PUT /repos/{org}/{repo}/collaborators/{username}', {
         headers,
@@ -30,7 +29,7 @@ export async function addRepositoryCollaborator(org: string, repo: string, usern
 }
 
 export async function getRepositoryFile(owner: string, path: string, repo: string) {
-    const octokit = new Octokit({ auth: await getAccessToken() })
+    const octokit = await newOctokit()
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error

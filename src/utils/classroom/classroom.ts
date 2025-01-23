@@ -10,11 +10,11 @@ import { Assignments, getAcceptedAssignments } from '../../api/assignment.js'
 import { Classrooms, getClassroom } from '../../api/classroom.js'
 import { addOrganizationMember } from '../../api/org.js'
 import { addRepositoryCollaborator, createRepository, getRepositoryFile } from '../../api/repository.js'
-import { tokenizeURL } from '../auth.js'
 import { configDirectoryPath } from '../config.js'
-import { Grade, TeachingAssistantGrades, writeJsonFile } from '../files.js'
+import { writeJsonFile } from '../files.js'
 import { createGrade, getGrade } from './grade.js'
 import { getTeachingAssistants } from './teaching-assistant.js'
+import utils from '../utils.js'
 
 function generateAnonymousName() {
     return uniqueNamesGenerator({ dictionaries: [adjectives, animals], separator: '-' })
@@ -28,10 +28,10 @@ async function pushAnonymousRepository(studentURL: string, anonymousURL: string,
     const git = simpleGit()
     await git.cwd(configDirectoryPath)
 
-    await git.clone((await tokenizeURL(studentURL)), repositoryPath)
+    await git.clone((await utils.auth.tokenizeURL(studentURL)), repositoryPath)
     await git.cwd(repositoryPath)
 
-    await git.remote(['set-url', '--push', 'origin', (await tokenizeURL(anonymousURL))])
+    await git.remote(['set-url', '--push', 'origin', (await utils.auth.tokenizeURL(anonymousURL))])
 
     const branches = await git.branch(['-r'])
 
@@ -57,14 +57,14 @@ async function pushAnonymousRepository(studentURL: string, anonymousURL: string,
     }
 }
 
-async function pushInstructorRepository(URL: string, readMeString: string, grade: Grade) {
+async function pushInstructorRepository(URL: string, readMeString: string, grade: unknown) {
     const repositoryPath = join(configDirectoryPath, 'repo')
     await rm(repositoryPath, { force: true, recursive: true })
 
     const git = simpleGit()
     await git.cwd(configDirectoryPath)
 
-    const instructorURL = await tokenizeURL(URL)
+    const instructorURL = await utils.auth.tokenizeURL(URL)
     await git.clone(instructorURL, repositoryPath)
 
     await git.cwd(repositoryPath)
@@ -93,7 +93,7 @@ async function updateInstructorGrades(URL: string, gradeFileString: string) {
     const git = simpleGit()
     await git.cwd(configDirectoryPath)
 
-    const instructorURL = await tokenizeURL(URL)
+    const instructorURL = await utils.auth.tokenizeURL(URL)
     await git.clone(instructorURL, repositoryPath)
 
     await git.cwd(repositoryPath)
@@ -113,14 +113,14 @@ async function updateInstructorGrades(URL: string, gradeFileString: string) {
 }
 
 // eslint-disable-next-line max-params
-async function pushTeachingAssistantRepository(URL: string, readMeString: string, classroom: Classrooms[number], organizationName: string, repositoryName: string, grade: Grade) {
+async function pushTeachingAssistantRepository(URL: string, readMeString: string, classroom: Classrooms[number], organizationName: string, repositoryName: string, grade: unknown) {
     const repositoryPath = join(configDirectoryPath, 'repo')
     await rm(repositoryPath, { force: true, recursive: true })
 
     const git = simpleGit()
     await git.cwd(configDirectoryPath)
 
-    const teachingAssistantURL = await tokenizeURL(URL)
+    const teachingAssistantURL = await utils.auth.tokenizeURL(URL)
     await git.clone(teachingAssistantURL, repositoryPath)
 
     await git.cwd(repositoryPath)
@@ -133,7 +133,8 @@ async function pushTeachingAssistantRepository(URL: string, readMeString: string
     await writeFile(join(repositoryPath, 'README.md'), readMeString)
     await git.add('README.md')
 
-    const grades: TeachingAssistantGrades = grade.repositories.anonymous.map(anonymous => ({
+    // @ts-ignore
+    const grades: unknown = grade.repositories.anonymous.map(anonymous => ({
         comments: '',
         grade: '',
         name: anonymous.anonymousName,
@@ -239,13 +240,14 @@ export async function updateGrade(assignment: Assignments[number], name: string)
     }
 
     spinner.text = 'Getting grading file from teaching assistant repository'
-    const teachingAssistantGradingFile: TeachingAssistantGrades = await getRepositoryFile(classroom.organization.login, 'grades.json', gradeInfo.repositories.teachingAssistant)
+    const teachingAssistantGradingFile: unknown = await getRepositoryFile(classroom.organization.login, 'grades.json', gradeInfo.repositories.teachingAssistant)
 
     spinner.text = 'Generating grades file for instructor repository'
     let instructorGradeFile: string = '# Grades\n'
 
+    // @ts-ignore
     for (const grade of teachingAssistantGradingFile) {
-        const anonymous = gradeInfo.repositories.anonymous.find(a => a.anonymousName === grade.name)
+        const anonymous = gradeInfo.repositories.anonymous.find((a: { anonymousName: any }) => a.anonymousName === grade.name)
 
         if (anonymous === undefined) {
             break
