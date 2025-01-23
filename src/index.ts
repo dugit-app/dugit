@@ -19,14 +19,15 @@ const latestVersion = (await getRepositoryFile('braydenoneal', 'package.json', '
 const installedVersion = config.version
 
 if (installedVersion != latestVersion) {
-    console.log(`Dugit update available ${chalk.gray(installedVersion)} -> ${chalk.green(latestVersion)}`)
-    console.log(`Run ${chalk.cyan('npm update -g dugit')} to update\n`)
+    console.log(`Dugit update available ${chalk.yellow(installedVersion)} -> ${chalk.green(latestVersion)}`)
+    console.log(`Run ${chalk.underline('npm update -g dugit')} to update\n`)
 }
 
 // Check if logged in
 if (!await utils.auth.isLoggedIn()) {
     console.log('You need to authenticate with GitHub to use Dugit\n')
     await utils.auth.login()
+    console.clear()
 }
 
 await prompts()

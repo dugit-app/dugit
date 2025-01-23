@@ -68,7 +68,7 @@ async function tokenizeURL(URL: string) {
 async function isLoggedIn() {
     const accessToken = await getAccessToken()
 
-    return accessToken !== ''
+    return accessToken !== '' && accessToken !== undefined
 }
 
 async function login() {

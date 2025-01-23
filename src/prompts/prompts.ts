@@ -42,6 +42,7 @@ export async function prompts() {
 
         case 'logout': {
             await logout()
+            console.log('Logged out')
             break
         }
 
