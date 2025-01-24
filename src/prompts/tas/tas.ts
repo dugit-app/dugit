@@ -1,9 +1,12 @@
 import { Separator, select } from '@inquirer/prompts'
 
-import { prompts } from '@/prompts/prompts.js'
+import prompts from '@/prompts/prompts.js'
 import api from '@/api/api.js'
+import add from '@/prompts/tas/add/add.js'
+import edit from '@/prompts/tas/edit/edit.js'
+import remove from '@/prompts/tas/remove/remove.js'
 
-export async function tas() {
+export default async function tas() {
     const option = await select(
         {
             choices: [
@@ -19,7 +22,7 @@ export async function tas() {
     )
 
     if (option == 'back') {
-        await prompts()
+        await prompts.prompts()
         return
     }
 
@@ -36,16 +39,20 @@ export async function tas() {
 
     switch (option) {
         case 'add': {
-            console.log(`Add TA for classroom ${classroom.name}`)
+            await add(classroom.id)
             break
         }
 
         case 'edit': {
+            await edit(classroom.id)
             break
         }
 
         case 'remove': {
+            await remove(classroom.id)
             break
         }
     }
+
+    await tas()
 }

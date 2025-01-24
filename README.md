@@ -37,9 +37,9 @@ GitHub Classroom tools for Drury University.
             - Multi-select repositories
                 - Confirm
                 - Cancel
-- Installation instructions
-    - [Link to GitHub App](https://github.com/apps/dugit-app/installations/select_target)
 - Usage instructions
+    - Open markdown file in github repo with the following:
+    - [Link to GitHub App](https://github.com/apps/dugit-app/installations/select_target)
     - Basic workflow explanation
 - Logout
 - Exit

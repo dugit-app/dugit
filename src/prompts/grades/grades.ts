@@ -1,9 +1,9 @@
 import { Separator, select } from '@inquirer/prompts'
 
-import { prompts } from '@/prompts/prompts.js'
+import prompts from '@/prompts/prompts.js'
 import api from '@/api/api.js'
 
-export async function grades() {
+export default async function grades() {
     const option = await select(
         {
             choices: [
@@ -19,7 +19,7 @@ export async function grades() {
     )
 
     if (option == 'back') {
-        await prompts()
+        await prompts.prompts()
         return
     }
 

@@ -1,10 +1,17 @@
 import { select, Separator } from '@inquirer/prompts'
 
-import { grades } from '@/prompts/grades/grades.js'
-import { tas } from '@/prompts/tas/tas.js'
-import { logout } from '@/prompts/logout/logout.js'
+import grades from '@/prompts/grades/grades.js'
+import tas from '@/prompts/tas/tas.js'
+import logout from '@/prompts/logout/logout.js'
 
-export async function prompts() {
+export default {
+    prompts,
+    grades,
+    tas,
+    logout
+}
+
+async function prompts() {
     const option = await select(
         {
             choices: [
