@@ -7,7 +7,7 @@ export async function grades() {
     const option = await select(
         {
             choices: [
-                { name: 'New grade', value: 'new' },
+                { name: 'Add grade', value: 'add' },
                 { name: 'Pull grades from TA repo', value: 'pull' },
                 { name: 'Remove grade', value: 'remove' },
                 new Separator(),
@@ -46,8 +46,8 @@ export async function grades() {
     )
 
     switch (option) {
-        case 'new': {
-            console.log(`New grade for assignment ${assignment.title}`)
+        case 'add': {
+            console.log(`Add grade for assignment ${assignment.title}`)
             break
         }
 

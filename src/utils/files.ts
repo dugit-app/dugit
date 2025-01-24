@@ -42,10 +42,6 @@ export type ConfigFile = {
     }[]
 }
 
-// export type ConfigFile = {
-//     accessToken?: string,
-// }
-
 export function jsonToString(data: unknown) {
     return JSON.stringify(data, null, 2)
 }

@@ -7,7 +7,7 @@ export async function tas() {
     const option = await select(
         {
             choices: [
-                { name: 'New TA', value: 'new' },
+                { name: 'Add TA', value: 'add' },
                 { name: 'Edit TA', value: 'edit' },
                 { name: 'Remove TA', value: 'remove' },
                 new Separator(),
@@ -35,8 +35,8 @@ export async function tas() {
     )
 
     switch (option) {
-        case 'new': {
-            console.log(`New TA for classroom ${classroom.name}`)
+        case 'add': {
+            console.log(`Add TA for classroom ${classroom.name}`)
             break
         }
 
