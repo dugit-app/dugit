@@ -1,5 +1,5 @@
 import { Octokit } from 'octokit'
-import utils from './utils.js'
+import utils from '@/utils/utils.js'
 
 export const headers = {
     'X-GitHub-Api-Version': '2022-11-28'

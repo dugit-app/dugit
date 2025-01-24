@@ -1,6 +1,4 @@
-import { Octokit } from 'octokit'
-
-import { headers, newOctokit } from '../utils/octokit.js'
+import { headers, newOctokit } from '@/utils/octokit.js'
 
 export async function createRepository(name: string, org: string) {
     const octokit = await newOctokit()

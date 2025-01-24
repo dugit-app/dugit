@@ -1,8 +1,8 @@
 import ora from 'ora'
 
-import { Assignments } from '../../api/assignment.js'
-import { getClassroom } from '../../api/classroom.js'
-import { deleteRepository } from '../../api/org.js'
+import { Assignments } from '@/api/assignment.js'
+import { getClassroom } from '@/api/classroom.js'
+import { deleteRepository } from '@/api/org.js'
 import { Grade, readConfigFile, writeConfigFile } from '../files.js'
 
 // eslint-disable-next-line max-params

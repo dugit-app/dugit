@@ -11,7 +11,7 @@ import { Classrooms, getClassroom } from '../../api/classroom.js'
 import { addOrganizationMember } from '../../api/org.js'
 import { addRepositoryCollaborator, createRepository, getRepositoryFile } from '../../api/repository.js'
 import { configDirectoryPath } from '../config.js'
-import { writeJsonFile } from '../files.js'
+import { Grade, TeachingAssistantGrades, writeJsonFile } from '../files.js'
 import { createGrade, getGrade } from './grade.js'
 import { getTeachingAssistants } from './teaching-assistant.js'
 import utils from '../utils.js'
@@ -57,7 +57,7 @@ async function pushAnonymousRepository(studentURL: string, anonymousURL: string,
     }
 }
 
-async function pushInstructorRepository(URL: string, readMeString: string, grade: unknown) {
+async function pushInstructorRepository(URL: string, readMeString: string, grade: Grade) {
     const repositoryPath = join(configDirectoryPath, 'repo')
     await rm(repositoryPath, { force: true, recursive: true })
 
@@ -113,7 +113,7 @@ async function updateInstructorGrades(URL: string, gradeFileString: string) {
 }
 
 // eslint-disable-next-line max-params
-async function pushTeachingAssistantRepository(URL: string, readMeString: string, classroom: Classrooms[number], organizationName: string, repositoryName: string, grade: unknown) {
+async function pushTeachingAssistantRepository(URL: string, readMeString: string, classroom: Classrooms[number], organizationName: string, repositoryName: string, grade: Grade) {
     const repositoryPath = join(configDirectoryPath, 'repo')
     await rm(repositoryPath, { force: true, recursive: true })
 
@@ -133,8 +133,7 @@ async function pushTeachingAssistantRepository(URL: string, readMeString: string
     await writeFile(join(repositoryPath, 'README.md'), readMeString)
     await git.add('README.md')
 
-    // @ts-ignore
-    const grades: unknown = grade.repositories.anonymous.map(anonymous => ({
+    const grades: TeachingAssistantGrades = grade.repositories.anonymous.map(anonymous => ({
         comments: '',
         grade: '',
         name: anonymous.anonymousName,
@@ -240,14 +239,13 @@ export async function updateGrade(assignment: Assignments[number], name: string)
     }
 
     spinner.text = 'Getting grading file from teaching assistant repository'
-    const teachingAssistantGradingFile: unknown = await getRepositoryFile(classroom.organization.login, 'grades.json', gradeInfo.repositories.teachingAssistant)
+    const teachingAssistantGradingFile: TeachingAssistantGrades = await getRepositoryFile(classroom.organization.login, 'grades.json', gradeInfo.repositories.teachingAssistant)
 
     spinner.text = 'Generating grades file for instructor repository'
     let instructorGradeFile: string = '# Grades\n'
 
-    // @ts-ignore
     for (const grade of teachingAssistantGradingFile) {
-        const anonymous = gradeInfo.repositories.anonymous.find((a: { anonymousName: any }) => a.anonymousName === grade.name)
+        const anonymous = gradeInfo.repositories.anonymous.find((a: { anonymousName: string }) => a.anonymousName === grade.name)
 
         if (anonymous === undefined) {
             break

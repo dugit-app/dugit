@@ -1,5 +1,5 @@
-import { requestDeviceCode, requestToken } from '../api/auth.js'
-import { readConfigFile, writeConfigFile } from './files.js'
+import { requestDeviceCode, requestToken } from '@/api/auth.js'
+import { readConfigFile, writeConfigFile } from '@/utils/files.js'
 
 export default {
     getAccessToken,

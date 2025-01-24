@@ -9,6 +9,7 @@ GitHub Classroom tools for Drury University.
 - [ ] Put development guide in the repo
 - [ ] Add testing somehow
 - [ ] Grade and TA info stored in a repo for each org
+- [ ] Consider replacing local git cloning with workflows
 
 ## Startup
 

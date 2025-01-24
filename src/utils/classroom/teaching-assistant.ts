@@ -1,5 +1,5 @@
-import { Classrooms } from '../../api/classroom.js'
-import { readConfigFile, writeConfigFile } from '../files.js'
+import { Classrooms } from '@/api/classroom.js'
+import { readConfigFile, writeConfigFile } from '@/utils/files.js'
 
 export async function createNewTeachingAssistant(classroom: Classrooms[number], name: string, username: string, email: string) {
     const teachingAssistant = { email, name, username }

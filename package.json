@@ -11,13 +11,17 @@
   "bin": {
     "dugit2": "dist/index.js"
   },
-  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "esbuild --format=cjs --target=node22 --platform=node --bundle --outfile=dist\\dugit2.cjs src\\index.ts",
+    "sea-prep": "node --experimental-sea-config sea-config.json",
+    "copy-node": "node -e \"require('fs').copyFileSync(process.execPath, 'dist\\\\dugit2.exe')\"",
+    "inject": "npx postject dist\\dugit2.exe NODE_SEA_BLOB dist\\sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2",
+    "start": "dist\\dugit2.exe",
     "dev": "tsx src/index.ts"
   },
   "devDependencies": {
     "@types/slug": "^5.0.9",
+    "esbuild": "^0.24.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   },

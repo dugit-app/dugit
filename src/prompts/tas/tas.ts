@@ -1,7 +1,7 @@
 import { Separator, select } from '@inquirer/prompts'
 
-import { prompts } from '../prompts.js'
-import api from '../../api/api.js'
+import { prompts } from '@/prompts/prompts.js'
+import api from '@/api/api.js'
 
 export async function tas() {
     const option = await select(

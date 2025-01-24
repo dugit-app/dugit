@@ -1,11 +1,50 @@
 import { existsSync } from 'node:fs'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 
-import { configDirectoryPath, configFilePath } from './config.js'
+import { configDirectoryPath, configFilePath } from '@/utils/config.js'
+
+export type TeachingAssistantGrades = {
+    comments: string,
+    grade: string,
+    name: string
+}[]
+
+export type Grade = {
+    availablePoints: number,
+    instructions: string,
+    name: string,
+    repositories: {
+        anonymous: {
+            anonymousName: string,
+            repositoryName: string,
+            studentName: string,
+        }[],
+        instructor: string,
+        teachingAssistant: string,
+    }
+}
 
 export type ConfigFile = {
     accessToken?: string,
+    classrooms: {
+        assignments: {
+            grades: Grade[],
+            id: number,
+            title: string,
+        }[],
+        id: number,
+        name: string,
+        teachingAssistants: {
+            email: string
+            name: string,
+            username: string,
+        }[]
+    }[]
 }
+
+// export type ConfigFile = {
+//     accessToken?: string,
+// }
 
 export function jsonToString(data: unknown) {
     return JSON.stringify(data, null, 2)
@@ -34,5 +73,5 @@ export async function writeConfigFile(data: ConfigFile) {
 
 export async function createConfigFile() {
     await mkdir(configDirectoryPath, { recursive: true })
-    await writeConfigFile({ accessToken: '' })
+    await writeConfigFile({ accessToken: '', classrooms: [] })
 }
