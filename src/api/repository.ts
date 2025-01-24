@@ -26,6 +26,16 @@ export async function addRepositoryCollaborator(org: string, repo: string, usern
     })).data
 }
 
+export async function getRepository(owner: string, repo: string) {
+    const octokit = await newOctokit()
+
+    return(await octokit.request('GET /repos/{owner}/{repo}', {
+        headers,
+        owner,
+        repo,
+    })).data
+}
+
 export async function getRepositoryFile(owner: string, path: string, repo: string) {
     const octokit = await newOctokit()
 

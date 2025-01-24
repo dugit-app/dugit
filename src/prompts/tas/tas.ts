@@ -26,7 +26,7 @@ export default async function tas() {
         return
     }
 
-    const classroom = await select(
+    const classroomSelect = await select(
         {
             choices: (await api.getClassrooms()).map((classroom) => ({
                 name: classroom.name,
@@ -37,19 +37,21 @@ export default async function tas() {
         { clearPromptOnDone: true },
     )
 
+    const classroom = await api.getClassroom(classroomSelect.id)
+
     switch (option) {
         case 'add': {
-            await add(classroom.id)
+            await add(classroom)
             break
         }
 
         case 'edit': {
-            await edit(classroom.id)
+            await edit(classroom)
             break
         }
 
         case 'remove': {
-            await remove(classroom.id)
+            await remove(classroom)
             break
         }
     }

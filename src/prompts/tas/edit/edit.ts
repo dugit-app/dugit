@@ -1,3 +1,5 @@
-export default async function edit(classroomId: number) {
+import { Classroom } from '@/api/classroom.js'
+
+export default async function edit(classroom: Classroom) {
 
 }
