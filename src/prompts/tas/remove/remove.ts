@@ -10,7 +10,7 @@ export default async function remove(classroom: Classroom) {
                 name: ta.name,
                 value: ta,
             })),
-            message: 'Select a teaching assistant',
+            message: 'Select a teaching assistant to remove',
         },
         { clearPromptOnDone: true },
     )

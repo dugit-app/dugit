@@ -16,7 +16,7 @@ export default async function remove(ta: TA, classroom: Classroom) {
         configFile.tas.splice(taExistsIndex, 1)
     }
 
-    await api.updateRepositoryFile(org, 'config.json', 'dugit-config', JSON.stringify(configFile, null, 2), `Add ${ta.name}`)
+    await api.updateRepositoryFile(org, 'config.json', 'dugit-config', JSON.stringify(configFile, null, 2), `Remove ${ta.name}`)
 
     spinner.succeed(`Removed ${ta.name} from ${classroom.name}`)
 }
