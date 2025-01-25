@@ -13,7 +13,7 @@ export default async function grades() {
                 new Separator(),
                 { name: 'Back', value: 'back' },
             ],
-            message: '',
+            message: 'Select an option',
         },
         { clearPromptOnDone: true },
     )

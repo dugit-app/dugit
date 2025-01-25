@@ -10,6 +10,7 @@ GitHub Classroom tools for Drury University.
 - [ ] Add testing somehow
 - [ ] Grade and TA info stored in a repo for each org
 - [ ] Consider replacing local git cloning with workflows
+- [ ] Create dugit organization and move the project there
 
 ## Startup
 
@@ -38,7 +39,7 @@ GitHub Classroom tools for Drury University.
                 - Confirm
                 - Cancel
 - Usage instructions
-    - Open markdown file in github repo with the following:
+    - Open markdown file in GitHub repo with the following:
     - [Link to GitHub App](https://github.com/apps/dugit-app/installations/select_target)
     - Basic workflow explanation
 - Logout

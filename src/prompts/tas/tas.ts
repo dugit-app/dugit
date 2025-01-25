@@ -16,7 +16,7 @@ export default async function tas() {
                 new Separator(),
                 { name: 'Back', value: 'back' },
             ],
-            message: '',
+            message: 'Select an option',
         },
         { clearPromptOnDone: true },
     )

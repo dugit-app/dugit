@@ -23,7 +23,7 @@ async function prompts() {
                 { name: 'Logout', value: 'logout' },
                 { name: 'Exit', value: 'exit' },
             ],
-            message: '',
+            message: 'Select an option',
         },
         { clearPromptOnDone: true },
     )
