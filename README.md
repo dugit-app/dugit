@@ -27,7 +27,6 @@ GitHub Classroom tools for Drury University.
 - [ ] Address freezing when hitting stop after adding a grade? Have to hit ctrl c to kill
 - [ ] Catch ta username doesn't exist errors
 - [ ] Replace simple-git with write file for teacher and ta repos
-- [ ] Add option to open links to repos
 
 ## Prompt structure
 

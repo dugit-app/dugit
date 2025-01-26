@@ -46,7 +46,7 @@ export default async function add(name: string, assignment: Assignments[number],
         anonymousNamesMap,
     })
 
-    await generateTeacherRepo({
+    const teacherRepoLink = await generateTeacherRepo({
         name,
         assignment,
         org,
@@ -72,5 +72,5 @@ export default async function add(name: string, assignment: Assignments[number],
     configRepo.grades.push(grade)
 
     await updateConfigRepo(org, configRepo, `Add grade ${name} to ${assignment.title}'`)
-    spinner.succeed(`Added grade ${name} to ${assignment.title}`)
+    spinner.succeed(`Added grade ${name} to ${assignment.title} at ${teacherRepoLink}`)
 }

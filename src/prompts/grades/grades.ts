@@ -4,6 +4,7 @@ import api from '@/api/api.js'
 import add from '@/prompts/grades/add/add.js'
 import remove from '@/prompts/grades/remove/remove.js'
 import { select } from '@/utils/prompts/prompts.js'
+import view from '@/prompts/grades/view/view.js'
 
 export default async function grades() {
     const option = await select(
@@ -11,6 +12,7 @@ export default async function grades() {
             message: 'Select an option',
             choices: [
                 { name: 'Add grade', value: 'add' },
+                { name: 'View grade', value: 'view' },
                 { name: 'Remove grade', value: 'remove' },
                 new Separator(),
                 { name: 'Back', value: 'back' },
@@ -57,6 +59,10 @@ export default async function grades() {
     switch (option) {
         case 'add': {
             await add(assignment, classroom)
+            break
+        }
+        case 'view': {
+            await view(assignment, classroom)
             break
         }
 

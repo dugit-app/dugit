@@ -46,4 +46,6 @@ export async function generateTeacherRepo(config: {
     await git.push(['-u', 'origin', 'main'])
 
     await rm(repositoryPath, { force: true, recursive: true })
+
+    return repoLink
 }

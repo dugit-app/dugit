@@ -15,7 +15,7 @@ export default async function remove(name: string, assignment: Assignments[numbe
     const gradeExistsIndex = configRepo.grades.findIndex(grade => grade.name === name && grade.assignmentId == assignment.id)
 
     if (gradeExistsIndex == -1) {
-        spinner.fail(`Grade '${name} not found`)
+        spinner.fail(`Grade ${name} not found in ${assignment.title}`)
         return
     }
 
