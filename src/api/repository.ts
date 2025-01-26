@@ -106,3 +106,15 @@ export async function updateRepositoryFile(owner: string, path: string, repo: st
         content: btoa(content),
     })).data
 }
+
+export async function getRepositories(org: string) {
+    const octokit = await newOctokit()
+
+    return (await octokit.request('GET /orgs/{org}/repos', { headers, org: org })).data
+}
+
+export async function deleteRepository(owner: string, repo: string) {
+    const octokit = await newOctokit()
+
+    return (await octokit.request('DELETE /repos/{owner}/{repo}', { headers, owner, repo })).data
+}

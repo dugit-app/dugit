@@ -1,4 +1,9 @@
-import { select as inquirerSelect, Separator, input as inquirerInput, confirm as inquirerConfirm } from '@inquirer/prompts'
+import {
+    confirm as inquirerConfirm,
+    input as inquirerInput,
+    select as inquirerSelect,
+    Separator,
+} from '@inquirer/prompts'
 import chalk from 'chalk'
 
 type Choice<Value> = {

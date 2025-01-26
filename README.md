@@ -10,14 +10,8 @@ GitHub Classroom tools for Drury University.
 - [ ] Add testing somehow (use dugit-testing-classroom with the dugit org, and setup for edge cases)
 - [ ] Consider replacing local git cloning with workflows
 - [ ] Create dugit organization and move the project there
-- [ ] Consider replacing complicated json thing with just spreadsheet link
-  - No pulling grades
-  - Teacher repo: anonymous name maps and links to student and anonymous repos, link to TA repo
-  - TA repo: links to anonymous repos
-  - TA can add link to spreadsheet in repo where they put in grades for each anonymous name
 - [ ] Clean up / standardize exports, consider a different folder structure
 - [ ] Wrap API function structure
-- [ ] Catch error when Dugit GitHub app isn't installed, and link to it
 - [ ] Consider limiting grades to one per assignment (prob not cuz sprints, but maybe)
 - [ ] Sort imports
 - [ ] Test with older versions of Node
@@ -27,6 +21,7 @@ GitHub Classroom tools for Drury University.
 - [ ] Address freezing when hitting stop after adding a grade? Have to hit ctrl c to kill
 - [ ] Catch ta username doesn't exist errors
 - [ ] Replace simple-git with write file for teacher and ta repos
+- [ ] Check if creating a classroom without an org is possible, if so catch error
 
 ## Prompt structure
 

@@ -5,6 +5,7 @@ import add from '@/prompts/tas/add/add.js'
 import edit from '@/prompts/tas/edit/edit.js'
 import remove from '@/prompts/tas/remove/remove.js'
 import { select } from '@/utils/prompts/prompts.js'
+import { isAppInstalled } from '@/prompts/classroom/classroom.js'
 
 export default async function tas() {
     const option = await select(
@@ -40,6 +41,10 @@ export default async function tas() {
     }
 
     const classroom = await api.getClassroom(classroomSelect.id)
+
+    if (!await isAppInstalled(classroom)) {
+        return
+    }
 
     switch (option) {
         case 'add': {

@@ -36,14 +36,16 @@ export async function getOrganizations() {
     return (await octokit.request('GET /user/orgs', { headers })).data
 }
 
-export async function getRepositories(organizationName: string) {
+export async function getOrganizationAppInstallations(org: string) {
     const octokit = await newOctokit()
 
-    return (await octokit.request('GET /orgs/{org}/repos', { headers, org: organizationName })).data
-}
+    try {
+        return (await octokit.request('GET /orgs/{org}/installations', { headers, org })).data.installations
+    } catch (error) {
+        if (error instanceof RequestError) {
+            return undefined
+        }
 
-export async function deleteRepository(owner: string, repo: string) {
-    const octokit = await newOctokit()
-
-    return (await octokit.request('DELETE /repos/{owner}/{repo}', { headers, owner, repo })).data
+        console.log(error)
+    }
 }
