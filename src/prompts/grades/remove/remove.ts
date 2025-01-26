@@ -1,8 +1,8 @@
-import { confirm } from '@/utils/prompts.js'
+import { confirm } from '@/utils/prompts/prompts.js'
 import { Classroom } from '@/api/classroom.js'
 import utils from '@/utils/utils.js'
 import { Assignments } from '@/api/assignment.js'
-import { select } from '@/utils/prompts.js'
+import { select } from '@/utils/prompts/prompts.js'
 
 export default async function remove(assignment: Assignments[number], classroom: Classroom) {
     const grade = await select({

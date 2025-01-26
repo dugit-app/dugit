@@ -3,7 +3,7 @@ import ora from 'ora'
 import { Assignments } from '@/api/assignment.js'
 import { getClassroom } from '@/api/classroom.js'
 import { deleteRepository } from '@/api/org.js'
-import { Grade, readConfigFile, writeConfigFile } from '../files.js'
+import { Grade, readConfigFile, writeConfigFile } from '../configFile.js'
 
 // eslint-disable-next-line max-params
 export async function createGrade(assignment: Assignments[number], name: string, instructions: string, availablePoints: number, instructorRepositoryName: string, teachingAssistantRepositoryName: string, anonymousRepositoryNames: {

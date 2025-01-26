@@ -2,7 +2,7 @@ import { simpleGit } from 'simple-git'
 import chalk from 'chalk'
 
 import { getRepositoryFile } from '@/api/repository.js'
-import config from '@/utils/config.js'
+import config from '@/utils/config/config.js'
 import utils from '@/utils/utils.js'
 
 export default async function startup() {

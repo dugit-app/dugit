@@ -1,4 +1,5 @@
-import { headers, newOctokit } from '@/utils/octokit.js'
+import { headers, newOctokit } from '@/api/octokit.js'
+import { RequestError } from 'octokit'
 
 export async function addOrganizationMember(org: string, username: string) {
     const octokit = await newOctokit()
@@ -9,6 +10,24 @@ export async function addOrganizationMember(org: string, username: string) {
         role: 'member',
         username,
     })).data
+}
+
+export async function getOrganizationMembership(org: string, username: string) {
+    const octokit = await newOctokit()
+
+    try {
+        return (await octokit.request('GET /orgs/{org}/memberships/{username}', {
+            headers,
+            org,
+            username,
+        })).data.role
+    } catch (error) {
+        if (error instanceof RequestError) {
+            return undefined
+        }
+
+        console.log(error)
+    }
 }
 
 export async function getOrganizations() {

@@ -1,8 +1,8 @@
-import { input } from '@/utils/prompts.js'
+import { input } from '@/utils/prompts/prompts.js'
 
 import { Classroom } from '@/api/classroom.js'
 import utils from '@/utils/utils.js'
-import { select } from '@/utils/prompts.js'
+import { select } from '@/utils/prompts/prompts.js'
 
 export default async function edit(classroom: Classroom) {
     const previousTa = await select(

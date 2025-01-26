@@ -1,6 +1,6 @@
 import { Endpoints } from '@octokit/types'
 
-import { headers, newOctokit } from '@/utils/octokit.js'
+import { headers, newOctokit } from '@/api/octokit.js'
 
 export type Assignments = Endpoints['GET /classrooms/{classroom_id}/assignments']['response']['data']
 

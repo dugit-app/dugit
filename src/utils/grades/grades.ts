@@ -11,7 +11,8 @@ export default {
 export type Grade = {
     name: string,
     assignmentId: number,
-    anonymousNameMap: {
+    anonymousNamesMap: {
+        studentRepoLink: string,
         studentName: string,
         anonymousName: string,
     }[]

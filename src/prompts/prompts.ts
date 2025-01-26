@@ -4,7 +4,7 @@ import { ExitPromptError } from '@inquirer/core'
 import grades from '@/prompts/grades/grades.js'
 import tas from '@/prompts/tas/tas.js'
 import logout from '@/prompts/logout/logout.js'
-import { select } from '@/utils/prompts.js'
+import { select } from '@/utils/prompts/prompts.js'
 
 export default {
     prompts,

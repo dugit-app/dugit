@@ -1,7 +1,7 @@
-import { confirm } from '@/utils/prompts.js'
+import { confirm } from '@/utils/prompts/prompts.js'
 import { Classroom } from '@/api/classroom.js'
 import utils from '@/utils/utils.js'
-import { select } from '@/utils/prompts.js'
+import { select } from '@/utils/prompts/prompts.js'
 
 export default async function remove(classroom: Classroom) {
     const ta = await select(

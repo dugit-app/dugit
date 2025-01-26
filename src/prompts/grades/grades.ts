@@ -3,7 +3,7 @@ import { Separator } from '@inquirer/prompts'
 import api from '@/api/api.js'
 import add from '@/prompts/grades/add/add.js'
 import remove from '@/prompts/grades/remove/remove.js'
-import { select } from '@/utils/prompts.js'
+import { select } from '@/utils/prompts/prompts.js'
 
 export default async function grades() {
     const option = await select(

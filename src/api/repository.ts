@@ -1,4 +1,4 @@
-import { headers, newOctokit } from '@/utils/octokit.js'
+import { headers, newOctokit } from '@/api/octokit.js'
 import { Endpoints } from '@octokit/types'
 
 export type Repository = Endpoints['GET /repos/{owner}/{repo}']['response']['data']
@@ -27,6 +27,17 @@ export async function addRepositoryCollaborator(org: string, repo: string, usern
         repo,
         username,
     })).data
+}
+
+export async function getRepositoryPermission(owner: string, repo: string, username: string) {
+    const octokit = await newOctokit()
+
+    return (await octokit.request('GET /repos/{owner}/{repo}/collaborators/{username}/permission', {
+        headers,
+        owner,
+        repo,
+        username,
+    })).data.permission
 }
 
 export async function getRepository(owner: string, repo: string): Promise<Repository> {

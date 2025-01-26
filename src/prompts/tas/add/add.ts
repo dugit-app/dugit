@@ -1,4 +1,4 @@
-import { input } from '@/utils/prompts.js'
+import { input } from '@/utils/prompts/prompts.js'
 
 import utils from '@/utils/utils.js'
 import { Classroom } from '@/api/classroom.js'
