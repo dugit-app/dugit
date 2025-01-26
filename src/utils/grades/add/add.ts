@@ -9,6 +9,8 @@ import api from '@/api/api.js'
 import { AnonymousNameGenerator } from '@/utils/grades/add/name/name.js'
 import { getReadmes } from '@/utils/grades/add/readme/readme.js'
 import { generateAnonymousRepo } from '@/utils/grades/add/repo/anonymous/anonymous.js'
+import { generateTeacherRepo } from '@/utils/grades/add/repo/teacher/teacher.js'
+import { generateTaRepo } from '@/utils/grades/add/repo/ta/ta.js'
 
 export default async function add(name: string, assignment: Assignments[number], classroom: Classroom) {
     const spinner = ora(`Adding grade for '${assignment.title}'`).start()
@@ -44,8 +46,22 @@ export default async function add(name: string, assignment: Assignments[number],
         anonymousNamesMap,
     })
 
-    // TODO: generateTeacherRepo()
-    // TODO: generateTaRepo()
+    await generateTeacherRepo({
+        name,
+        assignment,
+        org,
+        readme: readmes.teacher,
+        spinner,
+    })
+
+    await generateTaRepo({
+        name,
+        assignment,
+        classroom,
+        org,
+        readme: readmes.ta,
+        spinner,
+    })
 
     const grade: Grade = {
         name,

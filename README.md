@@ -26,19 +26,8 @@ GitHub Classroom tools for Drury University.
 - [ ] Shorten anonymous to anon?
 - [ ] Address freezing when hitting stop after adding a grade? Have to hit ctrl c to kill
 - [ ] Catch ta username doesn't exist errors
-
-- TODO: Create repos (put functions in separate files, put function params in objects)
-- TODO: Add spinner feedback
-
-- repo prefix: github.com/org/assignment.slug-slug(grade.name)-
-- markdown builder - create headers -> separate function
-- get accepted assignments
-- for each:
-  - generate anonymous name -> separate function
-  - generate anonymous repo -> separate function (repo prefix, anonymous name)
-  - md builder - add line -> separate function
-- add name map to configRepo
-create teacher and ta repos with md files -> separate function (repo prefix, name map)
+- [ ] Replace simple-git with write file for teacher and ta repos
+- [ ] Add option to open links to repos
 
 ## Prompt structure
 

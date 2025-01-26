@@ -20,7 +20,7 @@ export async function generateAnonymousRepo(config: {
     anonymousNamesMap: Grade['anonymousNamesMap'],
     spinner: Ora
 }) {
-    const { name, assignment, org, classroom, anonymousNamesMap, spinner } = config
+    const { name, assignment, classroom, org, anonymousNamesMap, spinner } = config
     const repoPrefix = `${assignment.slug}-${slug(name)}-`
 
     for (const anonymousNameMap of anonymousNamesMap) {
