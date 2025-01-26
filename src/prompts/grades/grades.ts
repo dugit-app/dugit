@@ -4,13 +4,13 @@ import prompts from '@/prompts/prompts.js'
 import api from '@/api/api.js'
 import utils from '@/utils/utils.js'
 import add from '@/prompts/grades/add/add.js'
+import remove from '@/prompts/grades/remove/remove.js'
 
 export default async function grades() {
     const option = await select(
         {
             choices: [
                 { name: 'Add grade', value: 'add' },
-                { name: 'Pull grades from TA repo', value: 'pull' },
                 { name: 'Remove grade', value: 'remove' },
                 new Separator(),
                 { name: 'Back', value: 'back' },
@@ -55,11 +55,8 @@ export default async function grades() {
             break
         }
 
-        case 'pull': {
-            break
-        }
-
         case 'remove': {
+            await remove(assignment, classroom)
             break
         }
     }
