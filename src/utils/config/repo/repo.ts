@@ -1,5 +1,5 @@
 import { TA } from '@/utils/tas/tas.js'
-import { getRepository } from '@/api/repository.js'
+import { getRepository } from '@/api/repo.js'
 import api from '@/api/api.js'
 import { RequestError } from 'octokit'
 import ora from 'ora'

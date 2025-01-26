@@ -66,6 +66,7 @@ export default async function grades() {
             await add(assignment, classroom)
             break
         }
+
         case 'view': {
             await view(assignment, classroom)
             break

@@ -1,7 +1,7 @@
 import { simpleGit } from 'simple-git'
 import chalk from 'chalk'
 
-import { getRepositoryFile } from '@/api/repository.js'
+import { getRepositoryFile } from '@/api/repo.js'
 import config from '@/utils/config/config.js'
 import utils from '@/utils/utils.js'
 

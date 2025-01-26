@@ -1,9 +1,10 @@
 import { headers, newOctokit } from '@/api/octokit.js'
 import { Endpoints } from '@octokit/types'
 
-export type Repository = Endpoints['GET /repos/{owner}/{repo}']['response']['data']
+export type Repo = Endpoints['GET /repos/{owner}/{repo}']['response']['data']
+export type Repos = Endpoints['GET /orgs/{org}/repos']['response']['data']
 
-export async function createRepository(name: string, org: string): Promise<Repository> {
+export async function createRepository(name: string, org: string): Promise<Repo> {
     const octokit = await newOctokit()
 
     return (await octokit.request('POST /orgs/{org}/repos', {
@@ -40,7 +41,7 @@ export async function getRepositoryPermission(owner: string, repo: string, usern
     })).data.permission
 }
 
-export async function getRepository(owner: string, repo: string): Promise<Repository> {
+export async function getRepository(owner: string, repo: string): Promise<Repo> {
     const octokit = await newOctokit()
 
     return (await octokit.request('GET /repos/{owner}/{repo}', {

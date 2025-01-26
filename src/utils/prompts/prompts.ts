@@ -1,7 +1,8 @@
 import {
-    confirm as inquirerConfirm,
-    input as inquirerInput,
     select as inquirerSelect,
+    checkbox as inquirerCheckbox,
+    input as inquirerInput,
+    confirm as inquirerConfirm,
     Separator,
 } from '@inquirer/prompts'
 import chalk from 'chalk'
@@ -28,6 +29,21 @@ export async function select<Value>(config: {
     }
 
     return inquirerSelect({ message, choices }, { clearPromptOnDone: true })
+}
+
+export async function checkbox<Value>(config: {
+    message: string,
+    choices: readonly (string | Separator)[] | readonly (Separator | Choice<Value>)[],
+    noOptionsMessage?: string
+}) {
+    const { message, choices, noOptionsMessage } = config
+
+    if (choices.length == 0) {
+        console.log(chalk.yellow(noOptionsMessage || 'No options exist'))
+        return
+    }
+
+    return inquirerCheckbox({ message, choices }, { clearPromptOnDone: true })
 }
 
 export async function input(message: string, defaultValue?: string) {

@@ -1,5 +1,8 @@
 import { headers, newOctokit } from '@/api/octokit.js'
 import { RequestError } from 'octokit'
+import { Endpoints } from '@octokit/types'
+
+export type Organizations = Endpoints['GET /user/orgs']['response']['data']
 
 export async function addOrganizationMember(org: string, username: string) {
     const octokit = await newOctokit()

@@ -5,6 +5,7 @@ import grades from '@/prompts/grades/grades.js'
 import tas from '@/prompts/tas/tas.js'
 import logout from '@/prompts/logout/logout.js'
 import { select } from '@/utils/prompts/prompts.js'
+import repos from '@/prompts/repos/repos.js'
 
 export default {
     prompts,
@@ -42,7 +43,7 @@ async function prompts() {
             }
 
             case 'repos': {
-                // TODO: Manage repos
+                await repos()
                 break
             }
 
