@@ -1,9 +1,7 @@
-import { confirm } from '@/utils/prompts/prompts.js'
 import { Classroom } from '@/api/classroom.js'
 import utils from '@/utils/utils.js'
 import { Assignments } from '@/api/assignment.js'
 import { select } from '@/utils/prompts/prompts.js'
-import slug from 'slug'
 
 export default async function view(assignment: Assignments[number], classroom: Classroom) {
     const grade = await select({

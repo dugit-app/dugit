@@ -1,5 +1,4 @@
 import { Classroom } from '@/api/classroom.js'
-import getConfigRepo from '@/utils/config/repo/repo.js'
 import { Assignments } from '@/api/assignment.js'
 import { Grade } from '@/utils/grades/grades.js'
 import slug from 'slug'
