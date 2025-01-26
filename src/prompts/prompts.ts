@@ -6,6 +6,7 @@ import tas from '@/prompts/tas/tas.js'
 import logout from '@/prompts/logout/logout.js'
 import { select } from '@/utils/prompts/prompts.js'
 import repos from '@/prompts/repos/repos.js'
+import { usage } from '@/prompts/usage/usage.js'
 
 export default {
     prompts,
@@ -24,7 +25,7 @@ async function prompts() {
                     { name: 'Manage teaching assistants', value: 'tas' },
                     { name: 'Manage repositories', value: 'repos' },
                     new Separator(),
-                    { name: 'Usage instructions', value: 'usage' },
+                    { name: 'Usage guide', value: 'usage' },
                     { name: 'Logout', value: 'logout' },
                     { name: 'Exit', value: 'exit' },
                 ],
@@ -48,7 +49,7 @@ async function prompts() {
             }
 
             case 'usage': {
-                // TODO: Link to usage guide on GitHub
+                usage()
                 break
             }
 

@@ -22,4 +22,3 @@ GitHub Classroom tools for Drury University.
 - [ ] Catch ta username doesn't exist errors
 - [ ] Replace simple-git with write file for teacher and ta repos
 - [ ] Check if creating a classroom without an org is possible, if so catch error
-- [ ] Usage instructions (open md file in Dugit repo)
