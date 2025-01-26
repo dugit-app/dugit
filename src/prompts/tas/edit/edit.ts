@@ -21,12 +21,10 @@ export default async function edit(classroom: Classroom) {
     }
 
     const name = await input('Update the teaching assistant\'s name', previousTa.name)
-    const email = await input('Update the teaching assistant\'s email', previousTa.email)
     const username = await input('Update the teaching assistant\'s GitHub username', previousTa.username)
 
     const newTa = {
         name,
-        email,
         username,
     }
 

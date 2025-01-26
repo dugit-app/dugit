@@ -19,7 +19,6 @@ export default async function edit(previousTa: TA, newTa: TA, classroom: Classro
     }
 
     configTa.name = newTa.name
-    configTa.email = newTa.email
     configTa.username = newTa.username
 
     await api.updateRepositoryFile(org, 'config.json', 'dugit-config', JSON.stringify(configFile, null, 2), `Update ${newTa.name}`)

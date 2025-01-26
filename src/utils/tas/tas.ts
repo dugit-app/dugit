@@ -12,6 +12,5 @@ export default {
 
 export type TA = {
     name: string,
-    email: string,
     username: string,
 }
