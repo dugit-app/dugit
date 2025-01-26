@@ -11,6 +11,7 @@ import { getReadmes } from '@/utils/grades/add/readme/readme.js'
 import { generateAnonymousRepo } from '@/utils/grades/add/repo/anonymous/anonymous.js'
 import { generateTeacherRepo } from '@/utils/grades/add/repo/teacher/teacher.js'
 import { generateTaRepo } from '@/utils/grades/add/repo/ta/ta.js'
+import chalk from 'chalk'
 
 export default async function add(name: string, assignment: Assignments[number], classroom: Classroom) {
     const spinner = ora(`Adding grade ${name} to ${assignment.title}`).start()
@@ -72,5 +73,5 @@ export default async function add(name: string, assignment: Assignments[number],
     configRepo.grades.push(grade)
 
     await updateConfigRepo(org, configRepo, `Add grade ${name} to ${assignment.title}'`)
-    spinner.succeed(`Added grade ${name} to ${assignment.title} at ${teacherRepoLink}`)
+    spinner.succeed(`Added grade ${name} to ${assignment.title} at ${chalk.cyan(teacherRepoLink)}`)
 }
