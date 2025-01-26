@@ -8,15 +8,8 @@ GitHub Classroom tools for Drury University.
 
 - [ ] Put development guide in the repo
 - [ ] Add testing somehow
-- [ ] Grade and TA info stored in a repo for each org
 - [ ] Consider replacing local git cloning with workflows
 - [ ] Create dugit organization and move the project there
-
-## Startup
-
-- [x] Auto check if git is installed
-- [x] Auto check for update on start
-- [x] Auto start login if not logged in
 
 ## Prompt structure
 

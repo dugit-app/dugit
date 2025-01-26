@@ -1,4 +1,5 @@
 import { select, Separator } from '@inquirer/prompts'
+import { ExitPromptError } from '@inquirer/core'
 
 import grades from '@/prompts/grades/grades.js'
 import tas from '@/prompts/tas/tas.js'
@@ -8,53 +9,61 @@ export default {
     prompts,
     grades,
     tas,
-    logout
+    logout,
 }
 
 async function prompts() {
-    const option = await select(
-        {
-            choices: [
-                { name: 'Manage grades', value: 'grades' },
-                { name: 'Manage teaching assistants', value: 'tas' },
-                { name: 'Manage repositories', value: 'repos' },
-                new Separator(),
-                { name: 'Usage instructions', value: 'usage' },
-                { name: 'Logout', value: 'logout' },
-                { name: 'Exit', value: 'exit' },
-            ],
-            message: 'Select an option',
-        },
-        { clearPromptOnDone: true },
-    )
+    try {
+        const option = await select(
+            {
+                choices: [
+                    { name: 'Manage grades', value: 'grades' },
+                    { name: 'Manage teaching assistants', value: 'tas' },
+                    { name: 'Manage repositories', value: 'repos' },
+                    new Separator(),
+                    { name: 'Usage instructions', value: 'usage' },
+                    { name: 'Logout', value: 'logout' },
+                    { name: 'Exit', value: 'exit' },
+                ],
+                message: 'Select an option',
+            },
+            { clearPromptOnDone: true },
+        )
 
-    switch (option) {
-        case 'grades': {
-            await grades()
-            break
+        switch (option) {
+            case 'grades': {
+                await grades()
+                break
+            }
+
+            case 'tas': {
+                await tas()
+                break
+            }
+
+            case 'repos': {
+                break
+            }
+
+            case 'usage': {
+                break
+            }
+
+            case 'logout': {
+                await logout()
+                console.log('Logged out')
+                break
+            }
+
+            case 'exit': {
+                break
+            }
+        }
+    } catch (e) {
+        if (e instanceof ExitPromptError) {
+            process.exit()
         }
 
-        case 'tas': {
-            await tas()
-            break
-        }
-
-        case 'repos': {
-            break
-        }
-
-        case 'usage': {
-            break
-        }
-
-        case 'logout': {
-            await logout()
-            console.log('Logged out')
-            break
-        }
-
-        case 'exit': {
-            break
-        }
+        console.log(e)
     }
 }

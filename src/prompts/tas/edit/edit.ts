@@ -1,4 +1,4 @@
-import { select, confirm, input } from '@inquirer/prompts'
+import { select, input } from '@inquirer/prompts'
 
 import { Classroom } from '@/api/classroom.js'
 import utils from '@/utils/utils.js'
