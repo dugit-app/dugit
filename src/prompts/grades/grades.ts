@@ -20,7 +20,6 @@ export default async function grades() {
     )
 
     if (option == 'back') {
-        await prompts.prompts()
         return
     }
 

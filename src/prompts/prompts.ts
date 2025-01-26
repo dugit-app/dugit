@@ -42,26 +42,30 @@ async function prompts() {
             }
 
             case 'repos': {
+                // TODO: Manage repos
                 break
             }
 
             case 'usage': {
+                // TODO: Link to usage guide on GitHub
                 break
             }
 
             case 'logout': {
                 await logout()
-                console.log('Logged out')
                 break
             }
 
             case 'exit': {
-                break
+                return
             }
         }
+
+        await prompts()
     } catch (error) {
+        // Prevent error from printing when exiting manually
         if (error instanceof ExitPromptError) {
-            process.exit()
+            return
         }
 
         console.log(error)

@@ -15,6 +15,8 @@ GitHub Classroom tools for Drury University.
   - Teacher repo: anonymous name maps and links to student and anonymous repos, link to TA repo
   - TA repo: links to anonymous repos
   - TA can add link to spreadsheet in repo where they put in grades for each anonymous name
+- [ ] Clean up / standardize exports, consider a different folder structure
+- [ ] Wrap API function structure
 
 ## Prompt structure
 

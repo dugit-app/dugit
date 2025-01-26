@@ -12,7 +12,6 @@ export default async function startup() {
 }
 
 async function checkGitInstalled() {
-    // TODO: Test if this check works on a system without git installed
     const gitInstalled = (await simpleGit().version()).installed
 
     if (!gitInstalled) {

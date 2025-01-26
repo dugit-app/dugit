@@ -18,6 +18,8 @@ export default async function add(name: string, assignment: Assignments[number],
     }
 
     // TODO: Add anonymous names
+    // TODO: Create repos (put functions in separate files, put function params in objects)
+
     const grade: Grade = {
         name,
         assignmentId: assignment.id,

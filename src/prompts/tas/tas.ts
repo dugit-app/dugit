@@ -22,7 +22,6 @@ export default async function tas() {
     )
 
     if (option == 'back') {
-        await prompts.prompts()
         return
     }
 
