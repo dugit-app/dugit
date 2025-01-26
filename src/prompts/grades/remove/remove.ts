@@ -1,5 +1,4 @@
-import { confirm } from '@inquirer/prompts'
-
+import { confirm } from '@/utils/prompts.js'
 import { Classroom } from '@/api/classroom.js'
 import utils from '@/utils/utils.js'
 import { Assignments } from '@/api/assignment.js'
@@ -19,7 +18,7 @@ export default async function remove(assignment: Assignments[number], classroom:
         return
     }
 
-    const confirmRemove = await confirm({ message: `Are you sure you want to permanently delete all anonymous repositories for the '${grade.name}' grade?` }, { clearPromptOnDone: true })
+    const confirmRemove = await confirm(`Are you sure you want to permanently delete all anonymous repositories for the '${grade.name}' grade?`)
 
     if (confirmRemove) {
         await utils.grades.remove(grade.name, assignment, classroom)

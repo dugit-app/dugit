@@ -1,5 +1,4 @@
-import { confirm } from '@inquirer/prompts'
-
+import { confirm } from '@/utils/prompts.js'
 import { Classroom } from '@/api/classroom.js'
 import utils from '@/utils/utils.js'
 import { select } from '@/utils/prompts.js'
@@ -20,7 +19,7 @@ export default async function remove(classroom: Classroom) {
         return
     }
 
-    const confirmRemove = await confirm({ message: `Are you sure you want to remove ${ta.name} from ${classroom.name}?` }, { clearPromptOnDone: true })
+    const confirmRemove = await confirm(`Are you sure you want to remove ${ta.name} from ${classroom.name}?`)
 
     if (confirmRemove) {
         await utils.tas.remove(ta, classroom)

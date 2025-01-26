@@ -1,4 +1,4 @@
-import { select as inquirerSelect, Separator, input as inquirerInput } from '@inquirer/prompts'
+import { select as inquirerSelect, Separator, input as inquirerInput, confirm as inquirerConfirm } from '@inquirer/prompts'
 import chalk from 'chalk'
 
 type Choice<Value> = {
@@ -27,4 +27,8 @@ export async function select<Value>(config: {
 
 export async function input(message: string, defaultValue?: string) {
     return await inquirerInput({ message, default: defaultValue }, { clearPromptOnDone: true })
+}
+
+export async function confirm(message: string) {
+    return await inquirerConfirm({ message }, { clearPromptOnDone: true })
 }
