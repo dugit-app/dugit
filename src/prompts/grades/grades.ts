@@ -1,6 +1,5 @@
 import { Separator } from '@inquirer/prompts'
 
-import prompts from '@/prompts/prompts.js'
 import api from '@/api/api.js'
 import add from '@/prompts/grades/add/add.js'
 import remove from '@/prompts/grades/remove/remove.js'
