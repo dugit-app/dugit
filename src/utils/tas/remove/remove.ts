@@ -2,21 +2,20 @@ import ora from 'ora'
 
 import { TA } from '@/utils/tas/tas.js'
 import { Classroom } from '@/api/classroom.js'
-import api from '@/api/api.js'
+import getConfigRepo, { updateConfigRepo } from '@/utils/configRepo.js'
 
 export default async function remove(ta: TA, classroom: Classroom) {
     const spinner = ora(`Removing ${ta.name} from ${classroom.name}`).start()
     const org = classroom.organization.login
 
-    const configFile: { tas: TA[] } = await api.getRepositoryFile(org, 'config.json', 'dugit-config')
+    const configRepo = await getConfigRepo(org)
 
-    const taExistsIndex = configFile.tas.findIndex(t => t.username === ta.username)
+    const taExistsIndex = configRepo.tas.findIndex(t => t.username === ta.username)
 
     if (taExistsIndex > -1) {
-        configFile.tas.splice(taExistsIndex, 1)
+        configRepo.tas.splice(taExistsIndex, 1)
     }
 
-    await api.updateRepositoryFile(org, 'config.json', 'dugit-config', JSON.stringify(configFile, null, 2), `Remove ${ta.name}`)
-
+    await updateConfigRepo(org, configRepo, `Remove ${ta.name}`)
     spinner.succeed(`Removed ${ta.name} from ${classroom.name}`)
 }

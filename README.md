@@ -10,6 +10,12 @@ GitHub Classroom tools for Drury University.
 - [ ] Add testing somehow
 - [ ] Consider replacing local git cloning with workflows
 - [ ] Create dugit organization and move the project there
+- [ ] Consider replacing complicated json thing with just spreadsheet link
+  - No pulling grades
+  - Teacher repo: anonymous name maps and links to student and anonymous repos, link to TA repo
+  - TA repo: links to anonymous repos
+  - TA can add link to spreadsheet in repo where they put in grades for each anonymous name
+- [ ] Error handling for empty selects
 
 ## Prompt structure
 
@@ -17,9 +23,7 @@ GitHub Classroom tools for Drury University.
     - Select classroom
         - Select assignment
             - New grade
-            - Pull grades from TA repo
-            - Remove grade
-                - Delete repos option
+            - Remove grade (delete repos)
 - Manage teaching assistants
     - Select classroom
         - Add TA

@@ -2,6 +2,8 @@ import { Separator, select } from '@inquirer/prompts'
 
 import prompts from '@/prompts/prompts.js'
 import api from '@/api/api.js'
+import utils from '@/utils/utils.js'
+import add from '@/prompts/grades/add/add.js'
 
 export default async function grades() {
     const option = await select(
@@ -23,7 +25,7 @@ export default async function grades() {
         return
     }
 
-    const classroom = await select(
+    const classroomSelect = await select(
         {
             choices: (await api.getClassrooms()).map((classroom) => ({
                 name: classroom.name,
@@ -33,6 +35,8 @@ export default async function grades() {
         },
         { clearPromptOnDone: true },
     )
+
+    const classroom = await api.getClassroom(classroomSelect.id)
 
     const assignment = await select(
         {
@@ -47,7 +51,7 @@ export default async function grades() {
 
     switch (option) {
         case 'add': {
-            console.log(`Add grade for assignment ${assignment.title}`)
+            await add(assignment, classroom)
             break
         }
 
@@ -59,4 +63,6 @@ export default async function grades() {
             break
         }
     }
+
+    await grades()
 }
