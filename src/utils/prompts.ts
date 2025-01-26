@@ -1,5 +1,4 @@
 import { select, Separator } from '@inquirer/prompts'
-import { ValidationError } from '@inquirer/core'
 import chalk from 'chalk'
 
 type Choice<Value> = {

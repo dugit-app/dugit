@@ -5,19 +5,19 @@ import api from '@/api/api.js'
 import utils from '@/utils/utils.js'
 import add from '@/prompts/grades/add/add.js'
 import remove from '@/prompts/grades/remove/remove.js'
+import selectOptions from '@/utils/prompts.js'
 
 export default async function grades() {
-    const option = await select(
+    const option = await selectOptions(
         {
+            message: 'Select an option',
             choices: [
                 { name: 'Add grade', value: 'add' },
                 { name: 'Remove grade', value: 'remove' },
                 new Separator(),
                 { name: 'Back', value: 'back' },
             ],
-            message: 'Select an option',
         },
-        { clearPromptOnDone: true },
     )
 
     if (option == 'back') {
@@ -25,29 +25,37 @@ export default async function grades() {
         return
     }
 
-    const classroomSelect = await select(
+    const classroomSelect = await selectOptions(
         {
+            message: 'Select a classroom',
             choices: (await api.getClassrooms()).map((classroom) => ({
                 name: classroom.name,
                 value: classroom,
             })),
-            message: 'Select an organization',
+            noOptionsMessage: 'No classrooms exist'
         },
-        { clearPromptOnDone: true },
     )
+
+    if (!classroomSelect) {
+        return
+    }
 
     const classroom = await api.getClassroom(classroomSelect.id)
 
-    const assignment = await select(
+    const assignment = await selectOptions(
         {
+            message: 'Select an assignment',
             choices: (await api.getAssignments(classroom.id)).map((assignment) => ({
                 name: assignment.title,
                 value: assignment,
             })),
-            message: '',
+            noOptionsMessage: `No assignments exist for ${classroom.name}`
         },
-        { clearPromptOnDone: true },
     )
+
+    if (!assignment) {
+        return
+    }
 
     switch (option) {
         case 'add': {

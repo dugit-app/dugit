@@ -4,6 +4,7 @@ import { ExitPromptError } from '@inquirer/core'
 import grades from '@/prompts/grades/grades.js'
 import tas from '@/prompts/tas/tas.js'
 import logout from '@/prompts/logout/logout.js'
+import selectOptions from '@/utils/prompts.js'
 
 export default {
     prompts,
@@ -14,8 +15,9 @@ export default {
 
 async function prompts() {
     try {
-        const option = await select(
+        const option = await selectOptions(
             {
+                message: 'Select an option',
                 choices: [
                     { name: 'Manage grades', value: 'grades' },
                     { name: 'Manage teaching assistants', value: 'tas' },
@@ -25,9 +27,7 @@ async function prompts() {
                     { name: 'Logout', value: 'logout' },
                     { name: 'Exit', value: 'exit' },
                 ],
-                message: 'Select an option',
             },
-            { clearPromptOnDone: true },
         )
 
         switch (option) {

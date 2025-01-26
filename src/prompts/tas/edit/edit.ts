@@ -2,18 +2,23 @@ import { select, input } from '@inquirer/prompts'
 
 import { Classroom } from '@/api/classroom.js'
 import utils from '@/utils/utils.js'
+import selectOptions from '@/utils/prompts.js'
 
 export default async function edit(classroom: Classroom) {
-    const previousTa = await select(
+    const previousTa = await selectOptions(
         {
+            message: 'Select a teaching assistant to edit',
             choices: (await utils.tas.get(classroom)).map((ta) => ({
                 name: ta.name,
                 value: ta,
             })),
-            message: 'Select a teaching assistant to edit',
+            noOptionsMessage: `No teaching assistants exist for ${classroom.name}`
         },
-        { clearPromptOnDone: true },
     )
+
+    if (!previousTa) {
+        return
+    }
 
     const name = await input({
         default: previousTa.name,
