@@ -59,11 +59,11 @@ async function prompts() {
                 break
             }
         }
-    } catch (e) {
-        if (e instanceof ExitPromptError) {
+    } catch (error) {
+        if (error instanceof ExitPromptError) {
             process.exit()
         }
 
-        console.log(e)
+        console.log(error)
     }
 }
