@@ -5,9 +5,6 @@ import add from '@/prompts/grades/add/add.js'
 import remove from '@/prompts/grades/remove/remove.js'
 import { select } from '@/utils/prompts/prompts.js'
 import view from '@/prompts/grades/view/view.js'
-import { getOrganizationAppInstallations } from '@/api/org.js'
-import { appID, appInstallationLink } from '@/utils/config/config.js'
-import chalk from 'chalk'
 import { isAppInstalled } from '@/prompts/classroom/classroom.js'
 
 export default async function grades() {
