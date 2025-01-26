@@ -4,10 +4,10 @@ import prompts from '@/prompts/prompts.js'
 import api from '@/api/api.js'
 import add from '@/prompts/grades/add/add.js'
 import remove from '@/prompts/grades/remove/remove.js'
-import selectOptions from '@/utils/prompts.js'
+import { select } from '@/utils/prompts.js'
 
 export default async function grades() {
-    const option = await selectOptions(
+    const option = await select(
         {
             message: 'Select an option',
             choices: [
@@ -24,7 +24,7 @@ export default async function grades() {
         return
     }
 
-    const classroomSelect = await selectOptions(
+    const classroomSelect = await select(
         {
             message: 'Select a classroom',
             choices: (await api.getClassrooms()).map((classroom) => ({
@@ -41,7 +41,7 @@ export default async function grades() {
 
     const classroom = await api.getClassroom(classroomSelect.id)
 
-    const assignment = await selectOptions(
+    const assignment = await select(
         {
             message: 'Select an assignment',
             choices: (await api.getAssignments(classroom.id)).map((assignment) => ({

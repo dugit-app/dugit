@@ -1,4 +1,4 @@
-import { select, Separator } from '@inquirer/prompts'
+import { select as inquirerSelect, Separator, input as inquirerInput } from '@inquirer/prompts'
 import chalk from 'chalk'
 
 type Choice<Value> = {
@@ -10,7 +10,7 @@ type Choice<Value> = {
     type?: never;
 };
 
-export default async function selectOptions<Value>(config: {
+export async function select<Value>(config: {
     message: string,
     choices: readonly (string | Separator)[] | readonly (Separator | Choice<Value>)[],
     noOptionsMessage?: string
@@ -22,5 +22,9 @@ export default async function selectOptions<Value>(config: {
         return
     }
 
-    return select({ message, choices }, { clearPromptOnDone: true })
+    return inquirerSelect({ message, choices }, { clearPromptOnDone: true })
+}
+
+export async function input(message: string, defaultValue?: string) {
+    return await inquirerInput({ message, default: defaultValue }, { clearPromptOnDone: true })
 }

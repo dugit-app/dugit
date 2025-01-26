@@ -3,10 +3,10 @@ import { confirm } from '@inquirer/prompts'
 import { Classroom } from '@/api/classroom.js'
 import utils from '@/utils/utils.js'
 import { Assignments } from '@/api/assignment.js'
-import selectOptions from '@/utils/prompts.js'
+import { select } from '@/utils/prompts.js'
 
 export default async function remove(assignment: Assignments[number], classroom: Classroom) {
-    const grade = await selectOptions({
+    const grade = await select({
         message: 'Select a grade to remove',
         choices: (await utils.grades.get(classroom)).map((grade) => ({
             name: grade.name,

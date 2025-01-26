@@ -1,12 +1,12 @@
-import { input } from '@inquirer/prompts'
+import { input } from '@/utils/prompts.js'
 
 import utils from '@/utils/utils.js'
 import { Classroom } from '@/api/classroom.js'
 
 export default async function add(classroom: Classroom) {
-    const name = await input({ message: 'Enter the teaching assistant\'s name' }, { clearPromptOnDone: true })
-    const email = await input({ message: 'Enter the teaching assistant\'s email' }, { clearPromptOnDone: true })
-    const username = await input({ message: 'Enter the teaching assistant\'s GitHub username' }, { clearPromptOnDone: true })
+    const name = await input('Enter the teaching assistant\'s name')
+    const email = await input('Enter the teaching assistant\'s email')
+    const username = await input('Enter the teaching assistant\'s GitHub username')
 
     await utils.tas.add({
         name,

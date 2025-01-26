@@ -5,10 +5,10 @@ import api from '@/api/api.js'
 import add from '@/prompts/tas/add/add.js'
 import edit from '@/prompts/tas/edit/edit.js'
 import remove from '@/prompts/tas/remove/remove.js'
-import selectOptions from '@/utils/prompts.js'
+import { select } from '@/utils/prompts.js'
 
 export default async function tas() {
-    const option = await selectOptions(
+    const option = await select(
         {
             message: 'Select an option',
             choices: [
@@ -26,7 +26,7 @@ export default async function tas() {
         return
     }
 
-    const classroomSelect = await selectOptions(
+    const classroomSelect = await select(
         {
             message: 'Select a classroom',
             choices: (await api.getClassrooms()).map((classroom) => ({

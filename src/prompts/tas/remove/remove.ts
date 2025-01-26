@@ -2,10 +2,10 @@ import { confirm } from '@inquirer/prompts'
 
 import { Classroom } from '@/api/classroom.js'
 import utils from '@/utils/utils.js'
-import selectOptions from '@/utils/prompts.js'
+import { select } from '@/utils/prompts.js'
 
 export default async function remove(classroom: Classroom) {
-    const ta = await selectOptions(
+    const ta = await select(
         {
             message: 'Select a teaching assistant to remove',
             choices: (await utils.tas.get(classroom)).map((ta) => ({
