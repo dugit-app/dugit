@@ -1,8 +1,7 @@
-import { Separator, select } from '@inquirer/prompts'
+import { Separator } from '@inquirer/prompts'
 
 import prompts from '@/prompts/prompts.js'
 import api from '@/api/api.js'
-import utils from '@/utils/utils.js'
 import add from '@/prompts/grades/add/add.js'
 import remove from '@/prompts/grades/remove/remove.js'
 import selectOptions from '@/utils/prompts.js'

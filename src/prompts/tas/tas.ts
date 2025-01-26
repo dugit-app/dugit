@@ -1,4 +1,4 @@
-import { Separator, select } from '@inquirer/prompts'
+import { Separator } from '@inquirer/prompts'
 
 import prompts from '@/prompts/prompts.js'
 import api from '@/api/api.js'

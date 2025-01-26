@@ -1,4 +1,4 @@
-import { select, Separator } from '@inquirer/prompts'
+import { Separator } from '@inquirer/prompts'
 import { ExitPromptError } from '@inquirer/core'
 
 import grades from '@/prompts/grades/grades.js'
