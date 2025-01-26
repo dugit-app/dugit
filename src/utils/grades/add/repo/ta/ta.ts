@@ -20,7 +20,7 @@ export async function generateTaRepo(config: {
     spinner: Ora
 }) {
     const { name, assignment, classroom, org, readme, spinner } = config
-    const repoName = `${assignment.slug}-${slug(name)}-ta`
+    const repoName = `${assignment.slug}-${slug(name)}-teaching-assistant`
     spinner.text = 'Generating teaching assistant repository'
 
     const repo = await api.createRepository(repoName, org)

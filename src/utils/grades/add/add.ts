@@ -13,7 +13,7 @@ import { generateTeacherRepo } from '@/utils/grades/add/repo/teacher/teacher.js'
 import { generateTaRepo } from '@/utils/grades/add/repo/ta/ta.js'
 
 export default async function add(name: string, assignment: Assignments[number], classroom: Classroom) {
-    const spinner = ora(`Adding grade for '${assignment.title}'`).start()
+    const spinner = ora(`Adding grade ${name} to ${assignment.title}`).start()
     const org = classroom.organization.login
 
     const configRepo = await getConfigRepo(org)
@@ -21,7 +21,7 @@ export default async function add(name: string, assignment: Assignments[number],
     const gradeExistsIndex = configRepo.grades.findIndex(grade => slug(grade.name) === slug(name))
 
     if (gradeExistsIndex > -1) {
-        spinner.fail(`Grade with name '${name}' already exists`)
+        spinner.fail(`Grade ${name} already exists`)
         return
     }
 
@@ -71,6 +71,6 @@ export default async function add(name: string, assignment: Assignments[number],
 
     configRepo.grades.push(grade)
 
-    await updateConfigRepo(org, configRepo, `Add grade for '${assignment.title}'`)
-    spinner.succeed(`Added grade for '${assignment.title}`)
+    await updateConfigRepo(org, configRepo, `Add grade ${name} to ${assignment.title}'`)
+    spinner.succeed(`Added grade ${name} to ${assignment.title}`)
 }

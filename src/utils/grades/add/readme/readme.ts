@@ -13,7 +13,7 @@ export function getReadmes(config: {
     const header = `${config.assignment.title} - ${config.name}\n\n`
 
     let teacher = '# Teacher - ' + header
-    teacher += `[Teaching Assistant Repository](${repoLinkPrefix}ta)\n\n`
+    teacher += `[Teaching Assistant Repository](${repoLinkPrefix}teaching-assistant)\n\n`
     teacher += '| Student repo | Anonymous repo |\n| - | - |\n'
 
     let ta = '# Teaching Assistant - ' + header + '| Anonymous repo |\n| - |\n'
