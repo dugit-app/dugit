@@ -1,20 +1,20 @@
 import { Separator } from '@inquirer/prompts'
 
 import api from '@/api/api.js'
-import add from '@/prompts/tas/add/add.js'
-import edit from '@/prompts/tas/edit/edit.js'
-import remove from '@/prompts/tas/remove/remove.js'
+import add from '@/prompts/graders/add/add.js'
+import edit from '@/prompts/graders/edit/edit.js'
+import remove from '@/prompts/graders/remove/remove.js'
 import { select } from '@/utils/prompts/prompts.js'
 import { isAppInstalled } from '@/prompts/classroom/classroom.js'
 
-export default async function tas() {
+export default async function graders() {
     const option = await select(
         {
             message: 'Select an option',
             choices: [
-                { name: 'Add TA', value: 'add' },
-                { name: 'Edit TA', value: 'edit' },
-                { name: 'Remove TA', value: 'remove' },
+                { name: 'Add grader', value: 'add' },
+                { name: 'Edit grader', value: 'edit' },
+                { name: 'Remove grader', value: 'remove' },
                 new Separator(),
                 { name: 'Back', value: 'back' },
             ],
@@ -63,5 +63,5 @@ export default async function tas() {
         }
     }
 
-    await tas()
+    await graders()
 }

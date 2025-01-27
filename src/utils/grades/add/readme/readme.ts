@@ -13,17 +13,17 @@ export function getReadmes(config: {
     const header = `${config.assignment.title} - ${config.name}\n\n`
 
     let teacher = '# Teacher - ' + header
-    teacher += `[Teaching Assistant Repository](${repoLinkPrefix}teaching-assistant)\n\n`
+    teacher += `[Grader Repository](${repoLinkPrefix}grader)\n\n`
     teacher += '| Student repo | Anonymous repo |\n| - | - |\n'
 
-    let ta = '# Teaching Assistant - ' + header + '| Anonymous repo |\n| - |\n'
+    let grader = '# Grader - ' + header + '| Anonymous repo |\n| - |\n'
 
     for (const anonymousNameMap of config.anonymousNamesMap) {
         const anonymousRepoLink = repoLinkPrefix + anonymousNameMap.anonymousName
         teacher += `| [${anonymousNameMap.studentName}](${anonymousNameMap.studentRepoLink}) `
         teacher += `| [${anonymousNameMap.anonymousName}](${anonymousRepoLink}) |\n`
-        ta += `| [${anonymousNameMap.anonymousName}](${anonymousRepoLink}) |\n`
+        grader += `| [${anonymousNameMap.anonymousName}](${anonymousRepoLink}) |\n`
     }
 
-    return { teacher, ta }
+    return { teacher, grader }
 }

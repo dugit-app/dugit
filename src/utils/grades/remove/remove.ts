@@ -27,8 +27,8 @@ export default async function remove(name: string, assignment: Assignments[numbe
     spinner.text = 'Deleting teacher repository'
     await deleteRepository(org, repoPrefix + 'teacher')
 
-    spinner.text = 'Deleting teaching assistant repository'
-    await deleteRepository(org, repoPrefix + 'teaching-assistant')
+    spinner.text = 'Deleting grader repository'
+    await deleteRepository(org, repoPrefix + 'grader')
 
     for (const anonymousNameMap of grade.anonymousNamesMap) {
         spinner.text = `Deleting ${anonymousNameMap.studentName}'s anonymous repository`

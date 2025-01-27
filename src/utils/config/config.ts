@@ -1,7 +1,7 @@
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 
-export const appName = 'dugit2'
+export const appName = 'dugit'
 export const clientID = 'Iv23lijtn2t2viXRUXCe'
 export const appID = 960869
 export const appInstallationLink = 'https://github.com/apps/dugit-app/installations/select_target'

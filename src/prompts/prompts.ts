@@ -2,7 +2,7 @@ import { Separator } from '@inquirer/prompts'
 import { ExitPromptError } from '@inquirer/core'
 
 import grades from '@/prompts/grades/grades.js'
-import tas from '@/prompts/tas/tas.js'
+import graders from '@/prompts/graders/graders.js'
 import logout from '@/prompts/logout/logout.js'
 import { select } from '@/utils/prompts/prompts.js'
 import repos from '@/prompts/repos/repos.js'
@@ -11,7 +11,7 @@ import { help } from '@/prompts/help/help.js'
 export default {
     prompts,
     grades,
-    tas,
+    graders,
     logout,
 }
 
@@ -22,7 +22,7 @@ async function prompts() {
                 message: 'Select an option',
                 choices: [
                     { name: 'Manage grades', value: 'grades' },
-                    { name: 'Manage teaching assistants', value: 'tas' },
+                    { name: 'Manage graders', value: 'graders' },
                     { name: 'Manage repositories', value: 'repos' },
                     new Separator(),
                     { name: 'Help', value: 'help' },
@@ -38,8 +38,8 @@ async function prompts() {
                 break
             }
 
-            case 'tas': {
-                await tas()
+            case 'graders': {
+                await graders()
                 break
             }
 

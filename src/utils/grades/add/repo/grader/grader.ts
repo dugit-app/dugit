@@ -11,7 +11,7 @@ import utils from '@/utils/utils.js'
 import { grantTaPermissions } from '@/utils/grades/add/repo/repo.js'
 import { Classroom } from '@/api/classroom.js'
 
-export async function generateTaRepo(config: {
+export async function generateGraderRepo(config: {
     name: string,
     assignment: Assignments[number],
     classroom: Classroom
@@ -20,8 +20,8 @@ export async function generateTaRepo(config: {
     spinner: Ora
 }) {
     const { name, assignment, classroom, org, readme, spinner } = config
-    const repoName = `${assignment.slug}-${slug(name)}-teaching-assistant`
-    spinner.text = 'Generating teaching assistant repository'
+    const repoName = `${assignment.slug}-${slug(name)}-grader`
+    spinner.text = 'Generating grader repository'
 
     const repo = await api.createRepository(repoName, org)
     const repoLink = repo.html_url

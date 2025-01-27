@@ -1,4 +1,4 @@
-import { TA } from '@/utils/tas/tas.js'
+import { Grader } from '@/utils/graders/graders.js'
 import { getRepository } from '@/api/repo.js'
 import api from '@/api/api.js'
 import { RequestError } from 'octokit'
@@ -6,11 +6,11 @@ import ora from 'ora'
 import { Grade } from '@/utils/grades/grades.js'
 
 export type ConfigRepo = {
-    tas: TA[],
+    graders: Grader[],
     grades: Grade[]
 }
 
-export const defaultConfigRepo: ConfigRepo = { tas: [], grades: [] }
+export const defaultConfigRepo: ConfigRepo = { graders: [], grades: [] }
 
 export default async function getConfigRepo(org: string) {
     try {

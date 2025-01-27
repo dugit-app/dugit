@@ -10,7 +10,7 @@ import { AnonymousNameGenerator } from '@/utils/grades/add/name/name.js'
 import { getReadmes } from '@/utils/grades/add/readme/readme.js'
 import { generateAnonymousRepo } from '@/utils/grades/add/repo/anonymous/anonymous.js'
 import { generateTeacherRepo } from '@/utils/grades/add/repo/teacher/teacher.js'
-import { generateTaRepo } from '@/utils/grades/add/repo/ta/ta.js'
+import { generateGraderRepo } from '@/utils/grades/add/repo/grader/grader.js'
 import chalk from 'chalk'
 
 export default async function add(name: string, assignment: Assignments[number], classroom: Classroom) {
@@ -55,12 +55,12 @@ export default async function add(name: string, assignment: Assignments[number],
         spinner,
     })
 
-    await generateTaRepo({
+    await generateGraderRepo({
         name,
         assignment,
         classroom,
         org,
-        readme: readmes.ta,
+        readme: readmes.grader,
         spinner,
     })
 

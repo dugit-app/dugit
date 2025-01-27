@@ -1,3 +1,5 @@
+import chalk from 'chalk'
+
 import { requestDeviceCode, requestToken } from '@/api/auth.js'
 import { readConfigFile, writeConfigFile } from '@/utils/config/file/file.js'
 
@@ -74,7 +76,7 @@ async function isLoggedIn() {
 async function login() {
     const response = await requestDeviceCode()
 
-    console.log(`Please visit ${response.verification_uri}\nand enter code: ${response.user_code}`)
+    console.log(`Please visit ${chalk.cyan(response.verification_uri)}\nand enter code: ${response.user_code}`)
 
     const accessToken = await pollForToken(response.device_code, response.interval)
 

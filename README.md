@@ -15,10 +15,9 @@ GitHub Classroom tools for Drury University.
 - [ ] Consider limiting grades to one per assignment (prob not cuz sprints, but maybe)
 - [ ] Sort imports
 - [ ] Test with older versions of Node
-- [ ] Rename TA to grader?
 - [ ] Rename instances of repository to repo
 - [ ] Shorten anonymous to anon?
 - [ ] Address freezing when hitting stop after adding a grade? Have to hit ctrl c to kill
-- [ ] Catch ta username doesn't exist errors
-- [ ] Replace simple-git with write file for teacher and ta repos
+- [ ] Catch grader username doesn't exist errors
+- [ ] Replace simple-git with write file for teacher and grader repos
 - [ ] Check if creating a classroom without an org is possible, if so catch error
