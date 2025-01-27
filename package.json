@@ -1,7 +1,7 @@
 {
   "name": "dugit",
   "description": "GitHub Classroom tools for Drury University",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Brayden O'Neal",
   "homepage": "https://github.com/dugit-app/dugit",
   "repository": "dugit-app/dugit",
@@ -9,15 +9,16 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "dugit2": "dist/index.js"
+    "dugit": "dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "dev": "tsx src/index.ts"
   },
   "devDependencies": {
     "@types/slug": "^5.0.9",
     "esbuild": "^0.24.2",
+    "tsc-alias": "^1.8.10",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   },
