@@ -1,7 +1,7 @@
 import { simpleGit } from 'simple-git'
 import chalk from 'chalk'
 
-import { getRepositoryFile } from '@/api/repo.js'
+import { getRepoFile } from '@/api/repo.js'
 import config from '@/utils/config/config.js'
 import utils from '@/utils/utils.js'
 
@@ -21,7 +21,7 @@ async function checkGitInstalled() {
 }
 
 async function checkUpdate() {
-    const latestVersion = (await getRepositoryFile('braydenoneal', 'package.json', 'dugit')).version
+    const latestVersion = (await getRepoFile('braydenoneal', 'package.json', 'dugit')).version
     const installedVersion = config.version
 
     if (installedVersion != latestVersion) {

@@ -23,32 +23,32 @@ export async function generateGraderRepo(config: {
     const repoName = `${assignment.slug}-${slug(name)}-grader`
     spinner.text = 'Generating grader repository'
 
-    const repo = await api.createRepository(repoName, org)
+    const repo = await api.createRepo(repoName, org)
     const repoLink = repo.html_url
 
-    const repositoryPath = join(configDirectoryPath, 'repo')
-    await rm(repositoryPath, { force: true, recursive: true })
+    const repoPath = join(configDirectoryPath, 'repo')
+    await rm(repoPath, { force: true, recursive: true })
 
     const git = simpleGit()
     await git.cwd(configDirectoryPath)
 
     const instructorURL = await utils.auth.tokenizeURL(repoLink)
-    await git.clone(instructorURL, repositoryPath)
+    await git.clone(instructorURL, repoPath)
 
-    await git.cwd(repositoryPath)
+    await git.cwd(repoPath)
 
     await git.remote(['set-url', 'origin', instructorURL])
 
     await git.addConfig('user.email', 'user@example.com')
     await git.addConfig('user.name', 'dugit')
 
-    await writeFile(join(repositoryPath, 'README.md'), readme)
+    await writeFile(join(repoPath, 'README.md'), readme)
     await git.add('README.md')
 
     await git.commit('Generate files')
     await git.push(['-u', 'origin', 'main'])
 
-    await rm(repositoryPath, { force: true, recursive: true })
+    await rm(repoPath, { force: true, recursive: true })
 
     await grantTaPermissions(repo.name, org, classroom)
 }

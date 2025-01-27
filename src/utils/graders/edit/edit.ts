@@ -9,7 +9,7 @@ export default async function edit(previousGrader: Grader, newGrader: Grader, cl
     const spinner = ora(`Updating ${previousGrader.name} in ${classroom.name}`).start()
     const org = classroom.organization.login
 
-    const configFile: ConfigRepo = await api.getRepositoryFile(org, 'config.json', 'dugit-config')
+    const configFile: ConfigRepo = await api.getRepoFile(org, 'config.json', 'dugit-config')
 
     const configGrader = configFile.graders.find(t => t.username === previousGrader.username)
 
@@ -21,7 +21,7 @@ export default async function edit(previousGrader: Grader, newGrader: Grader, cl
     configGrader.name = newGrader.name
     configGrader.username = newGrader.username
 
-    await api.updateRepositoryFile(org, 'config.json', 'dugit-config', JSON.stringify(configFile, null, 2), `Update ${newGrader.name}`)
+    await api.updateRepoFile(org, 'config.json', 'dugit-config', JSON.stringify(configFile, null, 2), `Update ${newGrader.name}`)
 
     spinner.succeed(`Updated ${newGrader.name} in ${classroom.name}`)
 }

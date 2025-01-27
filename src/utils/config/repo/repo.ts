@@ -1,5 +1,5 @@
 import { Grader } from '@/utils/graders/graders.js'
-import { getRepository } from '@/api/repo.js'
+import { getRepo } from '@/api/repo.js'
 import api from '@/api/api.js'
 import { RequestError } from 'octokit'
 import ora from 'ora'
@@ -14,17 +14,17 @@ export const defaultConfigRepo: ConfigRepo = { graders: [], grades: [] }
 
 export default async function getConfigRepo(org: string) {
     try {
-        await getRepository(org, 'dugit-config')
+        await getRepo(org, 'dugit-config')
         // ^^^ Checks if the repo exists by throwing an error if it doesn't
-        const configFile: ConfigRepo = await api.getRepositoryFile(org, 'config.json', 'dugit-config')
+        const configFile: ConfigRepo = await api.getRepoFile(org, 'config.json', 'dugit-config')
 
         return configFile
     } catch (error) {
         if (error instanceof RequestError) {
             const spinner = ora(`Creating Dugit config repository for ${org}`).start()
-            await api.createRepository('dugit-config', org)
+            await api.createRepo('dugit-config', org)
             spinner.text = 'Uploading config file'
-            await api.createRepositoryFile(
+            await api.createRepoFile(
                 org,
                 'config.json',
                 'dugit-config',
@@ -41,5 +41,5 @@ export default async function getConfigRepo(org: string) {
 }
 
 export async function updateConfigRepo(org: string, configRepo: ConfigRepo, message: string) {
-    await api.updateRepositoryFile(org, 'config.json', 'dugit-config', JSON.stringify(configRepo, null, 2), message)
+    await api.updateRepoFile(org, 'config.json', 'dugit-config', JSON.stringify(configRepo, null, 2), message)
 }

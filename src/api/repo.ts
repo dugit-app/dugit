@@ -4,7 +4,7 @@ import { Endpoints } from '@octokit/types'
 export type Repo = Endpoints['GET /repos/{owner}/{repo}']['response']['data']
 export type Repos = Endpoints['GET /orgs/{org}/repos']['response']['data']
 
-export async function createRepository(name: string, org: string): Promise<Repo> {
+export async function createRepo(name: string, org: string): Promise<Repo> {
     const octokit = await newOctokit()
 
     return (await octokit.request('POST /orgs/{org}/repos', {
@@ -18,7 +18,7 @@ export async function createRepository(name: string, org: string): Promise<Repo>
     })).data
 }
 
-export async function addRepositoryCollaborator(org: string, repo: string, username: string, permission: string) {
+export async function addRepoCollaborator(org: string, repo: string, username: string, permission: string) {
     const octokit = await newOctokit()
 
     return (await octokit.request('PUT /repos/{org}/{repo}/collaborators/{username}', {
@@ -30,7 +30,7 @@ export async function addRepositoryCollaborator(org: string, repo: string, usern
     })).data
 }
 
-export async function getRepositoryPermission(owner: string, repo: string, username: string) {
+export async function getRepoPermission(owner: string, repo: string, username: string) {
     const octokit = await newOctokit()
 
     return (await octokit.request('GET /repos/{owner}/{repo}/collaborators/{username}/permission', {
@@ -41,7 +41,7 @@ export async function getRepositoryPermission(owner: string, repo: string, usern
     })).data.permission
 }
 
-export async function getRepository(owner: string, repo: string): Promise<Repo> {
+export async function getRepo(owner: string, repo: string): Promise<Repo> {
     const octokit = await newOctokit()
 
     return (await octokit.request('GET /repos/{owner}/{repo}', {
@@ -51,7 +51,7 @@ export async function getRepository(owner: string, repo: string): Promise<Repo> 
     })).data
 }
 
-export async function getRepositoryFile(owner: string, path: string, repo: string) {
+export async function getRepoFile(owner: string, path: string, repo: string) {
     const octokit = await newOctokit()
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -64,7 +64,7 @@ export async function getRepositoryFile(owner: string, path: string, repo: strin
     })).data)
 }
 
-export async function createRepositoryFile(owner: string, path: string, repo: string, content: string, message: string) {
+export async function createRepoFile(owner: string, path: string, repo: string, content: string, message: string) {
     const octokit = await newOctokit()
 
     return (await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
@@ -81,7 +81,7 @@ export async function createRepositoryFile(owner: string, path: string, repo: st
     })).data
 }
 
-export async function updateRepositoryFile(owner: string, path: string, repo: string, content: string, message: string) {
+export async function updateRepoFile(owner: string, path: string, repo: string, content: string, message: string) {
     const octokit = await newOctokit()
 
     const fileData: any = (await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
@@ -108,13 +108,13 @@ export async function updateRepositoryFile(owner: string, path: string, repo: st
     })).data
 }
 
-export async function getRepositories(org: string) {
+export async function getRepos(org: string) {
     const octokit = await newOctokit()
 
     return (await octokit.request('GET /orgs/{org}/repos', { headers, org: org })).data
 }
 
-export async function deleteRepository(owner: string, repo: string) {
+export async function deleteRepo(owner: string, repo: string) {
     const octokit = await newOctokit()
 
     return (await octokit.request('DELETE /repos/{owner}/{repo}', { headers, owner, repo })).data

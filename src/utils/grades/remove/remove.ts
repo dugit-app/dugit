@@ -5,7 +5,7 @@ import { Classroom } from '@/api/classroom.js'
 import getConfigRepo, { updateConfigRepo } from '@/utils/config/repo/repo.js'
 import { Assignments } from '@/api/assignment.js'
 
-import { deleteRepository } from '@/api/repo.js'
+import { deleteRepo } from '@/api/repo.js'
 
 export default async function remove(name: string, assignment: Assignments[number], classroom: Classroom) {
     const spinner = ora(`Removing grade ${name} from ${assignment.title}`).start()
@@ -25,14 +25,14 @@ export default async function remove(name: string, assignment: Assignments[numbe
     const repoPrefix = `${assignment.slug}-${slug(name)}-`
 
     spinner.text = 'Deleting teacher repository'
-    await deleteRepository(org, repoPrefix + 'teacher')
+    await deleteRepo(org, repoPrefix + 'teacher')
 
     spinner.text = 'Deleting grader repository'
-    await deleteRepository(org, repoPrefix + 'grader')
+    await deleteRepo(org, repoPrefix + 'grader')
 
     for (const anonymousNameMap of grade.anonymousNamesMap) {
         spinner.text = `Deleting ${anonymousNameMap.studentName}'s anonymous repository`
-        await deleteRepository(org, repoPrefix + anonymousNameMap.anonymousName)
+        await deleteRepo(org, repoPrefix + anonymousNameMap.anonymousName)
     }
 
     configRepo.grades.splice(gradeExistsIndex, 1)

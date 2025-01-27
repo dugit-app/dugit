@@ -1,14 +1,14 @@
 import { getAcceptedAssignments, getAssignments } from '@/api/assignment.js'
 import { getClassroom, getClassrooms } from '@/api/classroom.js'
-import { createRepository, getRepositoryFile, createRepositoryFile, updateRepositoryFile } from '@/api/repo.js'
+import { createRepo, getRepoFile, createRepoFile, updateRepoFile } from '@/api/repo.js'
 
 export default {
     getAssignments,
     getAcceptedAssignments,
     getClassrooms,
     getClassroom,
-    createRepository,
-    getRepositoryFile,
-    createRepositoryFile,
-    updateRepositoryFile,
+    createRepo,
+    getRepoFile,
+    createRepoFile,
+    updateRepoFile,
 }

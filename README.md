@@ -15,7 +15,6 @@ GitHub Classroom tools for Drury University.
 - [ ] Consider limiting grades to one per assignment (prob not cuz sprints, but maybe)
 - [ ] Sort imports
 - [ ] Test with older versions of Node
-- [ ] Rename instances of repository to repo
 - [ ] Shorten anonymous to anon?
 - [ ] Address freezing when hitting stop after adding a grade? Have to hit ctrl c to kill
 - [ ] Catch grader username doesn't exist errors

@@ -1,12 +1,12 @@
 import { checkbox, confirm } from '@/utils/prompts/prompts.js'
 import utils from '@/utils/utils.js'
 import { Organizations } from '@/api/org.js'
-import { getRepositories } from '@/api/repo.js'
+import { getRepos } from '@/api/repo.js'
 
 export default async function remove(org: Organizations[number]) {
     const repos = await checkbox({
         message: 'Select repositories to delete',
-        choices: (await getRepositories(org.login)).map((repo) => ({
+        choices: (await getRepos(org.login)).map((repo) => ({
             name: repo.name,
             value: repo,
         })),

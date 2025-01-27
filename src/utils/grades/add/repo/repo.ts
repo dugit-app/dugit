@@ -1,7 +1,7 @@
 import { Classroom } from '@/api/classroom.js'
 import utils from '@/utils/utils.js'
 import { addOrganizationMember, getOrganizationMembership } from '@/api/org.js'
-import { addRepositoryCollaborator, getRepositoryPermission } from '@/api/repo.js'
+import { addRepoCollaborator, getRepoPermission } from '@/api/repo.js'
 
 export async function grantTaPermissions(repoName: string, org: string, classroom: Classroom) {
     const graders = await utils.graders.get(classroom)
@@ -13,10 +13,10 @@ export async function grantTaPermissions(repoName: string, org: string, classroo
             await addOrganizationMember(org, grader.username)
         }
 
-        const permission = await getRepositoryPermission(org, repoName, grader.username)
+        const permission = await getRepoPermission(org, repoName, grader.username)
 
         if (permission == 'none') {
-            await addRepositoryCollaborator(org, repoName, grader.username, 'triage')
+            await addRepoCollaborator(org, repoName, grader.username, 'triage')
         }
     }
 }

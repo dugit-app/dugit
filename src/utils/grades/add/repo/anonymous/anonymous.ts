@@ -27,17 +27,17 @@ export async function generateAnonymousRepo(config: {
         const { studentRepoLink, studentName, anonymousName } = anonymousNameMap
         spinner.text = `Generating anonymous repository for ${studentName}`
 
-        const repo = await api.createRepository(repoPrefix + anonymousName, org)
+        const repo = await api.createRepo(repoPrefix + anonymousName, org)
         const anonymousRepoLink = repo.html_url
 
-        const repositoryPath = join(configDirectoryPath, 'repo')
-        await rm(repositoryPath, { force: true, recursive: true })
+        const repoPath = join(configDirectoryPath, 'repo')
+        await rm(repoPath, { force: true, recursive: true })
 
         const git = simpleGit()
         await git.cwd(configDirectoryPath)
 
-        await git.clone((await utils.auth.tokenizeURL(studentRepoLink)), repositoryPath)
-        await git.cwd(repositoryPath)
+        await git.clone((await utils.auth.tokenizeURL(studentRepoLink)), repoPath)
+        await git.cwd(repoPath)
 
         await git.remote(['set-url', '--push', 'origin', (await utils.auth.tokenizeURL(anonymousRepoLink))])
 
@@ -55,7 +55,7 @@ export async function generateAnonymousRepo(config: {
 
         await git.push(['origin', '--all'])
 
-        await rm(repositoryPath, { force: true, recursive: true })
+        await rm(repoPath, { force: true, recursive: true })
 
         await grantTaPermissions(repo.name, org, classroom)
     }
