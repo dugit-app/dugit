@@ -1,11 +1,11 @@
 {
-  "name": "dugit2",
+  "name": "dugit",
   "description": "GitHub Classroom tools for Drury University",
   "version": "1.0.0",
   "author": "Brayden O'Neal",
-  "homepage": "https://github.com/braydenoneal/dugit",
-  "repository": "braydenoneal/dugit",
-  "bugs": "https://github.com/braydenoneal/dugit/issues",
+  "homepage": "https://github.com/dugit-app/dugit",
+  "repository": "dugit-app/dugit",
+  "bugs": "https://github.com/dugit-app/dugit/issues",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
