@@ -7,7 +7,7 @@ GitHub Classroom tools for Drury University.
 ## Installation
 
 - Install [Node.js](https://nodejs.org/en/download)
-- Install the CLI with `npm install -g dugit`
+- Install Dugit with `npm install -g dugit`
 - Install the [Dugit GitHub App]('https://github.com/apps/dugit-app/installations/select_target') on each organization
   that Dugit will be used for
 
