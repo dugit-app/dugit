@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import prompts from '@/prompts/prompts.js'
 import utils from '@/utils/utils.js'
 
