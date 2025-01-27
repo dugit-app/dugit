@@ -42,4 +42,4 @@ The typical workflow of Dugit is as follows:
 
 - Install [Node.js](https://nodejs.org/en/download)
 - Clone this repository with `git clone https://github.com/dugit-app/dugit`
-- Install packages with `npm install`
+- Install dependencies with `npm install`
