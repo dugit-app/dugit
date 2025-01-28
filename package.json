@@ -14,13 +14,15 @@
   },
   "scripts": {
     "build": "tsc && tsc-alias",
-    "dev": "tsx src/index.ts"
+    "dev": "tsx src/index.ts",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@types/slug": "^5.0.9",
     "tsc-alias": "^1.8.10",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.4"
   },
   "dependencies": {
     "@inquirer/prompts": "^7.2.3",

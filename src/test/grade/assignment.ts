@@ -1,7 +1,6 @@
 import api from '@/api/api.js'
-import utils from '@/utils/utils.js'
 
-export default async function add() {
+export async function getAssignment() {
     const classrooms = await api.getClassrooms()
     const classroomSelect = classrooms.find(classroom => classroom.name === 'Dugit Testing')
 
@@ -18,5 +17,5 @@ export default async function add() {
         throw new Error('Test assignment not found')
     }
 
-    await utils.grades.add('Test', assignment, classroom)
+    return { assignment, classroom }
 }
