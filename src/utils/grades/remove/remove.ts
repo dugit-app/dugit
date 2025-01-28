@@ -2,7 +2,7 @@ import ora from 'ora'
 import slug from 'slug'
 
 import { Classroom } from '@/api/classroom.js'
-import getConfigRepo, { updateConfigRepo } from '@/utils/config/repo/repo.js'
+import { getConfigRepo, updateConfigRepo } from '@/utils/config/repo/repo.js'
 import { Assignments } from '@/api/assignment.js'
 
 import { deleteRepo } from '@/api/repo.js'

@@ -12,7 +12,7 @@ export type ConfigRepo = {
 
 export const defaultConfigRepo: ConfigRepo = { graders: [], grades: [] }
 
-export default async function getConfigRepo(org: string) {
+export async function getConfigRepo(org: string) {
     try {
         await getRepo(org, 'dugit-config')
         // ^^^ Checks if the repo exists by throwing an error if it doesn't

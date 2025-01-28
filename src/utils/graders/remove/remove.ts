@@ -2,7 +2,7 @@ import ora from 'ora'
 
 import { Grader } from '@/utils/graders/graders.js'
 import { Classroom } from '@/api/classroom.js'
-import getConfigRepo, { updateConfigRepo } from '@/utils/config/repo/repo.js'
+import { getConfigRepo, updateConfigRepo } from '@/utils/config/repo/repo.js'
 
 export default async function remove(grader: Grader, classroom: Classroom) {
     const spinner = ora(`Removing ${grader.name} from ${classroom.name}`).start()
