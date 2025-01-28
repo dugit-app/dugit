@@ -9,10 +9,11 @@
     "moduleResolution": "node16",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@test/*": ["test/*"]
     }
   },
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*", "./test/**/*"],
   "ts-node": {
     "esm": true
   }
