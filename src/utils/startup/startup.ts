@@ -21,7 +21,7 @@ async function checkGitInstalled() {
 }
 
 async function checkUpdate() {
-    const latestVersion = (await getRepoFile('braydenoneal', 'package.json', 'dugit')).version
+    const latestVersion = (await getRepoFile('dugit-app', 'package.json', 'dugit')).version
     const installedVersion = config.version
 
     if (installedVersion != latestVersion) {
