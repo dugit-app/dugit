@@ -1,4 +1,5 @@
 import { Separator } from '@inquirer/prompts'
+import ora from 'ora'
 
 import api from '@/api/api.js'
 import add from '@/prompts/grades/add/add.js'
@@ -25,10 +26,14 @@ export default async function grades() {
         return
     }
 
+    const spinner = ora().start()
+    const classrooms = await api.getClassrooms()
+    spinner.stop()
+
     const classroomSelect = await select(
         {
             message: 'Select a classroom',
-            choices: (await api.getClassrooms()).map((classroom) => ({
+            choices: classrooms.map((classroom) => ({
                 name: classroom.name,
                 value: classroom,
             })),
@@ -40,16 +45,21 @@ export default async function grades() {
         return
     }
 
+    spinner.start()
     const classroom = await api.getClassroom(classroomSelect.id)
 
     if (!await isAppInstalled(classroom)) {
+        spinner.stop()
         return
     }
+
+    const assignments = await api.getAssignments(classroom.id)
+    spinner.stop()
 
     const assignment = await select(
         {
             message: 'Select an assignment',
-            choices: (await api.getAssignments(classroom.id)).map((assignment) => ({
+            choices: assignments.map((assignment) => ({
                 name: assignment.title,
                 value: assignment,
             })),

@@ -4,6 +4,7 @@ import { select } from '@/utils/prompts/prompts.js'
 import { isAppInstalledOrg } from '@/prompts/classroom/classroom.js'
 import { getOrganizations } from '@/api/org.js'
 import remove from '@/prompts/repos/remove/remove.js'
+import ora from 'ora'
 
 export default async function repos() {
     const option = await select(
@@ -21,10 +22,14 @@ export default async function repos() {
         return
     }
 
+    const spinner = ora().start()
+    const orgs = await getOrganizations()
+    spinner.stop()
+
     const org = await select(
         {
             message: 'Select an organization',
-            choices: (await getOrganizations()).map((org) => ({
+            choices: orgs.map((org) => ({
                 name: org.login,
                 value: org,
             })),
@@ -32,9 +37,14 @@ export default async function repos() {
         },
     )
 
+    spinner.start()
+
     if (!org || !await isAppInstalledOrg(org)) {
+        spinner.stop()
         return
     }
+
+    spinner.stop()
 
     switch (option) {
         case 'remove': {

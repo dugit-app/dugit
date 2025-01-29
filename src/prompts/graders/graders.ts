@@ -6,6 +6,7 @@ import edit from '@/prompts/graders/edit/edit.js'
 import remove from '@/prompts/graders/remove/remove.js'
 import { select } from '@/utils/prompts/prompts.js'
 import { isAppInstalled } from '@/prompts/classroom/classroom.js'
+import ora from 'ora'
 
 export default async function graders() {
     const option = await select(
@@ -25,10 +26,14 @@ export default async function graders() {
         return
     }
 
+    const spinner = ora().start()
+    const classrooms = await api.getClassrooms()
+    spinner.stop()
+
     const classroomSelect = await select(
         {
             message: 'Select a classroom',
-            choices: (await api.getClassrooms()).map((classroom) => ({
+            choices: classrooms.map((classroom) => ({
                 name: classroom.name,
                 value: classroom,
             })),
@@ -40,11 +45,15 @@ export default async function graders() {
         return
     }
 
+    spinner.start()
     const classroom = await api.getClassroom(classroomSelect.id)
 
     if (!await isAppInstalled(classroom)) {
+        spinner.stop()
         return
     }
+
+    spinner.stop()
 
     switch (option) {
         case 'add': {

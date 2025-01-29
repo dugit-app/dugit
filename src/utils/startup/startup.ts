@@ -4,11 +4,20 @@ import chalk from 'chalk'
 import { getRepoFile } from '@/api/repo.js'
 import config from '@/utils/config/config.js'
 import utils from '@/utils/utils.js'
+import ora from 'ora'
 
 export default async function startup() {
+    const spinner = ora('Checking for git installation').start()
     await checkGitInstalled()
+
+    spinner.text = 'Checking for update'
     await checkUpdate()
+
+    spinner.text = 'Checking for authentication'
     await checkLoggedIn()
+
+    spinner.stop()
+    console.clear()
 }
 
 async function checkGitInstalled() {
@@ -34,6 +43,5 @@ async function checkLoggedIn() {
     if (!await utils.auth.isLoggedIn()) {
         console.log('You need to authenticate with GitHub to use Dugit\n')
         await utils.auth.login()
-        console.clear()
     }
 }

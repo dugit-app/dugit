@@ -3,12 +3,17 @@ import { input } from '@/utils/prompts/prompts.js'
 import { Classroom } from '@/api/classroom.js'
 import utils from '@/utils/utils.js'
 import { select } from '@/utils/prompts/prompts.js'
+import ora from 'ora'
 
 export default async function edit(classroom: Classroom) {
+    const spinner = ora().start()
+    const graders = await utils.graders.get(classroom)
+    spinner.stop()
+
     const previousGrader = await select(
         {
             message: 'Select a grader to edit',
-            choices: (await utils.graders.get(classroom)).map((grader) => ({
+            choices: graders.map((grader) => ({
                 name: grader.name,
                 value: grader,
             })),
