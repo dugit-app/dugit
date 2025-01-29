@@ -25,7 +25,7 @@ export async function getOrganizationMembership(org: string, username: string) {
             username,
         })).data.role
     } catch (error) {
-        if (error instanceof RequestError) {
+        if (error instanceof RequestError && error.status == 404) {
             return undefined
         }
 
@@ -45,7 +45,7 @@ export async function getOrganizationAppInstallations(org: string) {
     try {
         return (await octokit.request('GET /orgs/{org}/installations', { headers, org })).data.installations
     } catch (error) {
-        if (error instanceof RequestError) {
+        if (error instanceof RequestError && error.status == 404) {
             return undefined
         }
 
