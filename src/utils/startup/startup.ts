@@ -7,17 +7,11 @@ import utils from '@/utils/utils.js'
 import ora from 'ora'
 
 export default async function startup() {
-    const spinner = ora('Checking for git installation').start()
+    const spinner = ora().start()
     await checkGitInstalled()
-
-    spinner.text = 'Checking for update'
     await checkUpdate()
-
-    spinner.text = 'Checking for authentication'
     await checkLoggedIn()
-
     spinner.stop()
-    console.clear()
 }
 
 async function checkGitInstalled() {
