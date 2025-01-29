@@ -22,5 +22,5 @@ jobs:
       - name: Run tests on Node ${{ matrix.node-version }}
         run: |
           mkdir -p .config/dugit
-          echo "{ \"accessToken\": \"${{ secrets.GH_TOKEN }}\" }" >> .config/dugit/config.json
+          echo "{ \"accessToken\": \"${{ secrets.DUGIT_TOKEN }}\" }" >> .config/dugit/config.json
           npm run test
