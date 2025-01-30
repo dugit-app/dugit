@@ -9,7 +9,7 @@ import { deleteRepo } from '@/api/repo.js'
 import { repoExists } from '@/utils/repos/repos.js'
 
 export default async function remove(name: string, assignment: Assignments[number], classroom: Classroom) {
-    const spinner = ora(`Removing grade ${name} from ${assignment.title}`).start()
+    const spinner = ora(`Removing ${name} from ${classroom.name} > ${assignment.title}`).start()
     const org = classroom.organization.login
 
     const configRepo = await getConfigRepo(org)
@@ -17,7 +17,7 @@ export default async function remove(name: string, assignment: Assignments[numbe
     const gradeExistsIndex = configRepo.grades.findIndex(grade => grade.name === name && grade.assignmentId == assignment.id)
 
     if (gradeExistsIndex == -1) {
-        spinner.fail(`Grade ${name} not found in ${assignment.title}`)
+        spinner.fail(`${name} does not exist in ${classroom.name} > ${assignment.title}`)
         return
     }
 
@@ -56,6 +56,6 @@ export default async function remove(name: string, assignment: Assignments[numbe
 
     configRepo.grades.splice(gradeExistsIndex, 1)
 
-    await updateConfigRepo(org, configRepo, `Remove grade ${name} from ${assignment.title}`)
-    spinner.succeed(`Removed grade ${name} from ${assignment.title}`)
+    await updateConfigRepo(org, configRepo, `Remove ${name} from ${classroom.name} > ${assignment.title}`)
+    spinner.succeed(`Removed ${name} from ${classroom.name} > ${assignment.title}`)
 }

@@ -1,27 +1,11 @@
-import { Separator } from '@inquirer/prompts'
-
-import { select } from '@/utils/prompts/prompts.js'
-import { isAppInstalledOrg } from '@/prompts/classroom/classroom.js'
-import { getOrganizations } from '@/api/org.js'
-import remove from '@/prompts/repos/remove/remove.js'
 import ora from 'ora'
 
+import { select } from '@/utils/prompts/prompts.js'
+import { isAppInstalledOrg } from '@/utils/classroom/classroom.js'
+import { getOrganizations } from '@/api/org.js'
+import remove from '@/prompts/repos/remove/remove.js'
+
 export default async function repos() {
-    const option = await select(
-        {
-            message: 'Select an option',
-            choices: [
-                { name: 'Select repositories to delete', value: 'remove' },
-                new Separator(),
-                { name: 'Back', value: 'back' },
-            ],
-        },
-    )
-
-    if (option == 'back') {
-        return
-    }
-
     const spinner = ora().start()
     const orgs = await getOrganizations()
     spinner.stop()
@@ -46,12 +30,23 @@ export default async function repos() {
 
     spinner.stop()
 
+    const option = await select(
+        {
+            message: 'Select an option',
+            choices: [
+                { name: 'Select repositories to delete', value: 'remove' },
+            ],
+        },
+    )
+
+    if (!option) {
+        return
+    }
+
     switch (option) {
         case 'remove': {
             await remove(org)
             break
         }
     }
-
-    await repos()
 }

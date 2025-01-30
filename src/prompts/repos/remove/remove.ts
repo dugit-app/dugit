@@ -1,8 +1,9 @@
+import ora from 'ora'
+
 import { checkbox, confirm } from '@/utils/prompts/prompts.js'
 import utils from '@/utils/utils.js'
 import { Organizations } from '@/api/org.js'
 import { getRepos } from '@/api/repo.js'
-import ora from 'ora'
 
 export default async function remove(org: Organizations[number]) {
     const spinner = ora().start()
@@ -10,7 +11,7 @@ export default async function remove(org: Organizations[number]) {
     spinner.stop()
 
     const repos = await checkbox({
-        message: 'Select repositories to delete',
+        message: `${org.login} > Select repositories to delete`,
         choices: allRepos.map((repo) => ({
             name: repo.name,
             value: repo,

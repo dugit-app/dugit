@@ -7,6 +7,7 @@ import logout from '@/prompts/logout/logout.js'
 import { select } from '@/utils/prompts/prompts.js'
 import repos from '@/prompts/repos/repos.js'
 import { help } from '@/prompts/help/help.js'
+import { about } from '@/prompts/about/about.js'
 
 export default {
     prompts,
@@ -26,9 +27,11 @@ async function prompts() {
                     { name: 'Manage repositories', value: 'repos' },
                     new Separator(),
                     { name: 'Help', value: 'help' },
+                    { name: 'About', value: 'about' },
                     { name: 'Logout', value: 'logout' },
                     { name: 'Exit', value: 'exit' },
                 ],
+                hideBackOption: true,
             },
         )
 
@@ -50,6 +53,11 @@ async function prompts() {
 
             case 'help': {
                 help()
+                break
+            }
+
+            case 'about': {
+                about()
                 break
             }
 

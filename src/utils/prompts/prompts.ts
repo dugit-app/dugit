@@ -7,7 +7,7 @@ import {
 } from '@inquirer/prompts'
 import chalk from 'chalk'
 
-type Choice<Value> = {
+export type Choice<Value> = {
     value: Value;
     name?: string;
     description?: string;
@@ -16,19 +16,45 @@ type Choice<Value> = {
     type?: never;
 };
 
+class BackOption {
+}
+
 export async function select<Value>(config: {
     message: string,
-    choices: readonly (string | Separator)[] | readonly (Separator | Choice<Value>)[],
-    noOptionsMessage?: string
+    choices: (Separator | Choice<Value>)[],
+    noOptionsMessage?: string,
+    hideBackOption?: boolean,
 }) {
-    const { message, choices, noOptionsMessage } = config
+    const { message, choices, noOptionsMessage, hideBackOption } = config
 
     if (choices.length == 0) {
         console.log(chalk.yellow(noOptionsMessage || 'No options exist'))
         return
     }
 
-    return inquirerSelect({ message, choices }, { clearPromptOnDone: true })
+    if (hideBackOption) {
+        return inquirerSelect({ message, choices, pageSize: choices.length }, { clearPromptOnDone: true })
+    }
+
+    const choicesWithBackOptions: (Separator | Choice<Value | BackOption>)[] = [
+        ...choices,
+        ...[
+            new Separator(),
+            { name: 'Back', value: new BackOption() },
+        ],
+    ]
+
+    const option = await inquirerSelect({
+        message,
+        choices: choicesWithBackOptions,
+        pageSize: choicesWithBackOptions.length,
+    }, { clearPromptOnDone: true })
+
+    if (option instanceof BackOption) {
+        return
+    }
+
+    return option
 }
 
 export async function checkbox<Value>(config: {
@@ -51,5 +77,5 @@ export async function input(message: string, defaultValue?: string) {
 }
 
 export async function confirm(message: string) {
-    return await inquirerConfirm({ message }, { clearPromptOnDone: true })
+    return await inquirerConfirm({ message, default: false }, { clearPromptOnDone: true })
 }

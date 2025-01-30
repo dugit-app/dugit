@@ -1,4 +1,3 @@
-import { Separator } from '@inquirer/prompts'
 import ora from 'ora'
 
 import api from '@/api/api.js'
@@ -6,26 +5,9 @@ import add from '@/prompts/grades/add/add.js'
 import remove from '@/prompts/grades/remove/remove.js'
 import { select } from '@/utils/prompts/prompts.js'
 import view from '@/prompts/grades/view/view.js'
-import { isAppInstalled } from '@/prompts/classroom/classroom.js'
+import { isAppInstalled } from '@/utils/classroom/classroom.js'
 
 export default async function grades() {
-    const option = await select(
-        {
-            message: 'Select an option',
-            choices: [
-                { name: 'Add grade', value: 'add' },
-                { name: 'View grade', value: 'view' },
-                { name: 'Remove grade', value: 'remove' },
-                new Separator(),
-                { name: 'Back', value: 'back' },
-            ],
-        },
-    )
-
-    if (option == 'back') {
-        return
-    }
-
     const spinner = ora().start()
     const classrooms = await api.getClassrooms()
     spinner.stop()
@@ -37,7 +19,7 @@ export default async function grades() {
                 name: classroom.name,
                 value: classroom,
             })),
-            noOptionsMessage: 'No classrooms exist',
+            noOptionsMessage: 'No classrooms exist for your account',
         },
     )
 
@@ -58,7 +40,7 @@ export default async function grades() {
 
     const assignment = await select(
         {
-            message: 'Select an assignment',
+            message: `${classroom.name} > Select an assignment`,
             choices: assignments.map((assignment) => ({
                 name: assignment.title,
                 value: assignment,
@@ -68,6 +50,21 @@ export default async function grades() {
     )
 
     if (!assignment) {
+        return
+    }
+
+    const option = await select(
+        {
+            message: `${classroom.name} > ${assignment.title}`,
+            choices: [
+                { name: 'Add grade', value: 'add' },
+                { name: 'View grade', value: 'view' },
+                { name: 'Remove grade', value: 'remove' },
+            ],
+        },
+    )
+
+    if (!option) {
         return
     }
 
@@ -87,6 +84,4 @@ export default async function grades() {
             break
         }
     }
-
-    await grades()
 }

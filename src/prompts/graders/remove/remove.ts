@@ -11,7 +11,7 @@ export default async function remove(classroom: Classroom) {
 
     const grader = await select(
         {
-            message: 'Select a grader to remove',
+            message: `${classroom.name} > Select a grader to remove`,
             choices: graders.map((grader) => ({
                 name: grader.name,
                 value: grader,

@@ -1,7 +1,8 @@
+import chalk from 'chalk'
+
 import { Classroom } from '@/api/classroom.js'
 import { getOrganizationAppInstallations, Organizations } from '@/api/org.js'
 import { appID, appInstallationLink } from '@/utils/config/config.js'
-import chalk from 'chalk'
 
 export async function isAppInstalled(classroom: Classroom) {
     const apps = await getOrganizationAppInstallations(classroom.organization.login)

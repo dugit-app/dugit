@@ -32,6 +32,6 @@ export default async function add(grader: Grader, classroom: Classroom) {
 
     configRepo.graders.push(grader)
 
-    await updateConfigRepo(org, configRepo, `Add ${grader.name}`)
+    await updateConfigRepo(org, configRepo, `Add ${grader.name} to ${classroom.name}`)
     spinner.succeed(`Added ${grader.name} to ${classroom.name}`)
 }

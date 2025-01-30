@@ -19,6 +19,6 @@ export default async function remove(grader: Grader, classroom: Classroom) {
         return
     }
 
-    await updateConfigRepo(org, configRepo, `Remove ${grader.name}`)
+    await updateConfigRepo(org, configRepo, `Remove ${grader.name} from ${classroom.name}`)
     spinner.succeed(`Removed ${grader.name} from ${classroom.name}`)
 }

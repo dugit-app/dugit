@@ -34,7 +34,7 @@ export default async function edit(previousGrader: Grader, newGrader: Grader, cl
     configGrader.name = newGrader.name
     configGrader.username = newGrader.username
 
-    await api.updateRepoFile(org, 'config.json', 'dugit-config', JSON.stringify(configFile, null, 2), `Update ${newGrader.name}`)
+    await api.updateRepoFile(org, 'config.json', 'dugit-config', JSON.stringify(configFile, null, 2), `Update ${newGrader.name} in ${classroom.name}`)
 
     spinner.succeed(`Updated ${newGrader.name} in ${classroom.name}`)
 }

@@ -11,19 +11,19 @@ export default async function remove(assignment: Assignments[number], classroom:
     spinner.stop()
 
     const grade = await select({
-        message: 'Select a grade to remove',
+        message: `${classroom.name} > ${assignment.title} > Select a grade to remove`,
         choices: grades.map((grade) => ({
             name: grade.name,
             value: grade,
         })),
-        noOptionsMessage: `No grades exist for ${assignment.title}`
+        noOptionsMessage: `No grades exist for ${classroom.name} > ${assignment.title}`,
     })
 
     if (!grade) {
         return
     }
 
-    const confirmRemove = await confirm(`Are you sure you want to permanently delete all anonymous repositories for the '${grade.name}' grade?`)
+    const confirmRemove = await confirm(`Are you sure you want to permanently delete all anonymous repositories for ${classroom.name} > ${assignment.title} > ${grade.name}?`)
 
     if (confirmRemove) {
         await utils.grades.remove(grade.name, assignment, classroom)

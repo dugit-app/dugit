@@ -10,12 +10,12 @@ export default async function view(assignment: Assignments[number], classroom: C
     spinner.stop()
 
     const grade = await select({
-        message: 'Select a grade to view',
+        message: `${classroom.name} > ${assignment.title} > Select a grade to view`,
         choices: grades.map((grade) => ({
             name: grade.name,
             value: grade,
         })),
-        noOptionsMessage: `No grades exist for ${assignment.title}`
+        noOptionsMessage: `No grades exist for ${classroom.name} > ${assignment.title}`,
     })
 
     if (!grade) {

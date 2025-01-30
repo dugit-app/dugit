@@ -1,31 +1,13 @@
-import { Separator } from '@inquirer/prompts'
+import ora from 'ora'
 
 import api from '@/api/api.js'
 import add from '@/prompts/graders/add/add.js'
 import edit from '@/prompts/graders/edit/edit.js'
 import remove from '@/prompts/graders/remove/remove.js'
 import { select } from '@/utils/prompts/prompts.js'
-import { isAppInstalled } from '@/prompts/classroom/classroom.js'
-import ora from 'ora'
+import { isAppInstalled } from '@/utils/classroom/classroom.js'
 
 export default async function graders() {
-    const option = await select(
-        {
-            message: 'Select an option',
-            choices: [
-                { name: 'Add grader', value: 'add' },
-                { name: 'Edit grader', value: 'edit' },
-                { name: 'Remove grader', value: 'remove' },
-                new Separator(),
-                { name: 'Back', value: 'back' },
-            ],
-        },
-    )
-
-    if (option == 'back') {
-        return
-    }
-
     const spinner = ora().start()
     const classrooms = await api.getClassrooms()
     spinner.stop()
@@ -55,6 +37,21 @@ export default async function graders() {
 
     spinner.stop()
 
+    const option = await select(
+        {
+            message: `${classroom.name}`,
+            choices: [
+                { name: 'Add grader', value: 'add' },
+                { name: 'Edit grader', value: 'edit' },
+                { name: 'Remove grader', value: 'remove' },
+            ],
+        },
+    )
+
+    if (!option) {
+        return
+    }
+
     switch (option) {
         case 'add': {
             await add(classroom)
@@ -71,6 +68,4 @@ export default async function graders() {
             break
         }
     }
-
-    await graders()
 }

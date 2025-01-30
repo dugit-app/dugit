@@ -14,7 +14,7 @@ import { generateTeacherRepo } from '@/utils/grades/add/repo/teacher/teacher.js'
 import { generateGraderRepo } from '@/utils/grades/add/repo/grader/grader.js'
 
 export default async function add(name: string, assignment: Assignments[number], classroom: Classroom) {
-    const spinner = ora(`Adding grade ${name} to ${assignment.title}`).start()
+    const spinner = ora(`Adding ${name} to ${classroom.name} > ${assignment.title}`).start()
     const org = classroom.organization.login
 
     const configRepo = await getConfigRepo(org)
@@ -22,7 +22,7 @@ export default async function add(name: string, assignment: Assignments[number],
     const gradeExistsIndex = configRepo.grades.findIndex(grade => slug(grade.name) === slug(name))
 
     if (gradeExistsIndex > -1) {
-        spinner.fail(`Grade ${name} already exists`)
+        spinner.fail(`${name} already exists in ${classroom.name} > ${assignment.title}`)
         return
     }
 
@@ -72,6 +72,6 @@ export default async function add(name: string, assignment: Assignments[number],
 
     configRepo.grades.push(grade)
 
-    await updateConfigRepo(org, configRepo, `Add grade ${name} to ${assignment.title}`)
-    spinner.succeed(`Added grade ${name} to ${assignment.title} at ${chalk.cyan(teacherRepoLink)}`)
+    await updateConfigRepo(org, configRepo, `Add ${name} to ${classroom.name} > ${assignment.title}`)
+    spinner.succeed(`Added ${name} to ${classroom.name} > ${assignment.title} at ${chalk.cyan(teacherRepoLink)}`)
 }
