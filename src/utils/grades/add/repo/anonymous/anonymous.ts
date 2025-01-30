@@ -10,7 +10,7 @@ import api from '@/api/api.js'
 import { configDirectoryPath } from '@/utils/config/config.js'
 import utils from '@/utils/utils.js'
 import { Classroom } from '@/api/classroom.js'
-import { grantTaPermissions } from '@/utils/grades/add/repo/repo.js'
+import { grantGraderPermissions } from '@/utils/grades/add/repo/repo.js'
 
 export async function generateAnonymousRepo(config: {
     name: string,
@@ -57,6 +57,6 @@ export async function generateAnonymousRepo(config: {
 
         await rm(repoPath, { force: true, recursive: true })
 
-        await grantTaPermissions(repo.name, org, classroom)
+        await grantGraderPermissions(repo.name, org, classroom, spinner)
     }
 }

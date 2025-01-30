@@ -3,7 +3,7 @@ import { Ora } from 'ora'
 
 import { Assignments } from '@/api/assignment.js'
 import api from '@/api/api.js'
-import { grantTaPermissions } from '@/utils/grades/add/repo/repo.js'
+import { grantGraderPermissions } from '@/utils/grades/add/repo/repo.js'
 import { Classroom } from '@/api/classroom.js'
 import { createRepoFile } from '@/api/repo.js'
 
@@ -23,5 +23,5 @@ export async function generateGraderRepo(config: {
 
     await createRepoFile(org, 'README.md', repoName, readme, 'Initial commit')
 
-    await grantTaPermissions(repo.name, org, classroom)
+    await grantGraderPermissions(repo.name, org, classroom, spinner)
 }
