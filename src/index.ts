@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-import prompts from '@/prompts/prompts.js'
-import utils from '@/utils/utils.js'
+import { startup } from '@/utils/startup/startup.js'
+import { prompts } from '@/prompts/prompts.js'
 
 async function main() {
-    await utils.startup()
-    await prompts.prompts()
+    await startup()
+    await prompts()
 }
 
 main().then(() => {})

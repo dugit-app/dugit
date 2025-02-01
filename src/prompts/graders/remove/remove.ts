@@ -1,12 +1,14 @@
-import { confirm } from '@/utils/prompts/prompts.js'
-import { Classroom } from '@/api/classroom.js'
-import utils from '@/utils/utils.js'
-import { select } from '@/utils/prompts/prompts.js'
 import ora from 'ora'
 
-export default async function remove(classroom: Classroom) {
+import { confirm, select } from '@/utils/prompts/prompts.js'
+import { Classroom } from '@/api/classroom/classroom.js'
+import { removeGrader } from '@/utils/grader/remove/remove.js'
+
+import { getGraders } from '@/utils/grader/grader.js'
+
+export async function removeGraderPrompt(classroom: Classroom) {
     const spinner = ora().start()
-    const graders = await utils.graders.get(classroom)
+    const graders = await getGraders(classroom)
     spinner.stop()
 
     const grader = await select(
@@ -27,6 +29,6 @@ export default async function remove(classroom: Classroom) {
     const confirmRemove = await confirm(`Are you sure you want to remove ${grader.name} from ${classroom.name}?`)
 
     if (confirmRemove) {
-        await utils.graders.remove(grader, classroom)
+        await removeGrader(grader, classroom)
     }
 }

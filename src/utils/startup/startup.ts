@@ -1,12 +1,12 @@
 import { simpleGit } from 'simple-git'
 import chalk from 'chalk'
 
-import { getRepoFile } from '@/api/repo.js'
-import config from '@/utils/config/config.js'
-import utils from '@/utils/utils.js'
+import { getRepoFile } from '@/api/repo/repo.js'
+import { version } from '@/utils/config/config.js'
 import ora from 'ora'
+import { isLoggedIn, login } from '@/utils/auth/auth.js'
 
-export default async function startup() {
+export async function startup() {
     const spinner = ora().start()
     await checkGitInstalled()
     await checkUpdate()
@@ -25,7 +25,7 @@ async function checkGitInstalled() {
 
 async function checkUpdate() {
     const latestVersion = (await getRepoFile('dugit-app', 'package.json', 'dugit')).version
-    const installedVersion = config.version
+    const installedVersion = version
 
     if (installedVersion != latestVersion) {
         console.log(`Dugit update available ${chalk.yellow(installedVersion)} -> ${chalk.green(latestVersion)}`)
@@ -34,8 +34,8 @@ async function checkUpdate() {
 }
 
 async function checkLoggedIn() {
-    if (!await utils.auth.isLoggedIn()) {
+    if (!await isLoggedIn()) {
         console.log('You need to authenticate with GitHub to use Dugit\n')
-        await utils.auth.login()
+        await login()
     }
 }

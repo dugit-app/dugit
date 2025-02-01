@@ -1,15 +1,16 @@
 import ora from 'ora'
 
-import api from '@/api/api.js'
-import add from '@/prompts/grades/add/add.js'
-import remove from '@/prompts/grades/remove/remove.js'
+import { addGradePrompt } from '@/prompts/grades/add/add.js'
+import { removeGradePrompt } from '@/prompts/grades/remove/remove.js'
+import { viewGradePrompt } from '@/prompts/grades/view/view.js'
 import { select } from '@/utils/prompts/prompts.js'
-import view from '@/prompts/grades/view/view.js'
 import { isAppInstalled } from '@/utils/classroom/classroom.js'
+import { getClassroom, getClassrooms } from '@/api/classroom/classroom.js'
+import { getAssignments } from '@/api/assignment/assignment.js'
 
-export default async function grades() {
+export async function grades() {
     const spinner = ora().start()
-    const classrooms = await api.getClassrooms()
+    const classrooms = await getClassrooms()
     spinner.stop()
 
     const classroomSelect = await select(
@@ -28,14 +29,14 @@ export default async function grades() {
     }
 
     spinner.start()
-    const classroom = await api.getClassroom(classroomSelect.id)
+    const classroom = await getClassroom(classroomSelect.id)
 
     if (!await isAppInstalled(classroom)) {
         spinner.stop()
         return
     }
 
-    const assignments = await api.getAssignments(classroom.id)
+    const assignments = await getAssignments(classroom.id)
     spinner.stop()
 
     const assignment = await select(
@@ -70,17 +71,17 @@ export default async function grades() {
 
     switch (option) {
         case 'add': {
-            await add(assignment, classroom)
+            await addGradePrompt(assignment, classroom)
             break
         }
 
         case 'view': {
-            await view(assignment, classroom)
+            await viewGradePrompt(assignment, classroom)
             break
         }
 
         case 'remove': {
-            await remove(assignment, classroom)
+            await removeGradePrompt(assignment, classroom)
             break
         }
     }

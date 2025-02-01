@@ -2,10 +2,10 @@ import ora from 'ora'
 
 import { select } from '@/utils/prompts/prompts.js'
 import { isAppInstalledOrg } from '@/utils/classroom/classroom.js'
-import { getOrganizations } from '@/api/org.js'
-import remove from '@/prompts/repos/remove/remove.js'
+import { getOrganizations } from '@/api/org/org.js'
+import { removeRepoPrompt } from '@/prompts/repos/remove/remove.js'
 
-export default async function repos() {
+export async function repos() {
     const spinner = ora().start()
     const orgs = await getOrganizations()
     spinner.stop()
@@ -45,7 +45,7 @@ export default async function repos() {
 
     switch (option) {
         case 'remove': {
-            await remove(org)
+            await removeRepoPrompt(org)
             break
         }
     }

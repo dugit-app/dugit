@@ -1,13 +1,13 @@
-import { confirm, input } from '@/utils/prompts/prompts.js'
-
-import { Classroom } from '@/api/classroom.js'
-import utils from '@/utils/utils.js'
-import { select } from '@/utils/prompts/prompts.js'
 import ora from 'ora'
 
-export default async function edit(classroom: Classroom) {
+import { confirm, input, select } from '@/utils/prompts/prompts.js'
+import { Classroom } from '@/api/classroom/classroom.js'
+import { editGrader } from '@/utils/grader/edit/edit.js'
+import { getGraders } from '@/utils/grader/grader.js'
+
+export async function editGraderPrompt(classroom: Classroom) {
     const spinner = ora().start()
-    const graders = await utils.graders.get(classroom)
+    const graders = await getGraders(classroom)
     spinner.stop()
 
     const previousGrader = await select(
@@ -31,6 +31,6 @@ export default async function edit(classroom: Classroom) {
     const confirmAdd = await confirm(`Are you sure you want to update ${name} in ${classroom.name}?`)
 
     if (confirmAdd) {
-        await utils.graders.edit(previousGrader, { name, username }, classroom)
+        await editGrader(previousGrader, { name, username }, classroom)
     }
 }
