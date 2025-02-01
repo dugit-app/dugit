@@ -1,6 +1,5 @@
-import axios from 'axios'
-
 import { clientID } from '@/utils/config/config.js'
+import axios from 'axios'
 
 export async function requestDeviceCode() {
     return (await axios.post('https://github.com/login/device/code', {},

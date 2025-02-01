@@ -1,11 +1,10 @@
-import ora from 'ora'
-
+import { getClassroom, getClassrooms } from '@/api/classroom/classroom.js'
 import { addGraderPrompt } from '@/prompts/graders/add/add.js'
 import { editGraderPrompt } from '@/prompts/graders/edit/edit.js'
 import { removeGraderPrompt } from '@/prompts/graders/remove/remove.js'
-import { select } from '@/utils/prompts/prompts.js'
 import { isAppInstalled } from '@/utils/classroom/classroom.js'
-import { getClassroom, getClassrooms } from '@/api/classroom/classroom.js'
+import { select } from '@/utils/prompts/prompts.js'
+import ora from 'ora'
 
 export async function graders() {
     const spinner = ora().start()

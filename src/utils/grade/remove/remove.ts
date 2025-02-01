@@ -1,12 +1,11 @@
+import { Assignments } from '@/api/assignment/assignment.js'
+import { Classroom } from '@/api/classroom/classroom.js'
+import { deleteRepo } from '@/api/repo/repo.js'
+import { getConfigRepo, updateConfigRepo } from '@/utils/config/repo/repo.js'
+import { repoExists } from '@/utils/repos/repos.js'
+import chalk from 'chalk'
 import ora from 'ora'
 import slug from 'slug'
-import chalk from 'chalk'
-
-import { Classroom } from '@/api/classroom/classroom.js'
-import { getConfigRepo, updateConfigRepo } from '@/utils/config/repo/repo.js'
-import { Assignments } from '@/api/assignment/assignment.js'
-import { deleteRepo } from '@/api/repo/repo.js'
-import { repoExists } from '@/utils/repos/repos.js'
 
 export async function removeGrade(name: string, assignment: Assignments[number], classroom: Classroom) {
     const spinner = ora(`Removing ${name} from ${classroom.name} > ${assignment.title}`).start()

@@ -1,16 +1,15 @@
-import ora from 'ora'
-import slug from 'slug'
-import chalk from 'chalk'
-
-import { getConfigRepo, updateConfigRepo } from '@/utils/config/repo/repo.js'
 import { Assignments, getAcceptedAssignments } from '@/api/assignment/assignment.js'
 import { Classroom } from '@/api/classroom/classroom.js'
-import { Grade } from '@/utils/grade/grade.js'
+import { getConfigRepo, updateConfigRepo } from '@/utils/config/repo/repo.js'
 import { AnonymousNameGenerator } from '@/utils/grade/add/name/name.js'
 import { getReadmes } from '@/utils/grade/add/readme/readme.js'
 import { generateAnonymousRepo } from '@/utils/grade/add/repo/anonymous/anonymous.js'
-import { generateTeacherRepo } from '@/utils/grade/add/repo/teacher/teacher.js'
 import { generateGraderRepo } from '@/utils/grade/add/repo/grader/grader.js'
+import { generateTeacherRepo } from '@/utils/grade/add/repo/teacher/teacher.js'
+import { Grade } from '@/utils/grade/grade.js'
+import chalk from 'chalk'
+import ora from 'ora'
+import slug from 'slug'
 
 export async function addGrade(name: string, assignment: Assignments[number], classroom: Classroom) {
     const spinner = ora(`Adding ${name} to ${classroom.name} > ${assignment.title}`).start()

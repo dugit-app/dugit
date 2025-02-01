@@ -1,9 +1,8 @@
-import ora from 'ora'
-
-import { select } from '@/utils/prompts/prompts.js'
-import { isAppInstalledOrg } from '@/utils/classroom/classroom.js'
 import { getOrganizations } from '@/api/org/org.js'
 import { removeRepoPrompt } from '@/prompts/repos/remove/remove.js'
+import { isAppInstalledOrg } from '@/utils/classroom/classroom.js'
+import { select } from '@/utils/prompts/prompts.js'
+import ora from 'ora'
 
 export async function repos() {
     const spinner = ora().start()

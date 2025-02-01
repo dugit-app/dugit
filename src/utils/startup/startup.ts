@@ -1,10 +1,9 @@
-import { simpleGit } from 'simple-git'
-import chalk from 'chalk'
-
 import { getRepoFile } from '@/api/repo/repo.js'
-import { version } from '@/utils/config/config.js'
-import ora from 'ora'
 import { isLoggedIn, login } from '@/utils/auth/auth.js'
+import { version } from '@/utils/config/config.js'
+import chalk from 'chalk'
+import ora from 'ora'
+import { simpleGit } from 'simple-git'
 
 export async function startup() {
     const spinner = ora().start()

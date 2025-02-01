@@ -1,6 +1,6 @@
-import { adjectives, animals, uniqueNamesGenerator } from 'unique-names-generator'
 import { AcceptedAssignments } from '@/api/assignment/assignment.js'
 import { Grade } from '@/utils/grade/grade.js'
+import { adjectives, animals, uniqueNamesGenerator } from 'unique-names-generator'
 
 function generateAnonymousName() {
     return uniqueNamesGenerator({ dictionaries: [adjectives, animals], separator: '-' })
