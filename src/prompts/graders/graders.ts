@@ -19,7 +19,7 @@ export async function graders() {
                 name: classroom.name,
                 value: classroom,
             })),
-            noOptionsMessage: 'No classrooms exist'
+            noOptionsMessage: 'No classrooms exist',
         },
     )
 

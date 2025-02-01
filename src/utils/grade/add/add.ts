@@ -36,7 +36,7 @@ export async function addGrade(name: string, assignment: Assignments[number], cl
         classroom,
         org,
         anonymousNamesMap,
-        spinner
+        spinner,
     })
 
     const readmes = getReadmes({

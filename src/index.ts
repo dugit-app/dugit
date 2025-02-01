@@ -8,4 +8,5 @@ async function main() {
     await prompts()
 }
 
-main().then(() => {})
+main().then(() => {
+})

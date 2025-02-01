@@ -10,7 +10,7 @@ export class AnonymousNameGenerator {
     private anonymousNamesMap: Grade['anonymousNamesMap'] = []
 
     add(acceptedAssignment: AcceptedAssignments[number]) {
-        const studentName = acceptedAssignment.students.map(student => student.login,).join(', ')
+        const studentName = acceptedAssignment.students.map(student => student.login).join(', ')
         let anonymousName = generateAnonymousName()
 
         while (this.anonymousNamesMap.map(n => n.anonymousName).includes(anonymousName)) {

@@ -28,7 +28,7 @@ export async function getConfigRepo(org: string) {
         'config.json',
         'dugit-config',
         JSON.stringify(defaultConfigRepo, null, 2),
-        'Initial commit'
+        'Initial commit',
     )
 
     spinner.succeed(`Created Dugit config repository for ${org}`)

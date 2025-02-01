@@ -12,7 +12,7 @@ export async function addGraderPrompt(classroom: Classroom) {
     if (confirmAdd) {
         await addGrader({
             name,
-            username
+            username,
         }, classroom)
     }
 }

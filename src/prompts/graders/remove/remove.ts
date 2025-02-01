@@ -18,7 +18,7 @@ export async function removeGraderPrompt(classroom: Classroom) {
                 name: grader.name,
                 value: grader,
             })),
-            noOptionsMessage: `No graders exist for ${classroom.name}`
+            noOptionsMessage: `No graders exist for ${classroom.name}`,
         },
     )
 
