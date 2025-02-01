@@ -1,8 +1,8 @@
 import {
-    select as inquirerSelect,
     checkbox as inquirerCheckbox,
-    input as inquirerInput,
     confirm as inquirerConfirm,
+    input as inquirerInput,
+    select as inquirerSelect,
     Separator,
 } from '@inquirer/prompts'
 import chalk from 'chalk'

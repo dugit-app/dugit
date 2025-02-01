@@ -1,22 +1,15 @@
 import { Separator } from '@inquirer/prompts'
 import { ExitPromptError } from '@inquirer/core'
 
-import grades from '@/prompts/grades/grades.js'
-import graders from '@/prompts/graders/graders.js'
-import logout from '@/prompts/logout/logout.js'
 import { select } from '@/utils/prompts/prompts.js'
-import repos from '@/prompts/repos/repos.js'
+import { grades } from '@/prompts/grades/grades.js'
+import { graders } from '@/prompts/graders/graders.js'
+import { repos } from '@/prompts/repos/repos.js'
 import { help } from '@/prompts/help/help.js'
 import { about } from '@/prompts/about/about.js'
+import { logoutPrompt } from '@/prompts/logout/logout.js'
 
-export default {
-    prompts,
-    grades,
-    graders,
-    logout,
-}
-
-async function prompts() {
+export async function prompts() {
     try {
         const option = await select(
             {
@@ -62,7 +55,7 @@ async function prompts() {
             }
 
             case 'logout': {
-                await logout()
+                await logoutPrompt()
                 break
             }
 

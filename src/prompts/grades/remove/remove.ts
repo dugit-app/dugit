@@ -1,13 +1,14 @@
-import { confirm } from '@/utils/prompts/prompts.js'
-import { Classroom } from '@/api/classroom.js'
-import utils from '@/utils/utils.js'
-import { Assignments } from '@/api/assignment.js'
-import { select } from '@/utils/prompts/prompts.js'
 import ora from 'ora'
 
-export default async function remove(assignment: Assignments[number], classroom: Classroom) {
+import { confirm, select } from '@/utils/prompts/prompts.js'
+import { Classroom } from '@/api/classroom/classroom.js'
+import { Assignments } from '@/api/assignment/assignment.js'
+import { removeGrade } from '@/utils/grade/remove/remove.js'
+import { getGrades } from '@/utils/grade/grade.js'
+
+export async function removeGradePrompt(assignment: Assignments[number], classroom: Classroom) {
     const spinner = ora().start()
-    const grades = await utils.grades.get(classroom)
+    const grades = await getGrades(classroom)
     spinner.stop()
 
     const grade = await select({
@@ -26,6 +27,6 @@ export default async function remove(assignment: Assignments[number], classroom:
     const confirmRemove = await confirm(`Are you sure you want to permanently delete all anonymous repositories for ${classroom.name} > ${assignment.title} > ${grade.name}?`)
 
     if (confirmRemove) {
-        await utils.grades.remove(grade.name, assignment, classroom)
+        await removeGrade(grade.name, assignment, classroom)
     }
 }

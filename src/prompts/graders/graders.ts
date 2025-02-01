@@ -1,15 +1,15 @@
 import ora from 'ora'
 
-import api from '@/api/api.js'
-import add from '@/prompts/graders/add/add.js'
-import edit from '@/prompts/graders/edit/edit.js'
-import remove from '@/prompts/graders/remove/remove.js'
+import { addGraderPrompt } from '@/prompts/graders/add/add.js'
+import { editGraderPrompt } from '@/prompts/graders/edit/edit.js'
+import { removeGraderPrompt } from '@/prompts/graders/remove/remove.js'
 import { select } from '@/utils/prompts/prompts.js'
 import { isAppInstalled } from '@/utils/classroom/classroom.js'
+import { getClassroom, getClassrooms } from '@/api/classroom/classroom.js'
 
-export default async function graders() {
+export async function graders() {
     const spinner = ora().start()
-    const classrooms = await api.getClassrooms()
+    const classrooms = await getClassrooms()
     spinner.stop()
 
     const classroomSelect = await select(
@@ -19,7 +19,7 @@ export default async function graders() {
                 name: classroom.name,
                 value: classroom,
             })),
-            noOptionsMessage: 'No classrooms exist'
+            noOptionsMessage: 'No classrooms exist',
         },
     )
 
@@ -28,7 +28,7 @@ export default async function graders() {
     }
 
     spinner.start()
-    const classroom = await api.getClassroom(classroomSelect.id)
+    const classroom = await getClassroom(classroomSelect.id)
 
     if (!await isAppInstalled(classroom)) {
         spinner.stop()
@@ -54,17 +54,17 @@ export default async function graders() {
 
     switch (option) {
         case 'add': {
-            await add(classroom)
+            await addGraderPrompt(classroom)
             break
         }
 
         case 'edit': {
-            await edit(classroom)
+            await editGraderPrompt(classroom)
             break
         }
 
         case 'remove': {
-            await remove(classroom)
+            await removeGraderPrompt(classroom)
             break
         }
     }

@@ -1,15 +1,7 @@
 import chalk from 'chalk'
 
-import { requestDeviceCode, requestToken } from '@/api/auth.js'
+import { requestDeviceCode, requestToken } from '@/api/auth/auth.js'
 import { readConfigFile, writeConfigFile } from '@/utils/config/file/file.js'
-
-export default {
-    getAccessToken,
-    tokenizeURL,
-    isLoggedIn,
-    login,
-    logout
-}
 
 function sleep(seconds: number) {
     return new Promise(resolve => {
@@ -57,23 +49,23 @@ async function pollForToken(deviceCode: string, interval: number) {
     return response.access_token
 }
 
-async function getAccessToken() {
+export async function getAccessToken() {
     const { accessToken } = await readConfigFile()
 
     return accessToken
 }
 
-async function tokenizeURL(URL: string) {
+export async function tokenizeURL(URL: string) {
     return `https://oauth2:${await getAccessToken()}@${URL.slice(8)}`
 }
 
-async function isLoggedIn() {
+export async function isLoggedIn() {
     const accessToken = await getAccessToken()
 
     return accessToken !== '' && accessToken !== undefined
 }
 
-async function login() {
+export async function login() {
     const response = await requestDeviceCode()
 
     console.log(`Please visit ${chalk.cyan(response.verification_uri)}\nand enter code: ${response.user_code}`)
@@ -88,7 +80,7 @@ async function login() {
     console.log('\nSuccessfully authenticated!')
 }
 
-async function logout() {
+export async function logout() {
     const configFile = await readConfigFile()
 
     if (Object.hasOwn(configFile, 'accessToken')) {

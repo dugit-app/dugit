@@ -1,7 +1,8 @@
 import { expect, test } from 'vitest'
 
-import utils from '@/utils/utils.js'
 import { getAssignment } from '@/test/grade/assignment.js'
+import { addGrade } from '@/utils/grade/add/add.js'
+import { removeGrade } from '@/utils/grade/remove/remove.js'
 
 test('creates new grade', { timeout: 0 }, async () => {
     await expect(add()).resolves.toBe(true)
@@ -14,7 +15,7 @@ test('removes the new grade', { timeout: 0 }, async () => {
 async function add(): Promise<boolean> {
     const { assignment, classroom } = await getAssignment()
 
-    await utils.grades.add('Test', assignment, classroom)
+    await addGrade('Test', assignment, classroom)
 
     return Promise.resolve(true)
 }
@@ -22,7 +23,7 @@ async function add(): Promise<boolean> {
 async function remove(): Promise<boolean> {
     const { assignment, classroom } = await getAssignment()
 
-    await utils.grades.remove('Test', assignment, classroom)
+    await removeGrade('Test', assignment, classroom)
 
     return Promise.resolve(true)
 }

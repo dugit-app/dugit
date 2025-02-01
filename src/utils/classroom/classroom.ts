@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 
-import { Classroom } from '@/api/classroom.js'
-import { getOrganizationAppInstallations, Organizations } from '@/api/org.js'
+import { Classroom } from '@/api/classroom/classroom.js'
+import { getOrganizationAppInstallations, Organizations } from '@/api/org/org.js'
 import { appID, appInstallationLink } from '@/utils/config/config.js'
 
 export async function isAppInstalled(classroom: Classroom) {

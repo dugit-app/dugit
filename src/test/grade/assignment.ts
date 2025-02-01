@@ -1,16 +1,17 @@
-import api from '@/api/api.js'
+import { getAssignments } from '@/api/assignment/assignment.js'
+import { getClassroom, getClassrooms } from '@/api/classroom/classroom.js'
 
 export async function getAssignment() {
-    const classrooms = await api.getClassrooms()
+    const classrooms = await getClassrooms()
     const classroomSelect = classrooms.find(classroom => classroom.name === 'Dugit Testing')
 
     if (!classroomSelect) {
         throw new Error('Dugit Testing Classroom not found')
     }
 
-    const classroom = await api.getClassroom(classroomSelect.id)
+    const classroom = await getClassroom(classroomSelect.id)
 
-    const assignments = await api.getAssignments(classroomSelect.id)
+    const assignments = await getAssignments(classroomSelect.id)
     const assignment = assignments.at(0)
 
     if (!assignment) {

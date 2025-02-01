@@ -10,12 +10,3 @@ export const version = '1.1.0'
 
 export const configDirectoryPath = join(homedir(), '.config/', appName)
 export const configFilePath = join(configDirectoryPath, 'config.json')
-
-export default {
-    appName,
-    clientID,
-    appID,
-    version,
-    configDirectoryPath,
-    configFilePath
-}
