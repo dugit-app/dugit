@@ -1,7 +1,6 @@
+import { configDirectoryPath, configFilePath } from '@/utils/config/config.js'
 import { existsSync } from 'node:fs'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
-
-import { configDirectoryPath, configFilePath } from '@/utils/config/config.js'
 
 export type ConfigFile = {
     accessToken?: string,

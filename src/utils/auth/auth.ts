@@ -1,7 +1,6 @@
-import chalk from 'chalk'
-
 import { requestDeviceCode, requestToken } from '@/api/auth/auth.js'
 import { readConfigFile, writeConfigFile } from '@/utils/config/file/file.js'
+import chalk from 'chalk'
 
 function sleep(seconds: number) {
     return new Promise(resolve => {

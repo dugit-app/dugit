@@ -1,11 +1,10 @@
-import ora from 'ora'
-
-import { Grader } from '@/utils/grader/grader.js'
 import { Classroom } from '@/api/classroom/classroom.js'
-import { ConfigRepo } from '@/utils/config/repo/repo.js'
-import { getUser } from '@/api/user/user.js'
-import { RequestError } from 'octokit'
 import { getRepoFile, updateRepoFile } from '@/api/repo/repo.js'
+import { getUser } from '@/api/user/user.js'
+import { ConfigRepo } from '@/utils/config/repo/repo.js'
+import { Grader } from '@/utils/grader/grader.js'
+import { RequestError } from 'octokit'
+import ora from 'ora'
 
 export async function editGrader(previousGrader: Grader, newGrader: Grader, classroom: Classroom) {
     const spinner = ora(`Updating ${previousGrader.name} in ${classroom.name}`).start()

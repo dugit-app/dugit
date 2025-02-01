@@ -1,16 +1,15 @@
-import slug from 'slug'
-import { simpleGit } from 'simple-git'
-import { join } from 'node:path'
-import { rm } from 'node:fs/promises'
-import { Ora } from 'ora'
-
 import { Assignments } from '@/api/assignment/assignment.js'
-import { Grade } from '@/utils/grade/grade.js'
-import { configDirectoryPath } from '@/utils/config/config.js'
 import { Classroom } from '@/api/classroom/classroom.js'
-import { grantGraderPermissions } from '@/utils/grade/add/repo/repo.js'
 import { createRepo } from '@/api/repo/repo.js'
 import { tokenizeURL } from '@/utils/auth/auth.js'
+import { configDirectoryPath } from '@/utils/config/config.js'
+import { grantGraderPermissions } from '@/utils/grade/add/repo/repo.js'
+import { Grade } from '@/utils/grade/grade.js'
+import { rm } from 'node:fs/promises'
+import { join } from 'node:path'
+import { Ora } from 'ora'
+import { simpleGit } from 'simple-git'
+import slug from 'slug'
 
 export async function generateAnonymousRepo(config: {
     name: string,

@@ -1,7 +1,7 @@
-import { confirm, input } from '@/utils/prompts/prompts.js'
 import { Assignments } from '@/api/assignment/assignment.js'
 import { Classroom } from '@/api/classroom/classroom.js'
 import { addGrade } from '@/utils/grade/add/add.js'
+import { confirm, input } from '@/utils/prompts/prompts.js'
 
 export async function addGradePrompt(assignment: Assignments[number], classroom: Classroom) {
     const name = await input('Enter a name for the grade')

@@ -1,7 +1,6 @@
-import { RequestError } from 'octokit'
-import * as process from 'node:process'
-
 import { deleteRepo, getRepo, Repos } from '@/api/repo/repo.js'
+import { exit } from 'node:process'
+import { RequestError } from 'octokit'
 import ora from 'ora'
 
 export async function repoExists(owner: string, repo: string) {
@@ -14,7 +13,7 @@ export async function repoExists(owner: string, repo: string) {
         }
 
         console.log(error)
-        process.exit()
+        exit()
     }
 }
 

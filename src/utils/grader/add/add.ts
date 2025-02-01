@@ -1,10 +1,9 @@
-import ora from 'ora'
-
-import { Grader } from '@/utils/grader/grader.js'
 import { Classroom } from '@/api/classroom/classroom.js'
-import { getConfigRepo, updateConfigRepo } from '@/utils/config/repo/repo.js'
 import { getUser } from '@/api/user/user.js'
+import { getConfigRepo, updateConfigRepo } from '@/utils/config/repo/repo.js'
+import { Grader } from '@/utils/grader/grader.js'
 import { RequestError } from 'octokit'
+import ora from 'ora'
 
 export async function addGrader(grader: Grader, classroom: Classroom) {
     const spinner = ora(`Adding ${grader.name} to ${classroom.name}`).start()

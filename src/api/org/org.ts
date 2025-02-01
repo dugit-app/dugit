@@ -1,6 +1,6 @@
 import { headers, newConnection } from '@/api/api.js'
-import { RequestError } from 'octokit'
 import { Endpoints } from '@octokit/types'
+import { RequestError } from 'octokit'
 
 export type Organizations = Endpoints['GET /user/orgs']['response']['data']
 

@@ -1,10 +1,8 @@
-import ora from 'ora'
-
-import { confirm, select } from '@/utils/prompts/prompts.js'
 import { Classroom } from '@/api/classroom/classroom.js'
-import { removeGrader } from '@/utils/grader/remove/remove.js'
-
 import { getGraders } from '@/utils/grader/grader.js'
+import { removeGrader } from '@/utils/grader/remove/remove.js'
+import { confirm, select } from '@/utils/prompts/prompts.js'
+import ora from 'ora'
 
 export async function removeGraderPrompt(classroom: Classroom) {
     const spinner = ora().start()

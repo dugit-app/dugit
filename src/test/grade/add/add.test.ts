@@ -1,8 +1,7 @@
-import { expect, test } from 'vitest'
-
 import { getAssignment } from '@/test/grade/assignment.js'
 import { addGrade } from '@/utils/grade/add/add.js'
 import { removeGrade } from '@/utils/grade/remove/remove.js'
+import { expect, test } from 'vitest'
 
 test('creates new grade', { timeout: 0 }, async () => {
     await expect(add()).resolves.toBe(true)

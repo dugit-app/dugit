@@ -1,10 +1,8 @@
-import ora from 'ora'
-
-import { checkbox, confirm } from '@/utils/prompts/prompts.js'
 import { Organizations } from '@/api/org/org.js'
 import { getRepos } from '@/api/repo/repo.js'
-
+import { checkbox, confirm } from '@/utils/prompts/prompts.js'
 import { removeRepo } from '@/utils/repos/repos.js'
+import ora from 'ora'
 
 export async function removeRepoPrompt(org: Organizations[number]) {
     const spinner = ora().start()

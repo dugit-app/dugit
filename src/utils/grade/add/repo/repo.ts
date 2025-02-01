@@ -1,13 +1,11 @@
-import chalk from 'chalk'
-import { Ora } from 'ora'
-
 import { Classroom } from '@/api/classroom/classroom.js'
 import { addOrganizationMember, getOrganizationMembership } from '@/api/org/org.js'
 import { addRepoCollaborator, getRepoPermission } from '@/api/repo/repo.js'
 import { getUser } from '@/api/user/user.js'
-import { RequestError } from 'octokit'
-
 import { getGraders } from '@/utils/grader/grader.js'
+import chalk from 'chalk'
+import { RequestError } from 'octokit'
+import { Ora } from 'ora'
 
 export async function grantGraderPermissions(repoName: string, org: string, classroom: Classroom, spinner: Ora) {
     const graders = await getGraders(classroom)

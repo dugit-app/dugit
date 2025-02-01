@@ -1,10 +1,9 @@
-import ora from 'ora'
-
-import { Classroom } from '@/api/classroom/classroom.js'
 import { Assignments } from '@/api/assignment/assignment.js'
-import { select } from '@/utils/prompts/prompts.js'
-import { viewGrade } from '@/utils/grade/view/view.js'
+import { Classroom } from '@/api/classroom/classroom.js'
 import { getGrades } from '@/utils/grade/grade.js'
+import { viewGrade } from '@/utils/grade/view/view.js'
+import { select } from '@/utils/prompts/prompts.js'
+import ora from 'ora'
 
 export async function viewGradePrompt(assignment: Assignments[number], classroom: Classroom) {
     const spinner = ora().start()

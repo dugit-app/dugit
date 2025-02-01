@@ -1,10 +1,9 @@
-import slug from 'slug'
-import { Ora } from 'ora'
-
 import { Assignments } from '@/api/assignment/assignment.js'
-import { grantGraderPermissions } from '@/utils/grade/add/repo/repo.js'
 import { Classroom } from '@/api/classroom/classroom.js'
 import { createRepo, createRepoFile } from '@/api/repo/repo.js'
+import { grantGraderPermissions } from '@/utils/grade/add/repo/repo.js'
+import { Ora } from 'ora'
+import slug from 'slug'
 
 export async function generateGraderRepo(config: {
     name: string,

@@ -1,8 +1,7 @@
-import slug from 'slug'
-import { Ora } from 'ora'
-
 import { Assignments } from '@/api/assignment/assignment.js'
 import { createRepo, createRepoFile } from '@/api/repo/repo.js'
+import { Ora } from 'ora'
+import slug from 'slug'
 
 export async function generateTeacherRepo(config: {
     name: string,
