@@ -1,14 +1,11 @@
-import { headers, newConnection } from '@/api/api.js'
+import { api } from '@/api/api.js'
 import { Endpoints } from '@octokit/types'
 import { RequestError } from 'octokit'
 
 export type Organizations = Endpoints['GET /user/orgs']['response']['data']
 
 export async function addOrganizationMember(org: string, username: string) {
-    const connection = await newConnection()
-
-    return (await connection.request('PUT /orgs/{org}/memberships/{username}', {
-        headers,
+    return (await api.rest.orgs.setMembershipForUser({
         org,
         role: 'member',
         username,
@@ -16,11 +13,8 @@ export async function addOrganizationMember(org: string, username: string) {
 }
 
 export async function getOrganizationMembership(org: string, username: string) {
-    const connection = await newConnection()
-
     try {
-        return (await connection.request('GET /orgs/{org}/memberships/{username}', {
-            headers,
+        return (await api.rest.orgs.getMembershipForUser({
             org,
             username,
         })).data.role
@@ -29,26 +23,22 @@ export async function getOrganizationMembership(org: string, username: string) {
             return undefined
         }
 
-        console.log(error)
+        throw error
     }
 }
 
 export async function getOrganizations() {
-    const connection = await newConnection()
-
-    return (await connection.request('GET /user/orgs', { headers })).data
+    return (await api.rest.orgs.listForAuthenticatedUser()).data
 }
 
 export async function getOrganizationAppInstallations(org: string) {
-    const connection = await newConnection()
-
     try {
-        return (await connection.request('GET /orgs/{org}/installations', { headers, org })).data.installations
+        return (await api.rest.orgs.listAppInstallations({ org })).data.installations
     } catch (error) {
         if (error instanceof RequestError && error.status == 404) {
             return undefined
         }
 
-        console.log(error)
+        throw error
     }
 }

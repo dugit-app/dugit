@@ -70,6 +70,6 @@ export async function prompts() {
             return
         }
 
-        console.log(error)
+        throw error
     }
 }

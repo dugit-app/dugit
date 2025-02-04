@@ -1,7 +1,6 @@
-import { createRepo, createRepoFile, getRepoFile, updateRepoFile } from '@/api/repo/repo.js'
+import { createRepo, createRepoFile, getRepoFile, repoExists, updateRepoFile } from '@/api/repo/repo.js'
 import { Grade } from '@/utils/grade/grade.js'
 import { Grader } from '@/utils/grader/grader.js'
-import { repoExists } from '@/utils/repos/repos.js'
 import ora from 'ora'
 
 export type ConfigRepo = {

@@ -1,29 +1,24 @@
-import { headers, newConnection } from '@/api/api.js'
+import { api } from '@/api/api.js'
 import { Endpoints } from '@octokit/types'
+import { RequestError } from 'octokit'
 
 export type Repo = Endpoints['GET /repos/{owner}/{repo}']['response']['data']
 export type Repos = Endpoints['GET /orgs/{org}/repos']['response']['data']
 
 export async function createRepo(name: string, org: string): Promise<Repo> {
-    const connection = await newConnection()
-
-    return (await connection.request('POST /orgs/{org}/repos', {
+    return (await api.rest.repos.createInOrg({
         has_issues: false,
         has_projects: false,
         has_wiki: false,
-        headers,
         name,
         org,
         private: true,
     })).data
 }
 
-export async function addRepoCollaborator(org: string, repo: string, username: string, permission: string) {
-    const connection = await newConnection()
-
-    return (await connection.request('PUT /repos/{org}/{repo}/collaborators/{username}', {
-        headers,
-        org,
+export async function addRepoCollaborator(owner: string, repo: string, username: string, permission: string) {
+    return (await api.rest.repos.addCollaborator({
+        owner,
         permission,
         repo,
         username,
@@ -31,33 +26,31 @@ export async function addRepoCollaborator(org: string, repo: string, username: s
 }
 
 export async function getRepoPermission(owner: string, repo: string, username: string) {
-    const connection = await newConnection()
-
-    return (await connection.request('GET /repos/{owner}/{repo}/collaborators/{username}/permission', {
-        headers,
+    return (await api.rest.repos.getCollaboratorPermissionLevel({
         owner,
         repo,
         username,
     })).data.permission
 }
 
-export async function getRepo(owner: string, repo: string): Promise<Repo> {
-    const connection = await newConnection()
+export async function repoExists(owner: string, repo: string) {
+    try {
+        await api.rest.repos.get({ owner, repo })
+        return true
+    } catch (error) {
+        if (error instanceof RequestError && error.status == 404) {
+            return false
+        }
 
-    return (await connection.request('GET /repos/{owner}/{repo}', {
-        headers,
-        owner,
-        repo,
-    })).data
+        throw error
+    }
 }
 
 export async function getRepoFile(owner: string, path: string, repo: string) {
-    const connection = await newConnection()
-
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
-    return JSON.parse((await connection.request('GET /repos/{owner}/{repo}/contents/{path}', {
-        headers: { ...headers, accept: 'application/vnd.github.raw+json' },
+    return JSON.parse((await api.rest.repos.getContent({
+        mediaType: { format: 'raw' },
         owner,
         path,
         repo,
@@ -65,14 +58,9 @@ export async function getRepoFile(owner: string, path: string, repo: string) {
 }
 
 export async function createRepoFile(owner: string, path: string, repo: string, content: string, message: string) {
-    const connection = await newConnection()
-
-    return (await connection.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-        headers: { ...headers, accept: 'application/vnd.github.raw+json' },
-        committer: {
-            name: 'dugit',
-            email: 'user@example.com',
-        },
+    return (await api.rest.repos.createOrUpdateFileContents({
+        mediaType: { format: 'raw' },
+        committer: { name: 'dugit', email: 'user@example.com' },
         message,
         owner,
         path,
@@ -82,10 +70,7 @@ export async function createRepoFile(owner: string, path: string, repo: string, 
 }
 
 export async function updateRepoFile(owner: string, path: string, repo: string, content: string, message: string) {
-    const connection = await newConnection()
-
-    const fileData: any = (await connection.request('GET /repos/{owner}/{repo}/contents/{path}', {
-        headers: { ...headers },
+    const fileData: any = (await api.rest.repos.getContent({
         owner,
         path,
         repo,
@@ -93,12 +78,9 @@ export async function updateRepoFile(owner: string, path: string, repo: string, 
 
     const sha: string = fileData.sha
 
-    return (await connection.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-        headers: { ...headers, accept: 'application/vnd.github.raw+json' },
-        committer: {
-            name: 'dugit',
-            email: 'user@example.com',
-        },
+    return (await api.rest.repos.createOrUpdateFileContents({
+        mediaType: { format: 'raw' },
+        committer: { name: 'dugit', email: 'user@example.com' },
         message,
         sha,
         owner,
@@ -109,13 +91,9 @@ export async function updateRepoFile(owner: string, path: string, repo: string, 
 }
 
 export async function getRepos(org: string) {
-    const connection = await newConnection()
-
-    return (await connection.request('GET /orgs/{org}/repos', { headers, org: org })).data
+    return (await api.rest.repos.listForOrg({ org: org })).data
 }
 
 export async function deleteRepo(owner: string, repo: string) {
-    const connection = await newConnection()
-
-    return (await connection.request('DELETE /repos/{owner}/{repo}', { headers, owner, repo })).data
+    return (await api.rest.repos.delete({ owner, repo })).data
 }

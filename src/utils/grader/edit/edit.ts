@@ -1,9 +1,8 @@
 import { Classroom } from '@/api/classroom/classroom.js'
 import { getRepoFile, updateRepoFile } from '@/api/repo/repo.js'
-import { getUser } from '@/api/user/user.js'
+import { userExists } from '@/api/user/user.js'
 import { ConfigRepo } from '@/utils/config/repo/repo.js'
 import { Grader } from '@/utils/grader/grader.js'
-import { RequestError } from 'octokit'
 import ora from 'ora'
 
 export async function editGrader(previousGrader: Grader, newGrader: Grader, classroom: Classroom) {
@@ -19,15 +18,9 @@ export async function editGrader(previousGrader: Grader, newGrader: Grader, clas
         return
     }
 
-    try {
-        await getUser(newGrader.username)
-    } catch (error) {
-        if (error instanceof RequestError && error.status == 404) {
-            spinner.fail(`GitHub user with the username ${newGrader.username} does not exist`)
-            return
-        }
-
-        console.log(error)
+    if (!await userExists(newGrader.username)) {
+        spinner.fail(`GitHub user with the username ${newGrader.username} does not exist`)
+        return
     }
 
     configGrader.name = newGrader.name

@@ -1,6 +1,7 @@
 import { requestDeviceCode, requestToken } from '@/api/auth/auth.js'
 import { readConfigFile, writeConfigFile } from '@/utils/config/file/file.js'
 import chalk from 'chalk'
+import { exit } from 'node:process'
 
 function sleep(seconds: number) {
     return new Promise(resolve => {
@@ -39,7 +40,7 @@ async function pollForToken(deviceCode: string, interval: number) {
         }
 
         if (terminate) {
-            process.exit(1)
+            exit()
         }
 
         return pollForToken(deviceCode, interval)

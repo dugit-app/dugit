@@ -1,10 +1,15 @@
-import { headers, newConnection } from '@/api/api.js'
+import { api } from '@/api/api.js'
+import { RequestError } from 'octokit'
 
-export async function getUser(username: string) {
-    const connection = await newConnection()
+export async function userExists(username: string) {
+    try {
+        await api.rest.users.getByUsername({ username })
+        return true
+    } catch (error) {
+        if (error instanceof RequestError && error.status == 404) {
+            return false
+        }
 
-    return (await connection.request('GET /users/{username}', {
-        username,
-        headers,
-    })).data
+        throw error
+    }
 }

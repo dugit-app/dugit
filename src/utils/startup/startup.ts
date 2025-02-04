@@ -2,6 +2,7 @@ import { getRepoFile } from '@/api/repo/repo.js'
 import { isLoggedIn, login } from '@/utils/auth/auth.js'
 import { version } from '@/utils/config/config.js'
 import chalk from 'chalk'
+import { exit } from 'node:process'
 import ora from 'ora'
 import { simpleGit } from 'simple-git'
 
@@ -18,7 +19,7 @@ async function checkGitInstalled() {
 
     if (!gitInstalled) {
         console.log(chalk.yellow('Git is not installed on this system. Please install Git in order to use Dugit'))
-        process.exit(0)
+        exit()
     }
 }
 
