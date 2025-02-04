@@ -30,8 +30,7 @@ export async function grades() {
     spinner.start()
     const classroom = await getClassroom(classroomSelect.id)
 
-    if (!await isAppInstalled(classroom)) {
-        spinner.stop()
+    if (!await isAppInstalled(classroom, spinner)) {
         return
     }
 
