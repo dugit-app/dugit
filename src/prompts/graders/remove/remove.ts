@@ -2,6 +2,7 @@ import { Classroom } from '@/api/classroom/classroom.js'
 import { getGraders } from '@/utils/grader/grader.js'
 import { removeGrader } from '@/utils/grader/remove/remove.js'
 import { confirm, select } from '@/utils/prompts/prompts.js'
+import chalk from 'chalk'
 import ora from 'ora'
 
 export async function removeGraderPrompt(classroom: Classroom) {
@@ -28,5 +29,7 @@ export async function removeGraderPrompt(classroom: Classroom) {
 
     if (confirmRemove) {
         await removeGrader(grader, classroom)
+    } else {
+        console.log(chalk.yellow(`Cancelled removing ${grader.name} from ${classroom.name}`))
     }
 }

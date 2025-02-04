@@ -2,6 +2,7 @@ import { Organizations } from '@/api/org/org.js'
 import { getRepos } from '@/api/repo/repo.js'
 import { checkbox, confirm } from '@/utils/prompts/prompts.js'
 import { removeRepo } from '@/utils/repos/repos.js'
+import chalk from 'chalk'
 import ora from 'ora'
 
 export async function removeRepoPrompt(org: Organizations[number]) {
@@ -26,5 +27,7 @@ export async function removeRepoPrompt(org: Organizations[number]) {
 
     if (confirmRemove) {
         await removeRepo(repos, org.login)
+    } else {
+        console.log(chalk.yellow('Cancelled deleting selected repositories'))
     }
 }

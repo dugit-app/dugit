@@ -1,6 +1,7 @@
 import { Classroom } from '@/api/classroom/classroom.js'
 import { addGrader } from '@/utils/grader/add/add.js'
 import { confirm, input } from '@/utils/prompts/prompts.js'
+import chalk from 'chalk'
 
 export async function addGraderPrompt(classroom: Classroom) {
     const name = await input('Enter the grader\'s name')
@@ -13,5 +14,7 @@ export async function addGraderPrompt(classroom: Classroom) {
             name,
             username,
         }, classroom)
+    } else {
+        console.log(chalk.yellow(`Cancelled adding ${name} to ${classroom.name}`))
     }
 }

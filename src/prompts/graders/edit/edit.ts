@@ -2,6 +2,7 @@ import { Classroom } from '@/api/classroom/classroom.js'
 import { editGrader } from '@/utils/grader/edit/edit.js'
 import { getGraders } from '@/utils/grader/grader.js'
 import { confirm, input, select } from '@/utils/prompts/prompts.js'
+import chalk from 'chalk'
 import ora from 'ora'
 
 export async function editGraderPrompt(classroom: Classroom) {
@@ -31,5 +32,7 @@ export async function editGraderPrompt(classroom: Classroom) {
 
     if (confirmAdd) {
         await editGrader(previousGrader, { name, username }, classroom)
+    } else {
+        console.log(chalk.yellow(`Cancelled updating ${name} in ${classroom.name}`))
     }
 }
