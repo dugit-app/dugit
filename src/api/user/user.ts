@@ -3,7 +3,7 @@ import { RequestError } from 'octokit'
 
 export async function userExists(username: string) {
     try {
-        await api.rest.users.getByUsername({ username })
+        await (await api()).rest.users.getByUsername({ username })
         return true
     } catch (error) {
         if (error instanceof RequestError && error.status == 404) {

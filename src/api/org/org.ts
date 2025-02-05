@@ -5,7 +5,7 @@ import { RequestError } from 'octokit'
 export type Organizations = Endpoints['GET /user/orgs']['response']['data']
 
 export async function addOrganizationMember(org: string, username: string) {
-    return (await api.rest.orgs.setMembershipForUser({
+    return (await (await api()).rest.orgs.setMembershipForUser({
         org,
         role: 'member',
         username,
@@ -14,7 +14,7 @@ export async function addOrganizationMember(org: string, username: string) {
 
 export async function getOrganizationMembership(org: string, username: string) {
     try {
-        return (await api.rest.orgs.getMembershipForUser({
+        return (await (await api()).rest.orgs.getMembershipForUser({
             org,
             username,
         })).data.role
@@ -28,12 +28,12 @@ export async function getOrganizationMembership(org: string, username: string) {
 }
 
 export async function getOrganizations() {
-    return (await api.rest.orgs.listForAuthenticatedUser()).data
+    return (await (await api()).rest.orgs.listForAuthenticatedUser()).data
 }
 
 export async function getOrganizationAppInstallations(org: string) {
     try {
-        return (await api.rest.orgs.listAppInstallations({ org })).data.installations
+        return (await (await api()).rest.orgs.listAppInstallations({ org })).data.installations
     } catch (error) {
         if (error instanceof RequestError && error.status == 404) {
             return undefined
