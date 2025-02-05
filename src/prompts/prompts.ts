@@ -1,9 +1,8 @@
-import { about } from '@/prompts/about/about.js'
 import { graders } from '@/prompts/graders/graders.js'
 import { grades } from '@/prompts/grades/grades.js'
 import { help } from '@/prompts/help/help.js'
 import { logoutPrompt } from '@/prompts/logout/logout.js'
-import { repos } from '@/prompts/repos/repos.js'
+import { settings } from '@/prompts/settings/settings.js'
 import { select } from '@/utils/prompts/prompts.js'
 import { ExitPromptError } from '@inquirer/core'
 import { Separator } from '@inquirer/prompts'
@@ -16,10 +15,9 @@ export async function prompts() {
                 choices: [
                     { name: 'Manage grades', value: 'grades' },
                     { name: 'Manage graders', value: 'graders' },
-                    { name: 'Manage repositories', value: 'repos' },
                     new Separator(),
+                    { name: 'Settings', value: 'settings' },
                     { name: 'Help', value: 'help' },
-                    { name: 'About', value: 'about' },
                     { name: 'Logout', value: 'logout' },
                     { name: 'Exit', value: 'exit' },
                 ],
@@ -38,18 +36,13 @@ export async function prompts() {
                 break
             }
 
-            case 'repos': {
-                await repos()
+            case 'settings': {
+                await settings()
                 break
             }
 
             case 'help': {
                 help()
-                break
-            }
-
-            case 'about': {
-                about()
                 break
             }
 

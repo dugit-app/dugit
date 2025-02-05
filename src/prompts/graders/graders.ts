@@ -3,12 +3,13 @@ import { addGraderPrompt } from '@/prompts/graders/add/add.js'
 import { editGraderPrompt } from '@/prompts/graders/edit/edit.js'
 import { removeGraderPrompt } from '@/prompts/graders/remove/remove.js'
 import { isAppInstalled } from '@/utils/classroom/classroom.js'
+import { getNonHiddenClassrooms } from '@/utils/classroom/hide/hide.js'
 import { select } from '@/utils/prompts/prompts.js'
 import ora from 'ora'
 
 export async function graders() {
     const spinner = ora().start()
-    const classrooms = await getClassrooms()
+    const classrooms = await getNonHiddenClassrooms(await getClassrooms())
     spinner.stop()
 
     const classroomSelect = await select(

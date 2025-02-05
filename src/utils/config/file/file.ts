@@ -4,6 +4,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 
 export type ConfigFile = {
     accessToken?: string,
+    hiddenClassrooms?: number[],
 }
 
 export function jsonToString(data: unknown) {

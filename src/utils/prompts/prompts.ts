@@ -16,6 +16,16 @@ export type Choice<Value> = {
     type?: never;
 };
 
+export type CheckboxChoice<Value> = {
+    value: Value;
+    name?: string;
+    description?: string;
+    short?: string;
+    checked?: boolean;
+    disabled?: boolean | string;
+    type?: never;
+};
+
 class BackOption {
 }
 
@@ -59,7 +69,7 @@ export async function select<Value>(config: {
 
 export async function checkbox<Value>(config: {
     message: string,
-    choices: readonly (string | Separator)[] | readonly (Separator | Choice<Value>)[],
+    choices: readonly (string | Separator)[] | readonly (Separator | CheckboxChoice<Value>)[],
     noOptionsMessage?: string
 }) {
     const { message, choices, noOptionsMessage } = config

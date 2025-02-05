@@ -1,5 +1,5 @@
 import { getOrganizations } from '@/api/org/org.js'
-import { removeRepoPrompt } from '@/prompts/repos/remove/remove.js'
+import { removeRepoPrompt } from '@/prompts/settings/repos/remove/remove.js'
 import { isAppInstalledOrg } from '@/utils/classroom/classroom.js'
 import { select } from '@/utils/prompts/prompts.js'
 import ora from 'ora'
