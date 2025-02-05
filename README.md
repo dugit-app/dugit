@@ -34,8 +34,9 @@ The typical workflow of Dugit is as follows:
     - The instructor can then record grades for each student by using the instructor repository to map between the
       anonymous names and the student names
 - After grades are recorded, the anonymous repositories can be deleted: `Manage grades > Remove grade`
+- You can hide classrooms from showing up when managing grades and graders: `Settings > Hide Classrooms`
 - An additional feature of Dugit allows organization repositories to be easily deleted:
-  `Manage repositories > Select repositories to delete`
+  `Settings > Manage repositories > Select repositories to delete`
 - This usage guide can be opened with: `Help`
 
 ## Development
