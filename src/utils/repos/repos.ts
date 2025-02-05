@@ -1,7 +1,7 @@
 import { deleteRepo, Repos } from '@/api/repo/repo.js'
 import ora from 'ora'
 
-export async function removeRepo(repos: Repos, org: string) {
+export async function removeRepos(repos: Repos, org: string) {
     const spinner = ora(`Deleting selected repositories from ${org}`).start()
 
     for (const repo of repos) {
