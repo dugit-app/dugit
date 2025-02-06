@@ -26,7 +26,27 @@ export async function grantGraderPermissions(repoName: string, org: string, clas
         const permission = await getRepoPermission(org, repoName, grader.username)
 
         if (permission == 'none') {
-            await addRepoCollaborator(org, repoName, grader.username, 'triage')
+            await addRepoCollaborator(org, repoName, grader.username, 'write')
         }
+    }
+}
+
+export async function grantStudentPermissions(username: string, repoName: string, org: string, spinner: Ora) {
+    if (!await userExists(username)) {
+        spinner.stop()
+        console.log(chalk.yellow(`GitHub user with the username ${username} does not exist`))
+        spinner.start()
+    }
+
+    const membership = await getOrganizationMembership(org, username)
+
+    if (!membership) {
+        await addOrganizationMember(org, username)
+    }
+
+    const permission = await getRepoPermission(org, repoName, username)
+
+    if (permission == 'none') {
+        await addRepoCollaborator(org, repoName, username, 'read')
     }
 }

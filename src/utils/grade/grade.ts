@@ -7,6 +7,7 @@ export type Grade = {
     anonymousNamesMap: {
         studentRepoLink: string,
         studentName: string,
+        studentUsernames: string[],
         anonymousName: string,
     }[]
 }

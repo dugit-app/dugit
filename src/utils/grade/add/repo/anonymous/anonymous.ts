@@ -3,7 +3,7 @@ import { Classroom } from '@/api/classroom/classroom.js'
 import { createRepo } from '@/api/repo/repo.js'
 import { tokenizeURL } from '@/utils/auth/auth.js'
 import { configDirectoryPath } from '@/utils/config/config.js'
-import { grantGraderPermissions } from '@/utils/grade/add/repo/repo.js'
+import { grantGraderPermissions, grantStudentPermissions } from '@/utils/grade/add/repo/repo.js'
 import { Grade } from '@/utils/grade/grade.js'
 import { rm } from 'node:fs/promises'
 import { join } from 'node:path'
@@ -57,5 +57,9 @@ export async function generateAnonymousRepo(config: {
         await rm(repoPath, { force: true, recursive: true })
 
         await grantGraderPermissions(repo.name, org, classroom, spinner)
+
+        for (const username of anonymousNameMap.studentUsernames) {
+            await grantStudentPermissions(username, repo.name, org, spinner)
+        }
     }
 }

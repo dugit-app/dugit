@@ -26,6 +26,7 @@ The typical workflow of Dugit is as follows:
     - Adding a grade will generate anonymous copies of each student's repository for the assignment
     - Each anonymous repository is given a memorable randomized name
     - The teaching assistants added to the classroom will automatically be given access to the anonymous repositories
+    - Each student will automatically be given access to only their own anonymous repository
     - A repository for the instructor will be generated that maps each student's name to their anonymous name and links
       to the original and anonymous repositories
     - A repository for the teaching assistants will be generated that only has the anonymous names and links to the
