@@ -1,4 +1,5 @@
 import { Classroom } from '@/api/classroom/classroom.js'
+import { addOrganizationMember, getOrganizationMembership } from '@/api/org/org.js'
 import { userExists } from '@/api/user/user.js'
 import { getConfigRepo, updateConfigRepo } from '@/utils/config/repo/repo.js'
 import { Grader } from '@/utils/grader/grader.js'
@@ -25,5 +26,12 @@ export async function addGrader(grader: Grader, classroom: Classroom) {
     configRepo.graders.push(grader)
 
     await updateConfigRepo(org, configRepo, `Add ${grader.name} to ${classroom.name}`)
+
+    const membership = await getOrganizationMembership(org, grader.username)
+
+    if (!membership) {
+        await addOrganizationMember(org, grader.username)
+    }
+
     spinner.succeed(`Added ${grader.name} to ${classroom.name}`)
 }
