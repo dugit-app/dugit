@@ -12,6 +12,13 @@ export async function addOrganizationMember(org: string, username: string) {
     })).data
 }
 
+export async function removeOrganizationMember(org: string, username: string) {
+    return (await (await api()).rest.orgs.removeMembershipForUser({
+        org,
+        username,
+    })).data
+}
+
 export async function getOrganizationMembership(org: string, username: string) {
     try {
         return (await (await api()).rest.orgs.getMembershipForUser({

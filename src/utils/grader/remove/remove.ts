@@ -1,4 +1,5 @@
 import { Classroom } from '@/api/classroom/classroom.js'
+import { getOrganizationMembership, removeOrganizationMember } from '@/api/org/org.js'
 import { getConfigRepo, updateConfigRepo } from '@/utils/config/repo/repo.js'
 import { Grader } from '@/utils/grader/grader.js'
 import ora from 'ora'
@@ -19,5 +20,12 @@ export async function removeGrader(grader: Grader, classroom: Classroom) {
     }
 
     await updateConfigRepo(org, configRepo, `Remove ${grader.name} from ${classroom.name}`)
+
+    const membership = await getOrganizationMembership(org, grader.username)
+
+    if (membership != 'admin') {
+        await removeOrganizationMember(org, grader.username)
+    }
+
     spinner.succeed(`Removed ${grader.name} from ${classroom.name}`)
 }
