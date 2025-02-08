@@ -4,8 +4,8 @@ import { confirm, input } from '@/utils/prompts/prompts.js'
 import chalk from 'chalk'
 
 export async function addGraderPrompt(classroom: Classroom) {
-    const name = await input('Enter the grader\'s name')
     const username = await input('Enter the grader\'s GitHub username')
+    const name = await input('Enter the grader\'s name')
 
     const confirmAdd = await confirm(`Are you sure you want to add ${name} to ${classroom.name}?`)
 
