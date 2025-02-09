@@ -7,20 +7,26 @@ import ora from 'ora'
 
 export async function viewGradePrompt(assignment: Assignments[number], classroom: Classroom) {
     const spinner = ora().start()
-    const grades = await getGrades(classroom)
+    const grades = await getGrades(classroom, assignment)
     spinner.stop()
 
-    const grade = await select({
-        message: `${classroom.name} > ${assignment.title} > Select a grade to view`,
-        choices: grades.map((grade) => ({
-            name: grade.name,
-            value: grade,
-        })),
-        noOptionsMessage: `No grades exist for ${classroom.name} > ${assignment.title}`,
-    })
+    let grade
 
-    if (!grade) {
-        return
+    if (grades.length == 1) {
+        grade = grades[0]
+    } else {
+        grade = await select({
+            message: `${classroom.name} > ${assignment.title} > Select a grade to view`,
+            choices: grades.map((grade) => ({
+                name: grade.name,
+                value: grade,
+            })),
+            noOptionsMessage: `No grades exist for ${classroom.name} > ${assignment.title}`,
+        })
+
+        if (!grade) {
+            return
+        }
     }
 
     viewGrade(grade, assignment, classroom)

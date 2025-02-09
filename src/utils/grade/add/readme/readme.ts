@@ -3,14 +3,15 @@ import { Grade } from '@/utils/grade/grade.js'
 import slug from 'slug'
 
 export function getReadmes(config: {
-    name: string,
+    name?: string,
     assignment: Assignments[number],
     org: string,
     anonymousNamesMap: Grade['anonymousNamesMap'],
 }) {
-    const repoLinkPrefix = `https://github.com/${config.org}/${config.assignment.slug}-${slug(config.name)}-`
+    const { name, assignment, org, anonymousNamesMap } = config
+    const repoLinkPrefix = `https://github.com/${org}/${assignment.slug}` + (name ? `-${slug(name)}-` : `-`)
 
-    const header = `${config.assignment.title} - ${config.name}\n\n`
+    const header = `${assignment.title}` + (name ? `- ${name}` : '') + '\n\n'
 
     let teacher = '# Teacher - ' + header
     teacher += `[Grader Repository](${repoLinkPrefix}grader)\n\n`
@@ -18,7 +19,7 @@ export function getReadmes(config: {
 
     let grader = '# Grader - ' + header + '| Anonymous repo |\n| - |\n'
 
-    for (const anonymousNameMap of config.anonymousNamesMap) {
+    for (const anonymousNameMap of anonymousNamesMap) {
         const anonymousRepoLink = repoLinkPrefix + anonymousNameMap.anonymousName
         teacher += `| [${anonymousNameMap.studentName}](${anonymousNameMap.studentRepoLink}) `
         teacher += `| [${anonymousNameMap.anonymousName}](${anonymousRepoLink}) |\n`

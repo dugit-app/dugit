@@ -12,7 +12,7 @@ import { simpleGit } from 'simple-git'
 import slug from 'slug'
 
 export async function generateAnonymousRepo(config: {
-    name: string,
+    name?: string,
     assignment: Assignments[number],
     classroom: Classroom
     org: string,
@@ -20,7 +20,7 @@ export async function generateAnonymousRepo(config: {
     spinner: Ora
 }) {
     const { name, assignment, classroom, org, anonymousNamesMap, spinner } = config
-    const repoPrefix = `${assignment.slug}-${slug(name)}-`
+    const repoPrefix = name ? `${assignment.slug}-${slug(name)}-` : `${assignment.slug}-`
 
     for (const anonymousNameMap of anonymousNamesMap) {
         const { studentRepoLink, studentName, anonymousName } = anonymousNameMap

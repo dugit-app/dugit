@@ -6,7 +6,7 @@ import { Ora } from 'ora'
 import slug from 'slug'
 
 export async function generateGraderRepo(config: {
-    name: string,
+    name?: string,
     assignment: Assignments[number],
     classroom: Classroom
     org: string,
@@ -14,7 +14,7 @@ export async function generateGraderRepo(config: {
     spinner: Ora
 }) {
     const { name, assignment, classroom, org, readme, spinner } = config
-    const repoName = `${assignment.slug}-${slug(name)}-grader`
+    const repoName = `${assignment.slug}-` + (name ? `${slug(name)}-` : '') + 'grader'
     spinner.text = 'Generating grader repository'
 
     const repo = await createRepo(repoName, org)

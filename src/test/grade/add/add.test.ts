@@ -14,7 +14,7 @@ test('removes the new grade', { timeout: 0 }, async () => {
 async function add(): Promise<boolean> {
     const { assignment, classroom } = await getAssignment()
 
-    await addGrade('Test', assignment, classroom)
+    await addGrade(assignment, classroom, 'Test')
 
     return Promise.resolve(true)
 }
