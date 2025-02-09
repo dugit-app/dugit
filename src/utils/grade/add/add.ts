@@ -11,24 +11,26 @@ import chalk from 'chalk'
 import ora from 'ora'
 import slug from 'slug'
 
-export async function addGrade(assignment: Assignments[number], classroom: Classroom, name?: string) {
-    const spinner = ora(`Adding ${name || 'new grade'} to ${classroom.name} > ${assignment.title}`).start()
+export async function addGrade(name: string, assignment: Assignments[number], classroom: Classroom) {
+    const spinner = ora(`Adding ${name} to ${classroom.name} > ${assignment.title}`).start()
     const org = classroom.organization.login
 
     const configRepo = await getConfigRepo(org)
 
-    if (name) {
-        const gradeExistsIndex = configRepo.grades.findIndex(grade => slug(grade.name) === slug(name))
+    const gradeExistsIndex = configRepo.grades.findIndex(grade => slug(grade.name) == slug(name))
 
-        if (gradeExistsIndex > -1) {
-            spinner.fail(`${name} already exists in ${classroom.name} > ${assignment.title}`)
-            return
-        }
+    if (gradeExistsIndex > -1) {
+        spinner.fail(`${name} already exists in ${classroom.name} > ${assignment.title}`)
+        return
     }
 
     const anonymousNamesGenerator = new AnonymousNameGenerator()
     const acceptedAssignments = await getAcceptedAssignments(assignment.id)
-    acceptedAssignments.forEach(acceptedAssignment => anonymousNamesGenerator.add(acceptedAssignment))
+
+    for (const acceptedAssignment of acceptedAssignments) {
+        await anonymousNamesGenerator.add(acceptedAssignment, org)
+    }
+
     const anonymousNamesMap = anonymousNamesGenerator.getAnonymousNamesMap()
 
     await generateAnonymousRepo({
@@ -65,7 +67,7 @@ export async function addGrade(assignment: Assignments[number], classroom: Class
     })
 
     const grade: Grade = {
-        name: name || 'default',
+        name,
         assignmentId: assignment.id,
         anonymousNamesMap,
     }

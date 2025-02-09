@@ -3,7 +3,7 @@ import { getClassroom, getClassrooms } from '@/api/classroom/classroom.js'
 
 export async function getAssignment() {
     const classrooms = await getClassrooms()
-    const classroomSelect = classrooms.find(classroom => classroom.name === 'Dugit Testing')
+    const classroomSelect = classrooms.find(classroom => classroom.name == 'Dugit Testing')
 
     if (!classroomSelect) {
         throw new Error('Dugit Testing Classroom not found')

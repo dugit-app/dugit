@@ -11,17 +11,17 @@ export async function addGradePrompt(assignment: Assignments[number], classroom:
     const grades = await getGrades(classroom, assignment)
     spinner.stop()
 
-    let name = undefined
+    let name = 'Grade'
 
     if (grades.length > 0) {
         name = await input('Enter a name for the grade')
     }
 
-    const confirmAdd = await confirm(`Are you sure you want to add ${name || 'a new grade'} to ${classroom.name} > ${assignment.title}?`)
+    const confirmAdd = await confirm(`Are you sure you want to add ${name} to ${classroom.name} > ${assignment.title}?`)
 
     if (confirmAdd) {
-        await addGrade(assignment, classroom, name)
+        await addGrade(name, assignment, classroom)
     } else {
-        console.log(chalk.yellow(`Cancelled adding ${name || 'new grade'} to ${classroom.name} > ${assignment.title}`))
+        console.log(chalk.yellow(`Cancelled adding ${name} to ${classroom.name} > ${assignment.title}`))
     }
 }

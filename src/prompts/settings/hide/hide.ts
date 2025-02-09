@@ -21,7 +21,7 @@ export async function hide() {
         noOptionsMessage: 'No classrooms exist for your account',
     })
 
-    if (classroomsSelect === undefined) {
+    if (classroomsSelect == undefined) {
         return
     }
 

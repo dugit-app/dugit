@@ -4,14 +4,14 @@ import { Ora } from 'ora'
 import slug from 'slug'
 
 export async function generateTeacherRepo(config: {
-    name?: string,
+    name: string,
     assignment: Assignments[number],
     org: string,
     readme: string,
     spinner: Ora
 }) {
     const { name, assignment, org, readme, spinner } = config
-    const repoName = `${assignment.slug}-` + (name ? `${slug(name)}-` : '') + 'teacher'
+    const repoName = `${assignment.slug}-${slug(name)}-teacher`
     spinner.text = 'Generating teacher repository'
 
     const repo = await createRepo(repoName, org)

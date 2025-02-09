@@ -10,7 +10,7 @@ export async function removeGrader(grader: Grader, classroom: Classroom) {
 
     const configRepo = await getConfigRepo(org)
 
-    const graderExistsIndex = configRepo.graders.findIndex(t => t.username === grader.username)
+    const graderExistsIndex = configRepo.graders.findIndex(t => t.username == grader.username)
 
     if (graderExistsIndex > -1) {
         configRepo.graders.splice(graderExistsIndex, 1)

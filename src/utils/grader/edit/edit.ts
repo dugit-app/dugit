@@ -11,7 +11,7 @@ export async function editGrader(previousGrader: Grader, newGrader: Grader, clas
 
     const configFile: ConfigRepo = await getRepoFile(org, 'config.json', 'dugit-config')
 
-    const configGrader = configFile.graders.find(t => t.username === previousGrader.username)
+    const configGrader = configFile.graders.find(t => t.username == previousGrader.username)
 
     if (!configGrader) {
         spinner.fail(`Grader with username ${previousGrader.username} does not exist in ${classroom.name}`)

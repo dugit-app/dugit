@@ -12,7 +12,7 @@ export async function removeGrade(name: string, assignment: Assignments[number],
 
     const configRepo = await getConfigRepo(org)
 
-    const gradeExistsIndex = configRepo.grades.findIndex(grade => grade.name === name && grade.assignmentId == assignment.id)
+    const gradeExistsIndex = configRepo.grades.findIndex(grade => grade.name == name && grade.assignmentId == assignment.id)
 
     if (gradeExistsIndex == -1) {
         spinner.fail(`${name} does not exist in ${classroom.name} > ${assignment.title}`)

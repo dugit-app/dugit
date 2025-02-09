@@ -16,5 +16,5 @@ export type Grade = {
 export async function getGrades(classroom: Classroom, assignment: Assignments[number]) {
     const org = classroom.organization.login
     const configFile = await getConfigRepo(org)
-    return (configFile.grades).filter(grade => grade.assignmentId === assignment.id)
+    return (configFile.grades).filter(grade => grade.assignmentId == assignment.id)
 }

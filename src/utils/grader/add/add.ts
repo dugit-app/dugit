@@ -16,7 +16,7 @@ export async function addGrader(grader: Grader, classroom: Classroom) {
 
     const configRepo = await getConfigRepo(org)
 
-    const graderExistsIndex = configRepo.graders.findIndex(t => t.username === grader.username)
+    const graderExistsIndex = configRepo.graders.findIndex(t => t.username == grader.username)
 
     if (graderExistsIndex > -1) {
         spinner.fail(`Grader with the username ${grader.username} already exists in ${classroom.name}`)
