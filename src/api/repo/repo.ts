@@ -6,7 +6,7 @@ export type Repo = Endpoints['GET /repos/{owner}/{repo}']['response']['data']
 export type Repos = Endpoints['GET /orgs/{org}/repos']['response']['data']
 
 export async function createRepo(name: string, org: string): Promise<Repo> {
-    return (await (await api()).rest.repos.createInOrg({
+    return (await api.octokit.rest.repos.createInOrg({
         has_issues: false,
         has_projects: false,
         has_wiki: false,
@@ -17,7 +17,7 @@ export async function createRepo(name: string, org: string): Promise<Repo> {
 }
 
 export async function addRepoCollaborator(owner: string, repo: string, username: string, permission: string) {
-    return (await (await api()).rest.repos.addCollaborator({
+    return (await api.octokit.rest.repos.addCollaborator({
         owner,
         permission,
         repo,
@@ -26,7 +26,7 @@ export async function addRepoCollaborator(owner: string, repo: string, username:
 }
 
 export async function getRepoPermission(owner: string, repo: string, username: string) {
-    return (await (await api()).rest.repos.getCollaboratorPermissionLevel({
+    return (await api.octokit.rest.repos.getCollaboratorPermissionLevel({
         owner,
         repo,
         username,
@@ -35,7 +35,7 @@ export async function getRepoPermission(owner: string, repo: string, username: s
 
 export async function repoExists(owner: string, repo: string) {
     try {
-        await (await api()).rest.repos.get({ owner, repo })
+        await api.octokit.rest.repos.get({ owner, repo })
         return true
     } catch (error) {
         if (error instanceof RequestError && error.status == 404) {
@@ -47,9 +47,8 @@ export async function repoExists(owner: string, repo: string) {
 }
 
 export async function getRepoFile(owner: string, path: string, repo: string) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
-    return JSON.parse((await (await api()).rest.repos.getContent({
+    return JSON.parse((await api.octokit.rest.repos.getContent({
         mediaType: { format: 'raw' },
         owner,
         path,
@@ -58,7 +57,7 @@ export async function getRepoFile(owner: string, path: string, repo: string) {
 }
 
 export async function createRepoFile(owner: string, path: string, repo: string, content: string, message: string) {
-    return (await (await api()).rest.repos.createOrUpdateFileContents({
+    return (await api.octokit.rest.repos.createOrUpdateFileContents({
         mediaType: { format: 'raw' },
         committer: { name: 'dugit', email: 'user@example.com' },
         message,
@@ -70,7 +69,7 @@ export async function createRepoFile(owner: string, path: string, repo: string, 
 }
 
 export async function updateRepoFile(owner: string, path: string, repo: string, content: string, message: string) {
-    const fileData: any = (await (await api()).rest.repos.getContent({
+    const fileData: any = (await api.octokit.rest.repos.getContent({
         owner,
         path,
         repo,
@@ -78,7 +77,7 @@ export async function updateRepoFile(owner: string, path: string, repo: string, 
 
     const sha: string = fileData.sha
 
-    return (await (await api()).rest.repos.createOrUpdateFileContents({
+    return (await api.octokit.rest.repos.createOrUpdateFileContents({
         mediaType: { format: 'raw' },
         committer: { name: 'dugit', email: 'user@example.com' },
         message,
@@ -91,9 +90,9 @@ export async function updateRepoFile(owner: string, path: string, repo: string, 
 }
 
 export async function getRepos(org: string) {
-    return (await (await api()).rest.repos.listForOrg({ org: org })).data
+    return (await api.octokit.rest.repos.listForOrg({ org: org })).data
 }
 
 export async function deleteRepo(owner: string, repo: string) {
-    return (await (await api()).rest.repos.delete({ owner, repo })).data
+    return (await api.octokit.rest.repos.delete({ owner, repo })).data
 }

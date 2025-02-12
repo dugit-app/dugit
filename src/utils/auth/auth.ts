@@ -1,3 +1,4 @@
+import { api } from '@/api/api.js'
 import { requestDeviceCode, requestToken } from '@/api/auth/auth.js'
 import { readConfigFile, writeConfigFile } from '@/utils/config/file/file.js'
 import chalk from 'chalk'
@@ -77,6 +78,8 @@ export async function login() {
 
     await writeConfigFile(configFile)
 
+    await api.updateToken()
+
     console.log('\nSuccessfully authenticated!')
 }
 
@@ -86,6 +89,8 @@ export async function logout() {
     if (Object.hasOwn(configFile, 'accessToken')) {
         delete configFile.accessToken
     }
+
+    await api.updateToken()
 
     await writeConfigFile(configFile)
 }
