@@ -20,7 +20,7 @@
   "devDependencies": {
     "@types/slug": "^5.0.9",
     "tsc-alias": "^1.8.10",
-    "tsx": "^4.19.2",
+    "tsx": "^4.19.3",
     "typescript": "^5.7.3",
     "vitest": "^3.0.6"
   },
