@@ -17,7 +17,7 @@ export async function addGrade(name: string, assignment: Assignments[number], cl
 
     const configRepo = await getConfigRepo(org)
 
-    const gradeExistsIndex = configRepo.grades.findIndex(grade => slug(grade.name) == slug(name))
+    const gradeExistsIndex = configRepo.grades.findIndex(grade => slug(grade.name) == slug(name) && grade.assignmentId == assignment.id)
 
     if (gradeExistsIndex > -1) {
         spinner.fail(`${name} already exists in ${classroom.name} > ${assignment.title}`)
