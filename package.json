@@ -25,7 +25,7 @@
     "vitest": "^3.1.2"
   },
   "dependencies": {
-    "@inquirer/prompts": "^7.4.1",
+    "@inquirer/prompts": "^7.5.0",
     "axios": "^1.8.4",
     "chalk": "^5.4.1",
     "octokit": "^4.1.3",
