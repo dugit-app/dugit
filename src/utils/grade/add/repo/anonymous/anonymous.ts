@@ -49,7 +49,7 @@ export async function generateAnonymousRepo(config: {
             await git.addConfig('user.email', 'user@example.com')
             await git.addConfig('user.name', anonymousName)
 
-            await git.rebase(['-r', '--root', '--exec', 'git commit --amend --no-edit --reset-author'])
+            await git.rebase(['-r', '--root', '--exec', 'git commit --amend --allow-empty --no-edit --reset-author'])
         }
 
         await git.push(['origin', '--all'])
