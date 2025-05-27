@@ -31,7 +31,7 @@
     "octokit": "^5.0.2",
     "ora": "^8.2.0",
     "simple-git": "^3.27.0",
-    "slug": "^10.0.0",
+    "slug": "^11.0.0",
     "unique-names-generator": "^4.7.1"
   }
 }
