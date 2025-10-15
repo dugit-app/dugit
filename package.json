@@ -1,7 +1,7 @@
 {
   "name": "dugit",
   "description": "GitHub Classroom tools for Drury University",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "author": "Brayden O'Neal",
   "license": "GPL-3.0",
   "homepage": "https://github.com/dugit-app/dugit",
