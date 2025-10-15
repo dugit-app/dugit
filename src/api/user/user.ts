@@ -1,5 +1,5 @@
 import { api } from '@/api/api.js'
-import { RequestError } from 'octokit'
+import { RequestError } from '@octokit/request-error'
 
 export async function userExists(username: string) {
     try {

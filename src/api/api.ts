@@ -1,5 +1,5 @@
 import { getAccessToken } from '@/utils/auth/auth.js'
-import { Octokit } from 'octokit'
+import { Octokit } from '@octokit/rest'
 
 class API {
     octokit: Octokit

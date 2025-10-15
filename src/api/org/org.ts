@@ -1,6 +1,6 @@
 import { api } from '@/api/api.js'
 import { Endpoints } from '@octokit/types'
-import { RequestError } from 'octokit'
+import { RequestError } from '@octokit/request-error'
 
 export type Organizations = Endpoints['GET /user/orgs']['response']['data']
 
