@@ -1,10 +1,8 @@
 import { defineConfig } from 'vitest/config'
-import { resolve } from "node:path";
+import { resolve } from 'node:path'
 
 export default defineConfig({
     resolve: {
-        alias: {
-            '@': path.resolve(__dirname, './src')
-        }
-    }
+        alias: [{ find: '@', replacement: resolve(__dirname, './src') }],
+    },
 })
