@@ -33,7 +33,7 @@ jobs:
       - id: metadata
         uses: dependabot/fetch-metadata@v2
         with:
-          github-token: "${{ secrets.GH_TOKEN }}"
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
       - run: |
           gh pr review --approve "$PR_URL"
           gh pr merge --squash --auto "$PR_URL"
