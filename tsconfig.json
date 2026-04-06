@@ -12,5 +12,6 @@
   "exclude": ["src/test"],
   "ts-node": {
     "esm": true
-  }
+  },
+  "types": ["node"]
 }
