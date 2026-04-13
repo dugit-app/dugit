@@ -69,7 +69,7 @@ export async function select<Value>(config: {
 
 export async function checkbox<Value>(config: {
     message: string,
-    choices: readonly (string | Separator)[] | readonly (Separator | CheckboxChoice<Value>)[],
+    choices: readonly (Separator | Value | Choice<Value>)[]
     noOptionsMessage?: string
 }) {
     const { message, choices, noOptionsMessage } = config
@@ -79,7 +79,7 @@ export async function checkbox<Value>(config: {
         return
     }
 
-    return inquirerCheckbox({ message, choices }, { clearPromptOnDone: true })
+    return inquirerCheckbox<Value>({ message, choices }, { clearPromptOnDone: true })
 }
 
 export async function input(message: string, defaultValue?: string) {
