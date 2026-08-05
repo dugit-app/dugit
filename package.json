@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@inquirer/prompts": "^8.5.2",
-    "@octokit/core": "^7.0.6",
+    "@octokit/core": "^7.0.7",
     "@octokit/rest": "^22.0.1",
     "@octokit/types": "^17.0.0",
     "axios": "^1.19.0",
