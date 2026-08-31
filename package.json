@@ -26,7 +26,7 @@
     "vitest": "^4.1.11"
   },
   "dependencies": {
-    "@inquirer/prompts": "^8.6.0",
+    "@inquirer/prompts": "^8.7.0",
     "@octokit/core": "^7.0.7",
     "@octokit/rest": "^22.0.1",
     "@octokit/types": "^17.0.0",
