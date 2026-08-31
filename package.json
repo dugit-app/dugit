@@ -30,7 +30,7 @@
     "@octokit/core": "^7.0.7",
     "@octokit/rest": "^22.0.1",
     "@octokit/types": "^17.0.0",
-    "axios": "^1.19.0",
+    "axios": "^1.20.0",
     "chalk": "^6.0.0",
     "ora": "^9.4.1",
     "simple-git": "^3.36.0",
